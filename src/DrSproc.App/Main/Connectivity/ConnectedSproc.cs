@@ -51,5 +51,15 @@ namespace DrSproc.Main.Connectivity
         {
             throw new NotImplementedException();
         }
+
+        internal string GetDatabaseName()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal string GetStoredProcName()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
