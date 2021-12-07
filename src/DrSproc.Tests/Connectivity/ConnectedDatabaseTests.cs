@@ -23,5 +23,23 @@ namespace DrSproc.Tests.Connectivity
             // Assert
             sproc.ShouldNotBeNull();
         }
+
+        [Fact]
+        public void Execute_WithSchema_ShouldReturnInstanceOfConnectedSproc()
+        {
+            // Arrange
+            ContosoDb db = new();
+
+            ConnectedDatabase sut = new(db);
+
+            var schema = "TestSchema";
+            var sprocName = "TestSproc";
+
+            // Act
+            var sproc = sut.Execute(schema, sprocName);
+
+            // Assert
+            sproc.ShouldNotBeNull();
+        }
     }
 }

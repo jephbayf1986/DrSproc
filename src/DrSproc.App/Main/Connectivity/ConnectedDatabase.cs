@@ -19,7 +19,7 @@ namespace DrSproc.Main.Connectivity
 
         public IConnectedSproc Execute(string schemaName, string storedProcedureName)
         {
-            throw new NotImplementedException();
+            return new ConnectedSproc();
         }
 
         public IConnectedDatabase SetTransactionId(Guid transactionId)
