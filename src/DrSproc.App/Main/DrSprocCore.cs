@@ -2,7 +2,7 @@
 
 namespace DrSproc.Main
 {
-    public class DrSprocCore : DrSproc
+    internal class DrSprocCore : DrSproc
     {
         public IConnectedDatabase Use<T>() where T : IDatabase, new()
         {
