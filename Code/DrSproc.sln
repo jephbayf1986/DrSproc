@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.App", "DrSproc.App\DrSproc.App.csproj", "{A0A9F824-30DF-486D-8807-553CFEC9B34F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.Testing", "DrSproc.Testing\DrSproc.Testing.csproj", "{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {419D0889-615B-4D63-983B-03EDC48DD6F1}
+	EndGlobalSection
+EndGlobal
