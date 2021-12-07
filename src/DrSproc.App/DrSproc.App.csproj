@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Connectivity\" />
-    <Folder Include="Main\" />
+    <Folder Include="Registration\" />
   </ItemGroup>
 
 </Project>

@@ -4,8 +4,8 @@
     /// <b>DrSproc</b> <br />
     /// A simple syntactically sweet way to call SQL stored procedures
     /// <para>
-    /// Start by Setting the Target Database then more options will follow. <br />
-    /// For examples see the Readme at <i>https://github.com/jephbayf1986/DrSproc</i>
+    /// Start by Setting the Target Database then more options will follow within the returned object. <br />
+    /// For detailed examples see the Readme at <i>https://github.com/jephbayf1986/DrSproc</i>
     /// </para>
     /// </summary>
     public interface DrSproc
@@ -19,8 +19,7 @@
         /// </para>
         /// </summary>
         /// <typeparam name="T">IDatabase</typeparam>
-        /// <param name="TTargetDb">Target Database</param>
-        /// <returns>A Connected Database Intance - With options for executing Sprocs within the Target Database</returns>
-        IConnectedDatabase Use<T>(T TTargetDb) where T : IDatabase;
+        /// <returns>A Connected Database Intance - With options for executing Sprocs within the Target Database</returns>  
+        IConnectedDatabase Use<T>() where T : IDatabase, new();
     }
 }
