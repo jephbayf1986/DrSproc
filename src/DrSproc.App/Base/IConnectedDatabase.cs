@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DrSproc
 {
@@ -9,5 +10,7 @@ namespace DrSproc
         IConnectedSproc Execute(string storedProcedureName);
 
         IConnectedSproc Execute(string schemaName, string storedProcedureName);
+
+        Task RollbackTransaction(Guid transactionId);
     }
 }

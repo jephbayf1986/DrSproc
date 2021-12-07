@@ -16,7 +16,7 @@ namespace DrSproc.EntityMapping
             _reader = reader;
         }
 
-        protected string GetString(string fieldName, bool allowNull = true, string defaultIfNull = null)
+        protected string ReadString(string fieldName, bool allowNull = true, string defaultIfNull = null)
         {
             var value = _reader.GetField(fieldName);
 
@@ -25,7 +25,7 @@ namespace DrSproc.EntityMapping
             return value?.ToString() ?? defaultIfNull;
         }
 
-        protected int GetInt(string fieldName, bool allowNull = false, int defaultIfNull = default)
+        protected int ReadInt(string fieldName, bool allowNull = false, int defaultIfNull = default)
         {
             var value = _reader.GetField(fieldName);
 
@@ -42,17 +42,17 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected int? GetNullableInt(string fieldName)
+        protected int? ReadNullableInt(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetInt(fieldName);
+            return ReadInt(fieldName);
         }
 
-        protected double GetDouble(string fieldName, bool allowNull = false, double defaultIfNull = default)
+        protected double ReadDouble(string fieldName, bool allowNull = false, double defaultIfNull = default)
         {
             var value = _reader.GetField(fieldName);
 
@@ -69,17 +69,17 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected double? GetNullableDouble(string fieldName)
+        protected double? ReadNullableDouble(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetDouble(fieldName);
+            return ReadDouble(fieldName);
         }
 
-        protected decimal GetDecimal(string fieldName, bool allowNull = false, decimal defaultIfNull = default)
+        protected decimal ReadDecimal(string fieldName, bool allowNull = false, decimal defaultIfNull = default)
         {
             var value = _reader.GetField(fieldName);
 
@@ -96,17 +96,17 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected decimal? GetNullableDecimal(string fieldName)
+        protected decimal? ReadNullableDecimal(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetDecimal(fieldName);
+            return ReadDecimal(fieldName);
         }
 
-        protected bool GetBoolean(string fieldName, bool allowNull = false, bool defaultIfNull = false)
+        protected bool ReadBoolean(string fieldName, bool allowNull = false, bool defaultIfNull = false)
         {
             var value = _reader.GetField(fieldName);
 
@@ -130,17 +130,17 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected bool? GetNullableBoolean(string fieldName)
+        protected bool? ReadNullableBoolean(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetBoolean(fieldName);
+            return ReadBoolean(fieldName);
         }
 
-        protected DateTime GetDateTime(string fieldName, bool allowNull = false, DateTime defaultIfNull = default)
+        protected DateTime ReadDateTime(string fieldName, bool allowNull = false, DateTime defaultIfNull = default)
         {
             var value = _reader.GetField(fieldName);
 
@@ -157,17 +157,17 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected DateTime? GetNullableDateTime(string fieldName)
+        protected DateTime? ReadNullableDateTime(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetDateTime(fieldName);
+            return ReadDateTime(fieldName);
         }
 
-        protected Guid GetGuid(string fieldName, bool generateNewIfNull = false)
+        protected Guid ReadGuid(string fieldName, bool generateNewIfNull = false)
         {
             var value = _reader.GetField(fieldName);
 
@@ -184,14 +184,14 @@ namespace DrSproc.EntityMapping
             return result;
         }
 
-        protected Guid? GetNullableGuid(string fieldName)
+        protected Guid? ReadNullableGuid(string fieldName)
         {
             var value = _reader.GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
-            return GetGuid(fieldName);
+            return ReadGuid(fieldName);
         }
     }
 }

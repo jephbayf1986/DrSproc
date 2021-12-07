@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DrSproc.Main.Connectivity
 {
-    public class ConnectedDatabase : IConnectedDatabase
+    internal class ConnectedDatabase : IConnectedDatabase
     {
         private IDatabase _db;
 
@@ -22,6 +23,11 @@ namespace DrSproc.Main.Connectivity
         }
 
         public IConnectedDatabase SetTransactionId(Guid transactionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RollbackTransaction(Guid transactionId)
         {
             throw new NotImplementedException();
         }

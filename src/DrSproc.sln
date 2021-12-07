@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.App", "DrSproc.App\DrSproc.App.csproj", "{A0A9F824-30DF-486D-8807-553CFEC9B34F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrSproc.App", "DrSproc.App\DrSproc.App.csproj", "{A0A9F824-30DF-486D-8807-553CFEC9B34F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.Testing", "DrSproc.Testing\DrSproc.Testing.csproj", "{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.Tests", "DrSproc.Tests\DrSproc.Tests.csproj", "{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0A9F824-30DF-486D-8807-553CFEC9B34F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AE0CEA3-6D47-4B27-8560-A3EF0FF4B3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
