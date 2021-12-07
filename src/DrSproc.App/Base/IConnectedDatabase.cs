@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DrSproc.App.Components
+namespace DrSproc
 {
     public interface IConnectedDatabase
     {

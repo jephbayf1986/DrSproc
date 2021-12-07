@@ -1,4 +1,4 @@
-﻿namespace DrSproc.Components
+﻿namespace DrSproc
 {
     public interface IDatabase
     {
