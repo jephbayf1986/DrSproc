@@ -14,7 +14,7 @@ namespace DrSproc.Main.Connectivity
 
         public IConnectedSproc Execute(string storedProcedureName)
         {
-            throw new NotImplementedException();
+            return new ConnectedSproc();
         }
 
         public IConnectedSproc Execute(string schemaName, string storedProcedureName)

@@ -9,4 +9,10 @@
     <Folder Include="Registration\" />
   </ItemGroup>
 
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+	  <_Parameter1>DrSproc.Tests</_Parameter1>
+	</AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
