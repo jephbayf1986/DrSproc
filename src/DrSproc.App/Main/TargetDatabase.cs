@@ -12,12 +12,12 @@ namespace DrSproc.Main
             _db = db;
         }
 
-        public ISprocBuilder Execute(string storedProcedureName)
+        public IAsyncSprocBuilder Execute(string storedProcedureName)
         {
             return new SprocBuilder();
         }
 
-        public ISprocBuilder Execute(string schemaName, string storedProcedureName)
+        public IAsyncSprocBuilder Execute(string schemaName, string storedProcedureName)
         {
             return new SprocBuilder();
         }

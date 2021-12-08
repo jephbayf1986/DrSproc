@@ -11,6 +11,10 @@ namespace DrSproc
 
         ISprocBuilder Execute(string schemaName, string storedProcedureName);
 
+        IAsyncSprocBuilder ExecuteAsync(string storedProcedureName);
+
+        IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName);
+
         Task RollbackTransaction(Guid transactionId);
     }
 }

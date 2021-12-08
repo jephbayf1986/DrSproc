@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class SprocBuilder : ISprocBuilder
+    internal class SprocBuilder : IAsyncSprocBuilder
     {
-        public ISprocBuilder WithTransactionId(Guid transactionId)
+        public IAsyncSprocBuilder WithTransactionId(Guid transactionId)
         {
             throw new NotImplementedException();
         }
 
-        public ISprocBuilder WithParam(string paramName, object input)
+        public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
             throw new NotImplementedException();
         }
 
-        public ISprocBuilder WithParamIfNotNull(string paramName, object input)
+        public IAsyncSprocBuilder WithParamIfNotNull(string paramName, object input)
         {
             throw new NotImplementedException();
         }

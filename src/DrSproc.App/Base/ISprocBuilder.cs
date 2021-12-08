@@ -1,7 +1,6 @@
 ﻿using DrSproc.EntityMapping;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DrSproc
 {
@@ -13,16 +12,16 @@ namespace DrSproc
 
         ISprocBuilder WithParamIfNotNull(string paramName, object input);
 
-        Task Go();
+        void Go();
 
-        Task<object> ReturnIdentity(bool allowNull = true);
+        object ReturnIdentity(bool allowNull = true);
 
-        Task<T> ReturnSingle<T>();
+        T ReturnSingle<T>();
 
-        Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper);
+        T ReturnSingle<T>(EntityMapper<T> entityMapper);
 
-        Task<IEnumerable<T>> ReturnMulti<T>();
+        IEnumerable<T> ReturnMulti<T>();
 
-        Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper);
+        IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper);
     }
 }
