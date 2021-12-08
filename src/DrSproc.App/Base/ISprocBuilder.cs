@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace DrSproc
 {
-    public interface IConnectedSproc
+    public interface ISprocBuilder
     {
-        IConnectedSproc WithTransactionId(Guid transactionId);
+        ISprocBuilder WithTransactionId(Guid transactionId);
         
-        IConnectedSproc WithParam(string paramName, object input);
+        ISprocBuilder WithParam(string paramName, object input);
 
-        IConnectedSproc WithParamIfNotNull(string paramName, object input);
+        ISprocBuilder WithParamIfNotNull(string paramName, object input);
 
         Task Go();
 

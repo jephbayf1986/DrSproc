@@ -1,5 +1,5 @@
 ﻿using DrSproc.Exceptions;
-using DrSproc.Main.Connectivity;
+using DrSproc.Main;
 using DrSproc.Main.EntityMapping;
 using System;
 using System.Data;
@@ -8,12 +8,12 @@ namespace DrSproc.EntityMapping
 {
     public abstract class EntityMapper<T>
     {
-        private ConnectedSproc _sproc;
+        private SprocBuilder _sproc;
         private IDataReader _reader;
 
         public abstract T Map();
         
-        internal void SetConditions(ConnectedSproc sproc, IDataReader reader)
+        internal void SetConditions(SprocBuilder sproc, IDataReader reader)
         {
             _sproc = sproc;
             _reader = reader;

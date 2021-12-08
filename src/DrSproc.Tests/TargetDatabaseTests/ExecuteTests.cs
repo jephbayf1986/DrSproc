@@ -1,11 +1,11 @@
-﻿using DrSproc.Main.Connectivity;
+﻿using DrSproc.Main;
 using DrSproc.Tests.Shared;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.Connectivity
+namespace DrSproc.Tests.TargetDatabaseTests
 {
-    public class ConnectedDatabaseTests
+    public class ExecuteTests
     {
         [Fact]
         public void Execute_WithoutSchema_ShouldReturnInstanceOfConnectedSproc()
@@ -13,7 +13,7 @@ namespace DrSproc.Tests.Connectivity
             // Arrange
             ContosoDb db = new();
 
-            ConnectedDatabase sut = new(db);
+            TargetDatabase sut = new(db);
 
             var sprocName = "TestSproc";
 
@@ -30,7 +30,7 @@ namespace DrSproc.Tests.Connectivity
             // Arrange
             ContosoDb db = new();
 
-            ConnectedDatabase sut = new(db);
+            TargetDatabase sut = new(db);
 
             var schema = "TestSchema";
             var sprocName = "TestSproc";

@@ -3,21 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DrSproc.Main.Connectivity
+namespace DrSproc.Main
 {
-    internal class ConnectedSproc : IConnectedSproc
+    internal class SprocBuilder : ISprocBuilder
     {
-        public IConnectedSproc WithTransactionId(Guid transactionId)
+        public ISprocBuilder WithTransactionId(Guid transactionId)
         {
             throw new NotImplementedException();
         }
 
-        public IConnectedSproc WithParam(string paramName, object input)
+        public ISprocBuilder WithParam(string paramName, object input)
         {
             throw new NotImplementedException();
         }
 
-        public IConnectedSproc WithParamIfNotNull(string paramName, object input)
+        public ISprocBuilder WithParamIfNotNull(string paramName, object input)
         {
             throw new NotImplementedException();
         }

@@ -3,9 +3,9 @@ using DrSproc.Tests.Shared;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.Core
+namespace DrSproc.Tests.DrSprocCoreTests
 {
-    public class DrSprocCoreTests
+    public class UseDatabaseTests
     {
         [Fact]
         public void UseDatabase_ReturnInstanceOfConnectedDatabase()

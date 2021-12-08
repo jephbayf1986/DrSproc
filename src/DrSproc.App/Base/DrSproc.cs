@@ -18,8 +18,8 @@
         /// <![CDATA[var db = _drSproc.Use<ContosoDb>()]]>
         /// </para>
         /// </summary>
-        /// <typeparam name="T">IDatabase</typeparam>
-        /// <returns>A Connected Database Intance - With options for executing Sprocs within the Target Database</returns>  
-        IConnectedDatabase Use<T>() where T : IDatabase, new();
+        /// <typeparam name="T">ITargetDb</typeparam>
+        /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
+        ITargetDatabase Use<T>() where T : IDatabase, new();
     }
 }

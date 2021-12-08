@@ -1,12 +1,11 @@
 ﻿using DrSproc.Exceptions;
-using DrSproc.Main.Connectivity;
 using System.Data;
 
 namespace DrSproc.Main.EntityMapping
 {
     internal static class EntityMappingExtensions
     {
-        public static object GetField(this IDataReader reader, ConnectedSproc sproc, string fieldName)
+        public static object GetField(this IDataReader reader, SprocBuilder sproc, string fieldName)
         {
             try
             {
@@ -18,7 +17,7 @@ namespace DrSproc.Main.EntityMapping
             }
         }
 
-        public static void CheckNotNull(this object value, ConnectedSproc sproc, string fieldName)
+        public static void CheckNotNull(this object value, SprocBuilder sproc, string fieldName)
         {
             if (value.IsNull())
             {
