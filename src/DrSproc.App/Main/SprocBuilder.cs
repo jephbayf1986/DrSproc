@@ -1,4 +1,5 @@
 ﻿using DrSproc.EntityMapping;
+using DrSproc.Main.DbExecutor;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,13 @@ namespace DrSproc.Main
 {
     internal class SprocBuilder<T> : ISprocBuilder where T : IDatabase, new()
     {
+        private readonly IDbExecutor _dbExecutor;
+
+        public SprocBuilder(IDbExecutor dbExecutor)
+        {
+            _dbExecutor = dbExecutor;
+        }
+
         public ISprocBuilder WithParam(string paramName, object input)
         {
             throw new NotImplementedException();
@@ -48,7 +56,7 @@ namespace DrSproc.Main
 
         public void Go()
         {
-            throw new NotImplementedException();
+            _dbExecutor.Execute(null, null, null, null);
         }
     }
 }

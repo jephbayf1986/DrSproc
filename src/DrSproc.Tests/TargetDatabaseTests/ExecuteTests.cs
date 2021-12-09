@@ -1,5 +1,7 @@
 ﻿using DrSproc.Main;
+using DrSproc.Main.DbExecutor;
 using DrSproc.Tests.Shared;
+using Moq;
 using Shouldly;
 using Xunit;
 
@@ -11,7 +13,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         public void Execute_WithoutSchema_ShouldReturnNotNullInstance()
         {
             // Arrange
-            TargetDatabase<ContosoDb> sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -26,7 +30,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         public void Execute_WithSchema_ShouldReturnNotNullInstance()
         {
             // Arrange
-            TargetDatabase<ContosoDb> sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -42,7 +48,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         public void Execute_WithoutSchema_ShouldReturnSprocBuilder()
         {
             // Arrange
-            TargetDatabase<ContosoDb> sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -57,7 +65,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         public void Execute_WithSchema_ShouldReturnSprocBuilder()
         {
             // Arrange
-            TargetDatabase<ContosoDb> sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();

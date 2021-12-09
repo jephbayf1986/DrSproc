@@ -1,5 +1,7 @@
 ﻿using DrSproc.Main;
+using DrSproc.Main.DbExecutor;
 using DrSproc.Tests.Shared;
+using Moq;
 using Shouldly;
 using Xunit;
 
@@ -11,7 +13,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         public void UseDatabase_ReturnTargetDatabaseType()
         {
             // Arrange
-            DrSprocCore sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            DrSprocCore sut = new(dbExecutor.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
@@ -24,7 +28,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         public void UseDatabase_ReturnInstanceOfConnectedDatabase()
         {
             // Arrange
-            DrSprocCore sut = new();
+            Mock<IDbExecutor> dbExecutor = new();
+
+            DrSprocCore sut = new(dbExecutor.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
