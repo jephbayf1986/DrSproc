@@ -4,7 +4,7 @@
     {
         public ITargetDatabase Use<T>() where T : IDatabase, new()
         {
-            return new TargetDatabase(new T());
+            return new TargetDatabase<T>();
         }
     }
 }

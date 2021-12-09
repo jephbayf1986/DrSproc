@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class AsyncSprocBuilder : IAsyncSprocBuilder
+    internal class AsyncSprocBuilder<T> : IAsyncSprocBuilder where T : IDatabase, new()
     {
+        internal readonly StoredProc<T> storedProcedure;
+
         public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
             throw new NotImplementedException();

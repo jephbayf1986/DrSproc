@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DrSproc.Main
 {
-    internal class SprocBuilder : ISprocBuilder
+    internal class SprocBuilder<T> : ISprocBuilder where T : IDatabase, new()
     {
         public ISprocBuilder WithParam(string paramName, object input)
         {

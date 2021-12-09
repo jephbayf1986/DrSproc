@@ -1,15 +1,15 @@
 ﻿using DrSproc.Exceptions;
-using System.Data;
+using DrSproc.Main.Shared;
 
 namespace DrSproc.Main.EntityMapping
 {
     internal static class EntityMappingExtensions
     {
-        public static object GetField(this IDataReader reader, SprocBuilder sproc, string fieldName)
+        public static object GetField(this InProcessStoredProc sproc, string fieldName)
         {
             try
             {
-                return reader[fieldName];
+                return sproc.DataReader[fieldName];
             }
             catch
             {
@@ -17,7 +17,7 @@ namespace DrSproc.Main.EntityMapping
             }
         }
 
-        public static void CheckNotNull(this object value, SprocBuilder sproc, string fieldName)
+        public static void CheckNotNull(this object value, InProcessStoredProc sproc, string fieldName)
         {
             if (value.IsNull())
             {

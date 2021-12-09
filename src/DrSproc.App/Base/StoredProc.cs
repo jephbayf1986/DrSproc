@@ -26,7 +26,8 @@
         }
     }
     
-    public abstract class StoredProc<T> : StoredProc
+    public abstract class StoredProc<T> : StoredProc 
+        where T : IDatabase, new()
     {
         public StoredProc(string sprocName)
             : base (sprocName)

@@ -3,33 +3,26 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class TargetDatabase : ITargetDatabase
+    internal class TargetDatabase<T> : ITargetDatabase where T : IDatabase, new() 
     {
-        private IDatabase _db;
-
-        public TargetDatabase(IDatabase db)
-        {
-            _db = db;
-        }
-
         public ISprocBuilder Execute(string storedProcedureName)
         {
-            return new SprocBuilder();
+            return new SprocBuilder<T>();
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
-            return new AsyncSprocBuilder();
+            return new AsyncSprocBuilder<T>();
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
         {
-            return new SprocBuilder();
+            return new SprocBuilder<T>();
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
-            return new AsyncSprocBuilder();
+            return new AsyncSprocBuilder<T>();
         }
 
         public Task RollbackTransaction(Guid transactionId)
