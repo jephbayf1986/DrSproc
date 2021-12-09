@@ -1,4 +1,5 @@
 ﻿using DrSproc.EntityMapping;
+using DrSproc.Main.DbExecutor;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,7 +8,12 @@ namespace DrSproc.Main
 {
     internal class AsyncSprocBuilder<T> : IAsyncSprocBuilder where T : IDatabase, new()
     {
-        internal readonly StoredProc<T> storedProcedure;
+        private readonly IDbExecutor _dbExecutor;
+
+        public AsyncSprocBuilder(IDbExecutor dbExecutor)
+        {
+            _dbExecutor = dbExecutor;
+        }
 
         public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
@@ -49,9 +55,9 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public Task Go()
+        public async Task Go()
         {
-            throw new NotImplementedException();
+            await _dbExecutor.ExecuteAsync(null, null, null, null);
         }
     }
 }

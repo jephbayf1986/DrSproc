@@ -20,7 +20,7 @@ namespace DrSproc.Main
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
-            return new AsyncSprocBuilder<T>();
+            return new AsyncSprocBuilder<T>(_dbExecutor);
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
@@ -30,7 +30,7 @@ namespace DrSproc.Main
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
-            return new AsyncSprocBuilder<T>();
+            return new AsyncSprocBuilder<T>(_dbExecutor);
         }
 
         public Task RollbackTransaction(Guid transactionId)
