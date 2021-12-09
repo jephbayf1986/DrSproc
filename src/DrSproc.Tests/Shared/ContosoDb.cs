@@ -4,7 +4,7 @@
     {
         public string GetConnectionString()
         {
-            return "Anything";
+            return RandomHelpers.RandomString();
         }
     }
 }

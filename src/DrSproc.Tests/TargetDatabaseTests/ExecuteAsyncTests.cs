@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DrSproc.Tests.TargetDatabaseTests
 {
-    public class ExecuteTests
+    public class ExecuteAsyncTests
     {
         [Fact]
         public void Execute_WithoutSchema_ShouldReturnSprocBuilder()
@@ -18,10 +18,10 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(sprocName);
+            var sproc = sut.ExecuteAsync(sprocName);
 
             // Assert
-            sproc.ShouldBeOfType<SprocBuilder>();
+            sproc.ShouldBeOfType<AsyncSprocBuilder>();
         }
 
         [Fact]
@@ -36,10 +36,10 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(schema, sprocName);
+            var sproc = sut.ExecuteAsync(schema, sprocName);
 
             // Assert
-            sproc.ShouldBeOfType<SprocBuilder>();
+            sproc.ShouldBeOfType<AsyncSprocBuilder>();
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(sprocName);
+            var sproc = sut.ExecuteAsync(sprocName);
 
             // Assert
             sproc.ShouldNotBeNull();
@@ -71,7 +71,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(schema, sprocName);
+            var sproc = sut.ExecuteAsync(schema, sprocName);
 
             // Assert
             sproc.ShouldNotBeNull();

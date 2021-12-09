@@ -1,52 +1,53 @@
 ﻿using DrSproc.EntityMapping;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class SprocBuilder : ISprocBuilder
+    internal class AsyncSprocBuilder : IAsyncSprocBuilder
     {
-        public ISprocBuilder WithParam(string paramName, object input)
+        public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
             throw new NotImplementedException();
         }
 
-        public ISprocBuilder WithParamIfNotNull(string paramName, object input)
+        public IAsyncSprocBuilder WithParamIfNotNull(string paramName, object input)
         {
             throw new NotImplementedException();
         }
 
-        public ISprocBuilder WithTransactionId(Guid transactionId)
+        public IAsyncSprocBuilder WithTransactionId(Guid transactionId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>()
+        public Task<IEnumerable<T>> ReturnMulti<T>()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper)
+        public Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper)
         {
             throw new NotImplementedException();
         }
 
-        public T ReturnSingle<T>()
+        public Task<T> ReturnSingle<T>()
         {
             throw new NotImplementedException();
         }
 
-        public T ReturnSingle<T>(EntityMapper<T> entityMapper)
+        public Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper)
         {
             throw new NotImplementedException();
         }
 
-        public object ReturnIdentity(bool allowNull = true)
+        public Task<object> ReturnIdentity(bool allowNull = true)
         {
             throw new NotImplementedException();
         }
 
-        public void Go()
+        public Task Go()
         {
             throw new NotImplementedException();
         }
