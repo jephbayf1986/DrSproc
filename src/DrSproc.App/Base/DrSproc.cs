@@ -14,8 +14,10 @@
         /// <b>Database to Use</b> <br />
         /// Set the Target Database to use and get further options for executing Sprocs within that Database
         /// <para>
-        /// Example: <br />
-        /// <![CDATA[var db = _drSproc.Use<ContosoDb>()]]>
+        /// <i>Example:</i> <br />
+        /// <code>
+        /// <![CDATA[var db = drSproc.Use<ContosoDb>()]]>
+        /// </code>
         /// </para>
         /// </summary>
         /// <typeparam name="T">ITargetDb</typeparam>
