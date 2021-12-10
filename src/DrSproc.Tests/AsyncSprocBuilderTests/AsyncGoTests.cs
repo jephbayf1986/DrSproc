@@ -86,5 +86,64 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
         }
+
+        [Fact]
+        public async Task GivenNoParameters_OnGo_PassEmptyDictonaryToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public async Task GivenWithParameterWithAtSign_OnGo_PassParameterToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "@Test";
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, null);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public async Task GivenWithParamNoAtSign_OnGo_PassParamWithAtSignToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "Another";
+            var expectedParamInput = $"@{paramName}";
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, null);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+                                                                                                                           && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+        }
     }
 }

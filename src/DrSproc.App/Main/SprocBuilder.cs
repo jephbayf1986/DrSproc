@@ -10,16 +10,24 @@ namespace DrSproc.Main
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly StoredProc _storedProc;
+        private IDictionary<string, object> _paramData;
 
         public SprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
             _storedProc = storedProc;
+
+            _paramData = new Dictionary<string, object>();
         }
 
         public ISprocBuilder WithParam(string paramName, object input)
         {
-            throw new NotImplementedException();
+            if (!paramName.StartsWith("@")) 
+                paramName = $"@{paramName}";
+
+            _paramData.Add(paramName, null);
+
+            return this;
         }
 
         public ISprocBuilder WithParamIfNotNull(string paramName, object input)
@@ -61,7 +69,7 @@ namespace DrSproc.Main
         {
             var db = new TDatabase();
 
-            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), null, null);
+            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, null);
         }
     }
 }

@@ -12,15 +12,24 @@ namespace DrSproc.Main
         private readonly IDbExecutor _dbExecutor;
         private readonly StoredProc _storedProc;
 
+        private IDictionary<string, object> _paramData;
+
         public AsyncSprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
             _storedProc = storedProc;
+
+            _paramData = new Dictionary<string, object>();
         }
 
         public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
-            throw new NotImplementedException();
+            if (!paramName.StartsWith("@")) 
+                paramName = $"@{paramName}";
+
+            _paramData.Add(paramName, null);
+
+            return this;
         }
 
         public IAsyncSprocBuilder WithParamIfNotNull(string paramName, object input)
@@ -62,7 +71,7 @@ namespace DrSproc.Main
         {
             var db = new TDatabase();
 
-            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), null, null);
+            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, null);
         }
     }
 }
