@@ -5,6 +5,7 @@ using DrSproc.Tests.Shared;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Xunit;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
@@ -143,7 +144,52 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
-                                                                                                                           && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public async Task GivenWithParamTrailingBlankSpace_OnGo_PassTrimmedParamToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "@TrailingSpaces    ";
+            var expectedParamInput = paramName.Trim();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, null);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public async Task GivenWithParamWithValue_OnGo_PassTogetherToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "ParamName";
+            var expectedParamInput = $"@{paramName}";
+            object paramValue = "ParamVal";
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, paramValue);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
+                                                                                                                                          && x.Value == paramValue)), It.IsAny<int?>()));
         }
     }
 }

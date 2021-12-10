@@ -27,7 +27,7 @@ namespace DrSproc.Main
             if (!paramName.StartsWith("@")) 
                 paramName = $"@{paramName}";
 
-            _paramData.Add(paramName, null);
+            _paramData.Add(paramName.TrimEnd(), input);
 
             return this;
         }

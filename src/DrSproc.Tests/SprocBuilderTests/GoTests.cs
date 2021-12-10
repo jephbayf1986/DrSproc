@@ -4,6 +4,7 @@ using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace DrSproc.Tests.SprocBuilderTests
@@ -143,6 +144,51 @@ namespace DrSproc.Tests.SprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName) 
                                                                                                                            && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenWithParamTrailingBlankSpace_OnGo_PassTrimmedParamToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "@TrailingSpaces    ";
+            var expectedParamInput = paramName.Trim();
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, null);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+                                                                                                                           && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenWithParamWithValue_OnGo_PassTogetherToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "ParamName";
+            var expectedParamInput = $"@{paramName}";
+            object paramValue = "ParamVal";
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParam(paramName, paramValue);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
+                                                                                                                                     && x.Value == paramValue)), It.IsAny<int?>()));
         }
     }
 }
