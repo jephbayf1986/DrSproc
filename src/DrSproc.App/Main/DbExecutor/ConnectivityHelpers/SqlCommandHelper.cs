@@ -7,7 +7,7 @@ namespace DrSproc.Main.Connectivity.ConnectivityHelpers
 {
     internal static class SqlCommandHelper
     {
-        internal static SqlCommand Create(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        internal static SqlCommand CreateSprocCommand(this SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
             var command = new SqlCommand(procedureName, connection);
 
@@ -20,14 +20,14 @@ namespace DrSproc.Main.Connectivity.ConnectivityHelpers
 
             command.CommandText = procedureName;
 
-            AddParameters(command, parameters);
+            command.AddParameters(parameters);
 
             command.CommandType = CommandType.StoredProcedure;
 
             return command;
         }
 
-        private static void AddParameters(SqlCommand command, IDictionary<string, object> parameters)
+        private static void AddParameters(this SqlCommand command, IDictionary<string, object> parameters)
         {
             var hasParameters = parameters?.Any() ?? false;
 

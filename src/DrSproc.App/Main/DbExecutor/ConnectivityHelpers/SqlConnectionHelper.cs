@@ -4,7 +4,7 @@ namespace DrSproc.Main.Connectivity.ConnectivityHelpers
 {
     internal static class SqlConnectionHelper
     {
-        public static SqlConnection Create(string connectionString)
+        public static SqlConnection CreateConnection(this string connectionString)
         {
             var connection = new SqlConnection(connectionString);
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DrSproc.Main.Connectivity.ConnectivityHelpers;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -7,43 +7,72 @@ namespace DrSproc.Main.DbExecutor
 {
     internal class DbExecutor : IDbExecutor
     {
-        public IEnumerable<T> ExecuteReturnMulti<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, Func<IDataReader, T> mapper, int? commandTimeout = null)
+        public IDataReader ExecuteReturnReader<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            var connection = connectionString.CreateConnection();
+
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                return command.ExecuteReader(CommandBehavior.CloseConnection);
+            }
         }
 
-        public Task<IEnumerable<T>> ExecuteReturnMultiAsync<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, Func<IDataReader, T> mapper, int? commandTimeout = null)
+        public async Task<IDataReader> ExecuteReturnReaderAsync<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            var connection = connectionString.CreateConnection();
+
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+            }
         }
 
-        public T ExecuteReturnSingle<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, Func<IDataReader, T> mapper, int? commandTimeout = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> ExecuteReturnSingleAsync<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, Func<IDataReader, T> mapper, int? commandTimeout = null)
-        {
-            throw new NotImplementedException();
-        }
         public object ExecuteReturnIdentity(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            using (var connection = connectionString.CreateConnection())
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                return command.ExecuteScalar();
+            }
         }
 
-        public Task<object> ExecuteReturnIdentityAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public async Task<object> ExecuteReturnIdentityAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            using (var connection = connectionString.CreateConnection())
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                return await command.ExecuteScalarAsync();
+            }
         }
 
         public void Execute(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            using (var connection = connectionString.CreateConnection())
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                command.ExecuteNonQuery();
+            }
         }
 
-        public Task ExecuteAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public async Task ExecuteAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            throw new NotImplementedException();
+            using (var connection = connectionString.CreateConnection())
+            using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
+            {
+                connection.Open();
+
+                await command.ExecuteNonQueryAsync();
+            }
         }
     }
 }
