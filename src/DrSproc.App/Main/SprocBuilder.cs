@@ -1,5 +1,6 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,9 @@ namespace DrSproc.Main
 
         public ISprocBuilder WithParam(string paramName, object input)
         {
-            if (!paramName.StartsWith("@")) 
+            paramName.CheckForInvaldInput(_storedProc, _paramData);
+
+            if (!paramName.StartsWith("@"))
                 paramName = $"@{paramName}";
 
             _paramData.Add(paramName.TrimEnd(), input);
