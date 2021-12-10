@@ -1,17 +1,20 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
 
 namespace DrSproc.Main
 {
-    internal class SprocBuilder<T> : ISprocBuilder where T : IDatabase, new()
+    internal class SprocBuilder<TDatabase> : ISprocBuilder where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
+        private readonly StoredProc _storedProc;
 
-        public SprocBuilder(IDbExecutor dbExecutor)
+        public SprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
+            _storedProc = storedProc;
         }
 
         public ISprocBuilder WithParam(string paramName, object input)
@@ -56,7 +59,9 @@ namespace DrSproc.Main
 
         public void Go()
         {
-            _dbExecutor.Execute(null, null, null, null);
+            var db = new TDatabase();
+
+            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), null, null);
         }
     }
 }

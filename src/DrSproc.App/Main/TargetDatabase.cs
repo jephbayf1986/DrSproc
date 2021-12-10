@@ -1,4 +1,5 @@
 ﻿using DrSproc.Main.DbExecutor;
+using DrSproc.Main.Shared;
 using System;
 using System.Threading.Tasks;
 
@@ -15,22 +16,30 @@ namespace DrSproc.Main
 
         public ISprocBuilder Execute(string storedProcedureName)
         {
-            return new SprocBuilder<T>(_dbExecutor);
+            var sproc = new StoredProc(storedProcedureName);
+
+            return new SprocBuilder<T>(_dbExecutor, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
-            return new AsyncSprocBuilder<T>(_dbExecutor);
+            var sproc = new StoredProc(storedProcedureName);
+
+            return new AsyncSprocBuilder<T>(_dbExecutor, sproc);
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
         {
-            return new SprocBuilder<T>(_dbExecutor);
+            var sproc = new StoredProc(schemaName, storedProcedureName);
+
+            return new SprocBuilder<T>(_dbExecutor, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
-            return new AsyncSprocBuilder<T>(_dbExecutor);
+            var sproc = new StoredProc(schemaName, storedProcedureName);
+
+            return new AsyncSprocBuilder<T>(_dbExecutor, sproc);
         }
 
         public Task RollbackTransaction(Guid transactionId)

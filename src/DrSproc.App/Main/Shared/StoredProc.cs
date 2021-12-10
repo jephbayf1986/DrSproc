@@ -1,6 +1,6 @@
-﻿namespace DrSproc
+﻿namespace DrSproc.Main.Shared
 {
-    public abstract class StoredProc
+    internal class StoredProc
     {
         private string _schemaName;
         private string _sprocName;
@@ -25,17 +25,17 @@
             return $"{_schemaName}.{_sprocName}";
         }
     }
-    
-    public abstract class StoredProc<T> : StoredProc 
+
+    internal class StoredProc<T> : StoredProc
         where T : IDatabase, new()
     {
         public StoredProc(string sprocName)
-            : base (sprocName)
+            : base(sprocName)
         {
         }
 
         public StoredProc(string schemaName, string sprocName)
-            :base (schemaName, sprocName)
+            : base(schemaName, sprocName)
         {
         }
     }

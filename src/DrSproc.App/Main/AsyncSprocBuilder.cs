@@ -1,18 +1,21 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class AsyncSprocBuilder<T> : IAsyncSprocBuilder where T : IDatabase, new()
+    internal class AsyncSprocBuilder<TDatabase> : IAsyncSprocBuilder where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
+        private readonly StoredProc _storedProc;
 
-        public AsyncSprocBuilder(IDbExecutor dbExecutor)
+        public AsyncSprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
+            _storedProc = storedProc;
         }
 
         public IAsyncSprocBuilder WithParam(string paramName, object input)
@@ -57,7 +60,9 @@ namespace DrSproc.Main
 
         public async Task Go()
         {
-            await _dbExecutor.ExecuteAsync(null, null, null, null);
+            var db = new TDatabase();
+
+            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), null, null);
         }
     }
 }

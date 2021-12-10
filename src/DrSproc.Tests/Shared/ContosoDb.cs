@@ -2,9 +2,11 @@
 {
     internal class ContosoDb : IDatabase
     {
+        private static string fixedConnection = RandomHelpers.RandomString();
+
         public string GetConnectionString()
         {
-            return RandomHelpers.RandomString();
+            return fixedConnection;
         }
     }
 }
