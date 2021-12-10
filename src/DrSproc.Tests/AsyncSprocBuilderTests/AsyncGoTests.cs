@@ -191,5 +191,30 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
                                                                                                                                           && x.Value == paramValue)), It.IsAny<int?>()));
         }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(6)]
+        [InlineData(11)]
+        public async Task GivenMultipleWithParams_OnGoPassEachToExecute(int numberOfParams)
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            IAsyncSprocBuilder sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            for (int i = 0; i < numberOfParams; i++)
+            {
+                sut = sut.WithParam($"Param{i}", RandomHelpers.RandomString());
+            }
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
+        }
     }
 }

@@ -190,5 +190,30 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
                                                                                                                                      && x.Value == paramValue)), It.IsAny<int?>()));
         }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(6)]
+        [InlineData(11)]
+        public void GivenMultipleWithParams_OnGoPassEachToExecute(int numberOfParams)
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            for(int i = 0; i < numberOfParams; i++)
+            {
+                sut = sut.WithParam($"Param{i}", RandomHelpers.RandomString());
+            }
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
+        }
     }
 }
