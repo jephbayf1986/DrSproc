@@ -32,7 +32,10 @@ namespace DrSproc.Main
 
         public ISprocBuilder WithParamIfNotNull(string paramName, object input)
         {
-            throw new NotImplementedException();
+            if (input == null)
+                return this;
+
+            return WithParam(paramName, input);
         }
 
         public ISprocBuilder WithTransactionId(Guid transactionId)

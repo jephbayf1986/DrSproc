@@ -195,7 +195,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         [InlineData(2)]
         [InlineData(6)]
         [InlineData(11)]
-        public void GivenMultipleWithParams_OnGoPassEachToExecute(int numberOfParams)
+        public void GivenMultipleWithParams_OnGo_PassEachToExecute(int numberOfParams)
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -214,6 +214,48 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenWithParamIfNotNull_NotNullInput_OnGo_PassParameterToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "@Optional";
+            object paramValue = 15;
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParamIfNotNull(paramName, paramValue);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
+                                                                                                                                     && x.Value == paramValue)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenWithParamIfNotNull_NullInput_OnGo_DontPassParameterToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var paramName = "@Optional";
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithParamIfNotNull(paramName, null);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<int?>()));
         }
     }
 }

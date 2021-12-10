@@ -34,7 +34,10 @@ namespace DrSproc.Main
 
         public IAsyncSprocBuilder WithParamIfNotNull(string paramName, object input)
         {
-            throw new NotImplementedException();
+            if (input == null)
+                return this;
+
+            return WithParam(paramName, input);
         }
 
         public IAsyncSprocBuilder WithTransactionId(Guid transactionId)
