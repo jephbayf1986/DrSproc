@@ -12,6 +12,8 @@ namespace DrSproc
 
         ISprocBuilder WithParamIfNotNull(string paramName, object input);
 
+        ISprocBuilder WithTimeOut(TimeSpan timeout);
+
         void Go();
 
         object ReturnIdentity(bool allowNull = true);

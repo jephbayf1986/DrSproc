@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Xunit;
+using System.Threading;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
 {
@@ -26,7 +27,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -63,7 +64,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -122,7 +123,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -144,7 +145,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
-                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -166,7 +167,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
-                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -189,7 +190,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
-                                                                                                                                          && x.Value == paramValue)), It.IsAny<int?>()));
+                                                                                                                                          && x.Value == paramValue)), It.IsAny<CancellationToken>()));
         }
 
         [Theory]
@@ -214,7 +215,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -236,7 +237,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
-                                                                                                                                     && x.Value == paramValue)), It.IsAny<int?>()));
+                                                                                                                                     && x.Value == paramValue)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -256,7 +257,27 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task GivenCancellation_OnGo_PassTokenToExecute()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
+            var token = cancelSource.Token;
+
+            // Act
+            await sut.Go(token);
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DrSproc.EntityMapping;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DrSproc
@@ -13,16 +14,16 @@ namespace DrSproc
 
         IAsyncSprocBuilder WithParamIfNotNull(string paramName, object input);
 
-        Task Go();
+        Task<IEnumerable<T>> ReturnMulti<T>(CancellationToken cancellationToken = default);
 
-        Task<object> ReturnIdentity(bool allowNull = true);
+        Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default);
 
-        Task<T> ReturnSingle<T>();
+        Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default);
 
-        Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper);
+        Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> ReturnMulti<T>();
+        Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper);
+        Task Go(CancellationToken cancellationToken = default);
     }
 }

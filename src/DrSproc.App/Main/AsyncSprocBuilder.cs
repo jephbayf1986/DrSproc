@@ -1,8 +1,10 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DrSproc.Main
@@ -24,6 +26,8 @@ namespace DrSproc.Main
 
         public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
+            paramName.CheckForInvaldInput(_storedProc, _paramData);
+
             if (!paramName.StartsWith("@")) 
                 paramName = $"@{paramName}";
 
@@ -45,36 +49,36 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> ReturnMulti<T>()
+        public Task<IEnumerable<T>> ReturnMulti<T>(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper)
+        public Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<T> ReturnSingle<T>()
+        public Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper)
+        public Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> ReturnIdentity(bool allowNull = true)
+        public Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public async Task Go()
+        public async Task Go(CancellationToken cancellationToken = default)
         {
             var db = new TDatabase();
 
-            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, null);
+            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
         }
     }
 }

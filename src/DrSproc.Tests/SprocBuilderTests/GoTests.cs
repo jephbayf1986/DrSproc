@@ -3,6 +3,8 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -256,6 +258,27 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenTimeoutSpan_OnGo_PassToExecuteInSeconds()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var timeoutSeconds = 111;
+            var timeoutSpan = TimeSpan.FromSeconds(timeoutSeconds);
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc)
+                                                    .WithTimeOut(timeoutSpan);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
         }
     }
 }

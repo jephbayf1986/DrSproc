@@ -8,7 +8,7 @@ using Shouldly;
 using System;
 using Xunit;
 
-namespace DrSproc.Tests.SprocBuilderTests
+namespace DrSproc.Tests.AsyncSprocBuilderTests
 {
     public class WithParamTests
     {
@@ -22,7 +22,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(null, RandomHelpers.RandomString());
@@ -44,7 +44,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(string.Empty, RandomHelpers.RandomString());
@@ -60,7 +60,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         [InlineData("Invalid Name")]
         [InlineData("Invalid    Tab")]
         [InlineData(@"Invalid
-                        Carriag Return")]
+                        Carriage Return")]
         [InlineData("   InvalidStart")]
         public void GivenWhiteSpaceInMiddleOfParamName_OnWithParams_ThrowInformativeError(string paramName)
         {
@@ -71,7 +71,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(paramName, RandomHelpers.IntBetween(1, 10));

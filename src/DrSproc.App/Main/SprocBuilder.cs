@@ -12,6 +12,7 @@ namespace DrSproc.Main
         private readonly IDbExecutor _dbExecutor;
         private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
+        private int? _timeOutSeconds = null;
 
         public SprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
         {
@@ -39,6 +40,13 @@ namespace DrSproc.Main
                 return this;
 
             return WithParam(paramName, input);
+        }
+
+        public ISprocBuilder WithTimeOut(TimeSpan timeout)
+        {
+            _timeOutSeconds = (int)Math.Ceiling(timeout.TotalSeconds);
+
+            return this;
         }
 
         public ISprocBuilder WithTransactionId(Guid transactionId)
@@ -75,7 +83,7 @@ namespace DrSproc.Main
         {
             var db = new TDatabase();
 
-            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, null);
+            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
         }
     }
 }
