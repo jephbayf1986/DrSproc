@@ -1,4 +1,5 @@
 ﻿using DrSproc.EntityMapping;
+using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
@@ -78,7 +79,12 @@ namespace DrSproc.Main
         {
             var db = new TDatabase();
 
-            return _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            var identity = _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+
+            if (!allowNull && identity == null)
+                throw new DrSprocNullReturnException();
+
+            return identity;
         }
 
         public void Go()

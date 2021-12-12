@@ -1,8 +1,10 @@
-﻿using DrSproc.Main;
+﻿using DrSproc.Exceptions;
+using DrSproc.Main;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,7 @@ namespace DrSproc.Tests.SprocBuilderTests
     public class ReturnIdentityTests
     {
         [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_ExecuteAProcedure()
+        public void GivenNoParametersOrTransaction_OnReturnIdentity_ExecuteAProcedure()
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
@@ -30,7 +32,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_ExecuteDatabaseConnectionString()
+        public void GivenNoParametersOrTransaction_OnReturnIdentity_ExecuteDatabaseConnectionString()
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
@@ -49,7 +51,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoSchemaStoredProc_OnGo_PassStoredProcNameToExecute()
+        public void GivenNoSchemaStoredProc_OnReturnIdentity_PassStoredProcNameToExecute()
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
@@ -67,7 +69,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenSchemaStoredProc_OnGo_PassStoredProcNameToExecute()
+        public void GivenSchemaStoredProc_OnReturnIdentity_PassStoredProcNameToExecute()
         {
             // Arrange
             var schemaName = RandomHelpers.RandomString();
@@ -89,7 +91,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoParameters_OnGo_PassEmptyDictonaryToExecute()
+        public void GivenNoParameters_OnReturnIdentity_PassEmptyDictonaryToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -106,7 +108,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParameterWithAtSign_OnGo_PassParameterToExecute()
+        public void GivenWithParameterWithAtSign_OnReturnIdentity_PassParameterToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -126,7 +128,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParamNoAtSign_OnGo_PassParamWithAtSignToExecute()
+        public void GivenWithParamNoAtSign_OnReturnIdentity_PassParamWithAtSignToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -148,7 +150,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParamTrailingBlankSpace_OnGo_PassTrimmedParamToExecute()
+        public void GivenWithParamTrailingBlankSpace_OnReturnIdentity_PassTrimmedParamToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -170,7 +172,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParamWithValue_OnGo_PassTogetherToExecute()
+        public void GivenWithParamWithValue_OnReturnIdentity_PassTogetherToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -196,7 +198,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         [InlineData(2)]
         [InlineData(6)]
         [InlineData(11)]
-        public void GivenMultipleWithParams_OnGo_PassEachToExecute(int numberOfParams)
+        public void GivenMultipleWithParams_OnReturnIdentity_PassEachToExecute(int numberOfParams)
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -218,7 +220,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParamIfNotNull_NotNullInput_OnGo_PassParameterToExecute()
+        public void GivenWithParamIfNotNull_NotNullInput_OnReturnIdentity_PassParameterToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -240,7 +242,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenWithParamIfNotNull_NullInput_OnGo_DontPassParameterToExecute()
+        public void GivenWithParamIfNotNull_NullInput_OnReturnIdentity_DontPassParameterToExecute()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -260,7 +262,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenTimeoutSpan_OnGo_PassToExecuteInSeconds()
+        public void GivenTimeoutSpan_OnReturnIdentity_PassToExecuteInSeconds()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -278,6 +280,45 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
+        }
+
+        [Fact]
+        public void GivenAllowNullTrue_WhenExecuteReturnsNull_OnReturnIdentity_ReturnNull()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(null);
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            // Act
+            var id = sut.ReturnIdentity(true);
+
+            id.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GivenAllowNullFalse_WhenExecuteReturnsNull_OnReturnIdentity_ThrowError()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(null);
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            // Act
+            Func<object> action = () => sut.ReturnIdentity(false);
+
+            // Assert
+            Should.Throw<DrSprocNullReturnException>(action);
         }
     }
 }
