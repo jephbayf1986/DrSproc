@@ -76,7 +76,9 @@ namespace DrSproc.Main
 
         public object ReturnIdentity(bool allowNull = true)
         {
-            throw new NotImplementedException();
+            var db = new TDatabase();
+
+            return _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
         }
 
         public void Go()
