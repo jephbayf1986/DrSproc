@@ -71,14 +71,16 @@ namespace DrSproc.Main
 
         public Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var db = new TDatabase();
+
+            return _dbExecutor.ExecuteReturnIdentityAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
         }
 
-        public async Task Go(CancellationToken cancellationToken = default)
+        public Task Go(CancellationToken cancellationToken = default)
         {
             var db = new TDatabase();
 
-            await _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            return _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
         }
     }
 }
