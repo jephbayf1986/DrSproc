@@ -1,5 +1,6 @@
 ﻿using DrSproc.Main;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.EntityMapping;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -14,8 +15,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -31,8 +33,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -49,8 +52,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -66,8 +70,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();

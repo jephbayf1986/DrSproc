@@ -1,5 +1,6 @@
 ﻿using DrSproc.Main;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.EntityMapping;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -14,8 +15,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            DrSprocCore sut = new(dbExecutor.Object);
+            DrSprocCore sut = new(dbExecutor.Object, entityCreator.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
@@ -29,8 +31,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
 
-            DrSprocCore sut = new(dbExecutor.Object);
+            DrSprocCore sut = new(dbExecutor.Object, entityCreator.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();

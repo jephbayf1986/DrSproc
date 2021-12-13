@@ -8,7 +8,7 @@ namespace DrSproc.Main.DbExecutor
 {
     internal class DbExecutor : IDbExecutor
     {
-        public IDataReader ExecuteReturnReader<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public IDataReader ExecuteReturnReader(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
             var connection = connectionString.CreateConnection();
 
@@ -20,7 +20,7 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public async Task<IDataReader> ExecuteReturnReaderAsync<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        public async Task<IDataReader> ExecuteReturnReaderAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
             var connection = connectionString.CreateConnection();
 

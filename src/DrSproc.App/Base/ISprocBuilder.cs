@@ -18,12 +18,8 @@ namespace DrSproc
 
         object ReturnIdentity(bool allowNull = true);
 
-        T ReturnSingle<T>();
+        T ReturnSingle<T>(EntityMapper<T> entityMapper = null);
 
-        T ReturnSingle<T>(EntityMapper<T> entityMapper);
-
-        IEnumerable<T> ReturnMulti<T>();
-
-        IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper);
+        IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper = null);
     }
 }

@@ -6,37 +6,18 @@ using DrSproc.Tests.Shared;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Xunit;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
-    public class GoTests
+    public class ReturnSingleTests
     {
         [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_Execute()
+        public void GivenNoParametersOrTransaction_OnReturnSingle_ExecuteReturnReader()
         {
             // Arrange
-            Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
-
-            var sproc = new StoredProc(RandomHelpers.RandomString());  
-
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
-
-            // Act
-            sut.Go();
-
-            // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
-        }
-
-        [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_PassDatabaseConnectionStringToExecute()
-        {
-            // Arrange
-            var connectionString = new ContosoDb().GetConnectionString();
-            
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityCreator> entityCreator = new();
 
@@ -45,14 +26,34 @@ namespace DrSproc.Tests.SprocBuilderTests
             SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenNoSchemaStoredProc_OnGo_PassStoredProcNameToExecute()
+        public void GivenNoParametersOrTransaction_OnReturnSingle_PassDatabaseConnectionStringToExecuteReturnReader()
+        {
+            // Arrange
+            var connectionString = new ContosoDb().GetConnectionString();
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
+
+            var sproc = new StoredProc(RandomHelpers.RandomString());
+
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+
+            // Act
+            sut.ReturnSingle<object>();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnReader(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenNoSchemaStoredProc_OnReturnSingle_PassStoredProcNameToExecuteReturnReader()
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
@@ -64,14 +65,14 @@ namespace DrSproc.Tests.SprocBuilderTests
             SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, storedProc);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenSchemaStoredProc_OnGo_PassStoredProcNameToExecute()
+        public void GivenSchemaStoredProc_OnReturnSingle_PassStoredProcNameToExecuteReturnReader()
         {
             // Arrange
             var schemaName = RandomHelpers.RandomString();
@@ -87,14 +88,14 @@ namespace DrSproc.Tests.SprocBuilderTests
             SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, storedProc);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenNoParameters_OnGo_PassEmptyDictonaryToExecute()
+        public void GivenNoParameters_OnReturnSingle_PassEmptyDictonaryToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -105,14 +106,14 @@ namespace DrSproc.Tests.SprocBuilderTests
             var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParameterWithAtSign_OnGo_PassParameterToExecute()
+        public void GivenWithParameterWithAtSign_OnReturnSingle_PassParameterToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -126,14 +127,14 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParamNoAtSign_OnGo_PassParamWithAtSignToExecute()
+        public void GivenWithParamNoAtSign_OnReturnSingle_PassParamWithAtSignToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -148,15 +149,15 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName) 
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
                                                                                                                            && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParamTrailingBlankSpace_OnGo_PassTrimmedParamToExecute()
+        public void GivenWithParamTrailingBlankSpace_OnReturnSingle_PassTrimmedParamToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -171,15 +172,15 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
                                                                                                                            && d.ContainsKey(expectedParamInput)), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParamWithValue_OnGo_PassTogetherToExecute()
+        public void GivenWithParamWithValue_OnReturnSingle_PassTogetherToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -195,10 +196,10 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParam(paramName, paramValue);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
                                                                                                                                      && x.Value == paramValue)), It.IsAny<int?>()));
         }
 
@@ -206,7 +207,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         [InlineData(2)]
         [InlineData(6)]
         [InlineData(11)]
-        public void GivenMultipleWithParams_OnGo_PassEachToExecute(int numberOfParams)
+        public void GivenMultipleWithParams_OnReturnSingle_PassEachToExecute(int numberOfParams)
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -216,20 +217,20 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
 
-            for(int i = 0; i < numberOfParams; i++)
+            for (int i = 0; i < numberOfParams; i++)
             {
                 sut = sut.WithParam($"Param{i}", RandomHelpers.RandomString());
             }
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParamIfNotNull_NotNullInput_OnGo_PassParameterToExecute()
+        public void GivenWithParamIfNotNull_NotNullInput_OnReturnSingle_PassParameterToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -244,15 +245,15 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParamIfNotNull(paramName, paramValue);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
                                                                                                                                      && x.Value == paramValue)), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenWithParamIfNotNull_NullInput_OnGo_DontPassParameterToExecute()
+        public void GivenWithParamIfNotNull_NullInput_OnReturnSingle_DontPassParameterToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -266,14 +267,14 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<int?>()));
         }
 
         [Fact]
-        public void GivenTimeoutSpan_OnGo_PassToExecuteInSeconds()
+        public void GivenTimeoutSpan_OnReturnSingle_PassToExecuteReturnReaderInSeconds()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -288,10 +289,33 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     .WithTimeOut(timeoutSpan);
 
             // Act
-            sut.Go();
+            sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.Execute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
+        }
+
+        [Fact]
+        public void GivenNoMapperSpecified_OnReturnSingle_PassExecuteReturnReaderResult_ToReadEntityUsingReflection()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityCreator> entityCreator = new();
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+
+            Mock<IDataReader> returnReader = new();
+
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
+
+            // Act
+            sut.ReturnSingle<TestClassForMapping>();
+
+            // Assert
+            entityCreator.Verify(x => x.ReadEntityUsingReflection<TestClassForMapping>(returnReader.Object));
         }
     }
 }

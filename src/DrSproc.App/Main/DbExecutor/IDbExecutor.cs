@@ -7,9 +7,9 @@ namespace DrSproc.Main.DbExecutor
 {
     internal interface IDbExecutor
     {
-        IDataReader ExecuteReturnReader<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null);
+        IDataReader ExecuteReturnReader(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null);
 
-        Task<IDataReader> ExecuteReturnReaderAsync<T>(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken);
+        Task<IDataReader> ExecuteReturnReaderAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken);
 
         object ExecuteReturnIdentity(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null);
 

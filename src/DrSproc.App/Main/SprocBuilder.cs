@@ -1,6 +1,7 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
@@ -11,13 +12,15 @@ namespace DrSproc.Main
     internal class SprocBuilder<TDatabase> : ISprocBuilder where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
+        private readonly IEntityCreator _entityCreator;
         private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
 
-        public SprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
+        public SprocBuilder(IDbExecutor dbExecutor, IEntityCreator entityCreator, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
+            _entityCreator = entityCreator;
             _storedProc = storedProc;
 
             _paramData = new Dictionary<string, object>();
@@ -55,24 +58,20 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>()
+        public IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper = null)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper)
+        public T ReturnSingle<T>(EntityMapper<T> entityMapper = null)
         {
-            throw new NotImplementedException();
-        }
+            var db = new TDatabase();
 
-        public T ReturnSingle<T>()
-        {
-            throw new NotImplementedException();
-        }
+            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
-        public T ReturnSingle<T>(EntityMapper<T> entityMapper)
-        {
-            throw new NotImplementedException();
+            var result = _entityCreator.ReadEntityUsingReflection<T>(reader);
+
+            return default;
         }
 
         public object ReturnIdentity(bool allowNull = true)

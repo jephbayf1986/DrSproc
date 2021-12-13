@@ -3,6 +3,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -238,6 +239,30 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
                                                                                                                                      && x.Value == paramValue)), It.IsAny<CancellationToken>()));
+        }
+
+        [Theory]
+        [InlineData("String")]
+        [InlineData(11)]
+        [InlineData(12.5)]
+        [InlineData(true)]
+        [InlineData(null)]
+        public async Task GivenAllowNullUnspecified_OnReturnIdentity_ReturnValue(object returnValue)
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(returnValue);
+            
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
+
+            // Act
+            var id = await sut.ReturnIdentity();
+
+            id.ShouldBe(returnValue);
         }
 
         [Fact]
