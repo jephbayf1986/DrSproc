@@ -12,17 +12,17 @@ namespace DrSproc.Main
     internal class SprocBuilder<TDatabase> : ISprocBuilder where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityCreator _entityCreator;
+        private readonly IEntityMapper _entityMapper;
         private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
 
 
 
-        public SprocBuilder(IDbExecutor dbExecutor, IEntityCreator entityCreator, StoredProc storedProc)
+        public SprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
-            _entityCreator = entityCreator;
+            _entityMapper = entityMapper;
             _storedProc = storedProc;
 
             _paramData = new Dictionary<string, object>();
@@ -71,7 +71,7 @@ namespace DrSproc.Main
             
             var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
-            return _entityCreator.ReadEntityUsingReflection<T>(reader);
+            return _entityMapper.MapUsingReflection<T>(reader);
         }
 
         public object ReturnIdentity(bool allowNull = true)

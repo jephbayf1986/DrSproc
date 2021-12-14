@@ -15,9 +15,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityCreator.Object);
+            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
@@ -31,9 +31,9 @@ namespace DrSproc.Tests.DrSprocCoreTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityCreator.Object);
+            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();

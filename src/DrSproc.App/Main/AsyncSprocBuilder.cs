@@ -1,4 +1,5 @@
 ﻿using DrSproc.Main.DbExecutor;
+using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
@@ -11,13 +12,15 @@ namespace DrSproc.Main
     internal class AsyncSprocBuilder<TDatabase> : IAsyncSprocBuilder where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
+        private readonly IEntityMapper _entityMapper;
         private readonly StoredProc _storedProc;
 
         private IDictionary<string, object> _paramData;
 
-        public AsyncSprocBuilder(IDbExecutor dbExecutor, StoredProc storedProc)
+        public AsyncSprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
+            _entityMapper = entityMapper;
             _storedProc = storedProc;
 
             _paramData = new Dictionary<string, object>();

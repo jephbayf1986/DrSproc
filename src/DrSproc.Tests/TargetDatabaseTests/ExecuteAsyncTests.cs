@@ -15,9 +15,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -33,9 +33,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -52,9 +52,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -70,9 +70,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();

@@ -9,40 +9,40 @@ namespace DrSproc.Main
     internal class TargetDatabase<T> : ITargetDatabase where T : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityCreator _entityCreator;
+        private readonly IEntityMapper _entityMapper;
 
-        public TargetDatabase(IDbExecutor dbExecutor, IEntityCreator entityCreator)
+        public TargetDatabase(IDbExecutor dbExecutor, IEntityMapper entityMapper)
         {
             _dbExecutor = dbExecutor;
-            _entityCreator = entityCreator;
+            _entityMapper = entityMapper;
         }
 
         public ISprocBuilder Execute(string storedProcedureName)
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            return new SprocBuilder<T>(_dbExecutor, _entityCreator, sproc);
+            return new SprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            return new AsyncSprocBuilder<T>(_dbExecutor, sproc);
+            return new AsyncSprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            return new SprocBuilder<T>(_dbExecutor, _entityCreator, sproc);
+            return new SprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            return new AsyncSprocBuilder<T>(_dbExecutor, sproc);
+            return new AsyncSprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
         }
 
         public Task RollbackTransaction(Guid transactionId)

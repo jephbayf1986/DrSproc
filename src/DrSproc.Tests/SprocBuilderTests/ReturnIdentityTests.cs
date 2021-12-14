@@ -20,11 +20,11 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -40,11 +40,11 @@ namespace DrSproc.Tests.SprocBuilderTests
             var connectionString = new ContosoDb().GetConnectionString();
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -61,9 +61,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(storedProcName);
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -84,9 +84,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(schemaName, storedProcName);
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -102,9 +102,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -120,11 +120,11 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Test";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -141,12 +141,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "Another";
             var expectedParamInput = $"@{paramName}";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -164,12 +164,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@TrailingSpaces    ";
             var expectedParamInput = paramName.Trim();
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -187,13 +187,13 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "ParamName";
             var expectedParamInput = $"@{paramName}";
             object paramValue = "ParamVal";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParam(paramName, paramValue);
 
             // Act
@@ -214,9 +214,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
             
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+            ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
 
             for (int i = 0; i < numberOfParams; i++)
             {
@@ -237,12 +237,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Optional";
             object paramValue = 15;
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParamIfNotNull(paramName, paramValue);
 
             // Act
@@ -260,11 +260,11 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Optional";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
@@ -281,12 +281,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var timeoutSeconds = 111;
             var timeoutSpan = TimeSpan.FromSeconds(timeoutSeconds);
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
                                                     .WithTimeOut(timeoutSpan);
 
             // Act
@@ -308,12 +308,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(returnValue);
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             var id = sut.ReturnIdentity();
@@ -328,12 +328,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             var id = sut.ReturnIdentity(true);
@@ -348,12 +348,12 @@ namespace DrSproc.Tests.SprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityCreator.Object, storedProc);
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             Func<object> action = () => sut.ReturnIdentity(false);

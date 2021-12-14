@@ -18,13 +18,13 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(null, RandomHelpers.RandomString());
@@ -41,13 +41,13 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(string.Empty, RandomHelpers.RandomString());
@@ -69,13 +69,13 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityCreator> entityCreator = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityCreator.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(paramName, RandomHelpers.IntBetween(1, 10));

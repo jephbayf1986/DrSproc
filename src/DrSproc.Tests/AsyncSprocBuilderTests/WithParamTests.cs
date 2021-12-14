@@ -1,6 +1,7 @@
 ﻿using DrSproc.Exceptions;
 using DrSproc.Main;
 using DrSproc.Main.DbExecutor;
+using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
@@ -17,12 +18,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(null, RandomHelpers.RandomString());
@@ -39,12 +41,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(string.Empty, RandomHelpers.RandomString());
@@ -66,12 +69,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
 
             var sprocName = RandomHelpers.RandomString();
 
             var sproc = new StoredProc(sprocName);
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(paramName, RandomHelpers.IntBetween(1, 10));

@@ -6,17 +6,17 @@ namespace DrSproc.Main
     internal class DrSprocCore : DrSproc
     {
         private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityCreator _entityCreator;
+        private readonly IEntityMapper _entityMapper;
 
-        public DrSprocCore(IDbExecutor executor, IEntityCreator entityCreator)
+        public DrSprocCore(IDbExecutor executor, IEntityMapper entityMapper)
         {
             _dbExecutor = executor;
-            _entityCreator = entityCreator;
+            _entityMapper = entityMapper;
         }
 
         public ITargetDatabase Use<T>() where T : IDatabase, new()
         {
-            return new TargetDatabase<T>(_dbExecutor, _entityCreator);
+            return new TargetDatabase<T>(_dbExecutor, _entityMapper);
         }
     }
 }
