@@ -8,6 +8,7 @@ using Shouldly;
 using System.Linq;
 using System.Collections.Generic;
 using Xunit;
+using System;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
@@ -187,71 +188,89 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
         }
 
-        //[Theory]
-        //[InlineData("String")]
-        //[InlineData(11)]
-        //[InlineData(12.5)]
-        //[InlineData(true)]
-        //[InlineData(null)]
-        //public void GivenAllowNullUnspecified_OnReturnIdentity_ReturnValue(object returnValue)
-        //{
-        //    // Arrange
-        //    var storedProc = new StoredProc(RandomHelpers.RandomString());
+        [Theory]
+        [InlineData("String")]
+        [InlineData(11)]
+        [InlineData(12.5)]
+        [InlineData(true)]
+        [InlineData(null)]
+        public void GivenAllowNullUnspecified_OnGo_ReturnValue(object returnValue)
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-        //    Mock<IDbExecutor> dbExecutor = new();
-        //    Mock<IEntityMapper> entityMapper = new();
+            Mock<IDbExecutor> dbExecutor = new();
 
-        //    dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
-        //        .Returns(returnValue);
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(returnValue);
 
-        //    var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc,
+            };
 
-        //    // Act
-        //    //var id = sut.ReturnIdentity();
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
-        //    //id.ShouldBe(returnValue);
-        //}
+            // Act
+            var id = sut.Go();
 
-        //[Fact]
-        //public void GivenAllowNullTrue_WhenExecuteReturnsNull_OnReturnIdentity_ReturnNull()
-        //{
-        //    //// Arrange
-        //    //var storedProc = new StoredProc(RandomHelpers.RandomString());
+            // Assert
+            id.ShouldBe(returnValue);
+        }
+        
+        [Fact]
+        public void GivenAllowNullTrue_WhenExecuteReturnIdentityReturnsNull_OnGo_ReturnNull()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-        //    //Mock<IDbExecutor> dbExecutor = new();
-        //    //Mock<IEntityMapper> entityMapper = new();
+            Mock<IDbExecutor> dbExecutor = new();
 
-        //    //dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
-        //    //    .Returns(null);
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(null);
 
-        //    //var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc,
+            };
 
-        //    //// Act
-        //    //var id = sut.ReturnIdentity(true);
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: true);
 
-        //    ////// Assert
-        //    //id.ShouldBeNull();
-        //}
+            // Act
+            var id = sut.Go();
 
-        //[Fact]
-        //public void GivenAllowNullFalse_WhenExecuteReturnsNull_OnReturnIdentity_ThrowError()
-        //{
-        //    // Arrange
-        //    var storedProc = new StoredProc(RandomHelpers.RandomString());
+            //// Assert
+            id.ShouldBeNull();
+        }
 
-        //    Mock<IDbExecutor> dbExecutor = new();
-        //    Mock<IEntityMapper> entityMapper = new();
+        [Fact]
+        public void GivenAllowNullFalse_WhenExecuteReturnsNull_OnGo_ThrowErrorWithUsefulMessage()
+        {
+            // Arrange
+            var sprocName = RandomHelpers.RandomString();
+            var storedProc = new StoredProc(sprocName);
 
-        //    dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
-        //        .Returns(null);
+            Mock<IDbExecutor> dbExecutor = new();
 
-        //    var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(null);
 
-        //    // Act
-        //    Func<object> action = () => sut.ReturnIdentity(false);
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc,
+            };
 
-        //    //// Assert
-        //    //Should.Throw<DrSprocNullReturnException>(action);
-        //}
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: false);
+
+            // Act
+            Func<object> action = () => sut.Go();
+
+            // Assert
+            Should.Throw<DrSprocNullReturnException>(action)
+                .Message.ShouldSatisfyAllConditions(x => x.ToLower().ShouldContain("identity"),
+                                                    x => x.ToLower().ShouldContain("null"),
+                                                    x => x.ToLower().ShouldContain("allow"),
+                                                    x => x.ToLower().ShouldContain(sprocName.ToLower()));
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace DrSproc.Exceptions
     public class DrSprocNullReturnException : Exception
     {
         private DrSprocNullReturnException(StoredProc storedProc)
-            : base($"The following error occurred while Dr Sproc attempted to read a non-null return type from sproc '{storedProc.GetStoredProcFullName()}': A null identity was returned and the input specified to not allow nulls")
+            : base($"The following error occurred while Dr Sproc attempted to read a non-null return object from sproc '{storedProc.GetStoredProcFullName()}': A null identity was returned and the input specified to not allow nulls")
         {
         }
 
