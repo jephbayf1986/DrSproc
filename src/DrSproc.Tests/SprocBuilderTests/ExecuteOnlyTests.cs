@@ -1,5 +1,4 @@
-﻿using DrSproc.Builders;
-using DrSproc.Main.Builders;
+﻿using DrSproc.Main.Builders;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;

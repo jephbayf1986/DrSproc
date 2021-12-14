@@ -62,7 +62,7 @@ namespace DrSproc.Main.Builders.Async
             throw new NotImplementedException();
         }
 
-        public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
+        public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull)
         {
             throw new NotImplementedException();
         }
