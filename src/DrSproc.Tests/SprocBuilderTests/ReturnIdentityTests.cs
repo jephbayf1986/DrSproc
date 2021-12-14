@@ -5,7 +5,7 @@ using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 
@@ -83,6 +83,28 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
+        public void GivenNullParameters_OnGo_PassEmptyDictonaryToExecuteReturnIdentity()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc
+            };
+
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), null, It.IsAny<int?>()));
+        }
+
+        [Fact]
         public void GivenEmptyParameters_OnGo_PassEmptyDictonaryToExecuteReturnIdentity()
         {
             // Arrange
@@ -103,6 +125,66 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenParameters_OnGo_PassToExecuteReturnIdentity()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var param1Name = "@Param1";
+            object param1Val = RandomHelpers.RandomString();
+            var param2Name = "@Param2";
+            object param2Val = RandomHelpers.IntBetween(20, 50);
+
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc,
+                Parameters = new Dictionary<string, object>()
+                {
+                    { param1Name, param1Val},
+                    { param2Name, param2Val}
+                }
+            };
+
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
+                                                                                                                                                   && x.Value == param1Val)
+                                                                                                                                        && d.Any(x => x.Key == param2Name
+                                                                                                                                                   && x.Value == param2Val)), It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenTimeoutSpan_OnGo_PassToExecuteInSeconds()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var timeoutSeconds = RandomHelpers.IntBetween(100, 500);
+
+            var input = new StoredProcInput
+            {
+                StoredProc = storedProc,
+                TimeOutSeconds = timeoutSeconds,    
+            };
+
+            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
         }
 
         //[Theory]
