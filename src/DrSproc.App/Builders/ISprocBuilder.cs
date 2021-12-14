@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace DrSproc
+namespace DrSproc.Builders
 {
     public interface ISprocBuilder
     {
@@ -15,10 +14,10 @@ namespace DrSproc
 
         void Go();
 
-        object ReturnIdentity(bool allowNull = true);
-        
-        T ReturnSingle<T>();
+        IIdentityReturnBuilder ReturnIdentity(bool allowNull = true);
 
-        IEnumerable<T> ReturnMulti<T>();
+        ISingleReturnBuilder<T> ReturnSingle<T>();
+
+        IMultiReturnBuilder<T> ReturnMulti<T>();
     }
 }

@@ -5,7 +5,7 @@ using System;
 
 namespace DrSproc.EntityMapping
 {
-    public abstract class CustomEntityMapping<T>
+    public abstract class CustomMapper<T>
     {
         private InProcessStoredProc _conditions; 
         

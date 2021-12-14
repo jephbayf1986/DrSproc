@@ -1,4 +1,5 @@
-﻿using DrSproc.Main.DbExecutor;
+﻿using DrSproc.Builders.Async;
+using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DrSproc.Main
+namespace DrSproc.Main.Builders.Async
 {
     internal class AsyncSprocBuilder<TDatabase> : IAsyncSprocBuilder where TDatabase : IDatabase, new()
     {
@@ -30,7 +31,7 @@ namespace DrSproc.Main
         {
             paramName.CheckForInvaldInput(_storedProc, _paramData);
 
-            if (!paramName.StartsWith("@")) 
+            if (!paramName.StartsWith("@"))
                 paramName = $"@{paramName}";
 
             _paramData.Add(paramName.TrimEnd(), input);
@@ -51,25 +52,19 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> ReturnMulti<T>(CancellationToken cancellationToken = default)
+        public IAsyncMultiReturnBuilder<T> ReturnMulti<T>()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default)
+        public IAsyncSingleReturnBuilder<T> ReturnSingle<T>()
         {
-            var db = new TDatabase();
-
-            var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
-
-            return _entityMapper.MapUsingReflection<T>(reader);
+            throw new NotImplementedException();
         }
 
-        public Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default)
+        public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
-            var db = new TDatabase();
-
-            return _dbExecutor.ExecuteReturnIdentityAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            throw new NotImplementedException();
         }
 
         public Task Go(CancellationToken cancellationToken = default)

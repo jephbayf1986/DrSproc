@@ -1,4 +1,4 @@
-﻿using DrSproc.Exceptions;
+﻿using DrSproc.Builders;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
@@ -6,7 +6,7 @@ using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
 
-namespace DrSproc.Main
+namespace DrSproc.Main.Builders
 {
     internal class SprocBuilder<TDatabase> : ISprocBuilder where TDatabase : IDatabase, new()
     {
@@ -57,34 +57,19 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>()
+        public IMultiReturnBuilder<T> ReturnMulti<T>()
         {
-            var db = new TDatabase();
-
-            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
-
-            return _entityMapper.MapMultiUsingReflection<T>(reader);
+            throw new NotImplementedException();
         }
 
-        public T ReturnSingle<T>()
+        public ISingleReturnBuilder<T> ReturnSingle<T>()
         {
-            var db = new TDatabase();
-            
-            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
-
-            return _entityMapper.MapUsingReflection<T>(reader);
+            throw new NotImplementedException();
         }
 
-        public object ReturnIdentity(bool allowNull = true)
+        public IIdentityReturnBuilder ReturnIdentity(bool allowNull)
         {
-            var db = new TDatabase();
-
-            var identity = _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
-
-            if (!allowNull && identity == null)
-                throw new DrSprocNullReturnException();
-
-            return identity;
+            throw new NotImplementedException();
         }
 
         public void Go()

@@ -2,7 +2,7 @@
 
 namespace DrSproc.Tests.Shared
 {
-    internal class TestClassMapper : CustomEntityMapping<TestClassForMapping>
+    internal class TestClassMapper : CustomMapper<TestClassForMapping>
     {
         public override TestClassForMapping Map()
         {
