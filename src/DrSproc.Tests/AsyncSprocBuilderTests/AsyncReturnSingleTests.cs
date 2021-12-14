@@ -4,6 +4,7 @@ using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -296,7 +297,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoMapperSpecified_OnReturnSingle_PassExecuteReturnReaderResult_ToReadEntityUsingReflection()
+        public async Task GivenNoMapperSpecified_OnReturnSingle_PassExecuteReturnReaderResult_ToMapUsingReflection()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -312,11 +313,33 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .ReturnsAsync(returnReader.Object);
 
             // Act
-            sut.ReturnSingle<TestClassForMapping>();
+            await sut.ReturnSingle<TestClassForMapping>();
 
             // Assert
             entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object));
         }
 
+        [Fact]
+        public async Task GivenNoMapperSpecified_OnReturnSingle_ReturnResultOfMapUsingReflection()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+
+            TestClassForMapping expectedReturn = new();
+
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+                .Returns(expectedReturn);
+
+            // Act
+            var result = await sut.ReturnSingle<TestClassForMapping>();
+
+            // Assert
+            result.ShouldBe(expectedReturn);
+        }
     }
 }

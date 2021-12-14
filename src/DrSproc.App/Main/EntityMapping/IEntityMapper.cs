@@ -5,7 +5,7 @@ namespace DrSproc.Main.EntityMapping
 {
     internal interface IEntityMapper
     {
-        TReturn MapUsingMapper<TReturn, TMapper>(IDataReader reader) where TMapper : EntityMapper<TReturn>;
+        TReturn MapUsingCustomMapping<TReturn, TMapper>(IDataReader reader) where TMapper : CustomEntityMapping<TReturn>;
 
         TReturn MapUsingReflection<TReturn>(IDataReader reader);
     }

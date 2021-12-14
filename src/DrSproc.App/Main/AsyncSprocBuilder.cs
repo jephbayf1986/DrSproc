@@ -60,9 +60,9 @@ namespace DrSproc.Main
         {
             var db = new TDatabase();
 
-            await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
-            return default;
+            return _entityMapper.MapUsingReflection<T>(reader);
         }
 
         public Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default)

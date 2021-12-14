@@ -297,7 +297,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoMapperSpecified_OnReturnSingle_PassExecuteReturnReaderResult_ToReadEntityUsingReflection()
+        public void GivenNoMapperSpecified_OnReturnSingle_PassExecuteReturnReaderResult_ToMapUsingReflection()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -320,7 +320,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNoMapperSpecified_OnReturnSingle_ReturnResultOfReadEntityUsingReflection()
+        public void GivenNoMapperSpecified_OnReturnSingle_ReturnResultOfMapUsingReflection()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());

@@ -5,10 +5,10 @@ using System;
 
 namespace DrSproc.EntityMapping
 {
-    public abstract class EntityMapper<T>
+    public abstract class CustomEntityMapping<T>
     {
         private InProcessStoredProc _conditions; 
-
+        
         internal void SetInProcessConditions(InProcessStoredProc conditions)
         {
             _conditions = conditions;   
