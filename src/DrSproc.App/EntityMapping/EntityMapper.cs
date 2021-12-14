@@ -14,6 +14,8 @@ namespace DrSproc.EntityMapping
             _conditions = conditions;   
         }
 
+        public abstract T Map();
+
         protected string ReadString(string fieldName, bool allowNull = true, string defaultIfNull = null)
         {
             var value = _conditions.GetField(fieldName);

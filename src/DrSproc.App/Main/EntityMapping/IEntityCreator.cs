@@ -1,11 +1,12 @@
-﻿using System.Data;
+﻿using DrSproc.EntityMapping;
+using System.Data;
 
 namespace DrSproc.Main.EntityMapping
 {
     internal interface IEntityCreator
     {
-        T ReadEntityUsingMapper<T>(IDataReader reader, IEnityMapper<T> mapper);
+        TReturn ReadEntityUsingMapper<TReturn, TMapper>(IDataReader reader) where TMapper : EntityMapper<TReturn>;
 
-        T ReadEntityUsingReflection<T>(IDataReader reader);
+        TReturn ReadEntityUsingReflection<TReturn>(IDataReader reader);
     }
 }

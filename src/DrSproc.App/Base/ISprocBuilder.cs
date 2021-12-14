@@ -1,5 +1,4 @@
-﻿using DrSproc.EntityMapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DrSproc
@@ -17,9 +16,9 @@ namespace DrSproc
         void Go();
 
         object ReturnIdentity(bool allowNull = true);
+        
+        T ReturnSingle<T>();
 
-        T ReturnSingle<T>(EntityMapper<T> entityMapper = null);
-
-        IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper = null);
+        IEnumerable<T> ReturnMulti<T>();
     }
 }

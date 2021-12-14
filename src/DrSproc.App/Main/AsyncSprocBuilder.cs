@@ -1,5 +1,4 @@
-﻿using DrSproc.EntityMapping;
-using DrSproc.Main.DbExecutor;
+﻿using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
@@ -54,19 +53,13 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default)
+        public async Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
-        }
+            var db = new TDatabase();
 
-        public Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+            await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
-        public Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
+            return default;
         }
 
         public Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default)

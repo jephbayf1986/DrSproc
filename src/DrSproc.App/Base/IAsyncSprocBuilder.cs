@@ -1,5 +1,4 @@
-﻿using DrSproc.EntityMapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,11 +15,7 @@ namespace DrSproc
 
         Task<IEnumerable<T>> ReturnMulti<T>(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<T>> ReturnMulti<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default);
-
         Task<T> ReturnSingle<T>(CancellationToken cancellationToken = default);
-
-        Task<T> ReturnSingle<T>(EntityMapper<T> entityMapper, CancellationToken cancellationToken = default);
 
         Task<object> ReturnIdentity(bool allowNull = true, CancellationToken cancellationToken = default);
 

@@ -17,6 +17,8 @@ namespace DrSproc.Main
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
 
+
+
         public SprocBuilder(IDbExecutor dbExecutor, IEntityCreator entityCreator, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
@@ -58,20 +60,18 @@ namespace DrSproc.Main
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> ReturnMulti<T>(EntityMapper<T> entityMapper = null)
+        public IEnumerable<T> ReturnMulti<T>()
         {
             throw new NotImplementedException();
         }
 
-        public T ReturnSingle<T>(EntityMapper<T> entityMapper = null)
+        public T ReturnSingle<T>()
         {
             var db = new TDatabase();
-
+            
             var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
-            var result = _entityCreator.ReadEntityUsingReflection<T>(reader);
-
-            return default;
+            return _entityCreator.ReadEntityUsingReflection<T>(reader);
         }
 
         public object ReturnIdentity(bool allowNull = true)

@@ -3,7 +3,6 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
-using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,10 +11,10 @@ using Xunit;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
 {
-    public class ReturnIdentityTests
+    public class AsyncReturnSingleTests
     {
         [Fact]
-        public async Task GivenNoParametersOrTransaction_OnReturnIdentity_ExecuteAProcedure()
+        public async Task GivenNoParametersOrTransaction_OnReturnSingle_ExecuteReturnReaderAsync()
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
@@ -25,14 +24,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenNoParametersOrTransaction_OnReturnIdentity_ExecuteDatabaseConnectionString()
+        public async Task GivenNoParametersOrTransaction_OnReturnSingle_PassDatabaseConnectionStringToExecuteReturnReaderAsync()
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
@@ -44,14 +43,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, sproc);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenNoSchemaStoredProc_OnReturnIdentity_PassStoredProcNameToExecute()
+        public async Task GivenNoSchemaStoredProc_OnReturnSingle_PassStoredProcNameToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
@@ -62,14 +61,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, storedProc);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenSchemaStoredProc_OnReturnIdentity_PassStoredProcNameToExecute()
+        public async Task GivenSchemaStoredProc_OnReturnSingle_PassStoredProcNameToExecuteReturnReaderAsync()
         {
             // Arrange
             var schemaName = RandomHelpers.RandomString();
@@ -84,14 +83,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, storedProc);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenNoParameters_OnReturnIdentity_PassEmptyDictonaryToExecute()
+        public async Task GivenNoParameters_OnReturnSingle_PassEmptyDictonaryToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -101,14 +100,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenWithParameterWithAtSign_OnReturnIdentity_PassParameterToExecute()
+        public async Task GivenWithParameterWithAtSign_OnReturnSingle_PassParameterToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -121,14 +120,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenWithParamNoAtSign_OnReturnIdentity_PassParamWithAtSignToExecute()
+        public async Task GivenWithParamNoAtSign_OnReturnSingle_PassParamWithAtSignToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -142,15 +141,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
                                                                                                                                 && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenWithParamTrailingBlankSpace_OnReturnIdentity_PassTrimmedParamToExecute()
+        public async Task GivenWithParamTrailingBlankSpace_OnReturnSingle_PassTrimmedParamToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -164,15 +163,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
                                                                                                                                 && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenWithParamWithValue_OnReturnIdentity_PassTogetherToExecute()
+        public async Task GivenWithParamWithValue_OnReturnSingle_PassTogetherToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -187,10 +186,10 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, paramValue);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
                                                                                                                                           && x.Value == paramValue)), It.IsAny<CancellationToken>()));
         }
 
@@ -198,7 +197,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         [InlineData(2)]
         [InlineData(6)]
         [InlineData(11)]
-        public async Task GivenMultipleWithParams_OnGoPassEachToExecute(int numberOfParams)
+        public async Task GivenMultipleWithParams_OnGoPassEachToExecuteReturnReaderAsync(int numberOfParams)
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -213,14 +212,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             }
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenWithParamIfNotNull_NotNullInput_OnReturnIdentity_PassParameterToExecute()
+        public async Task GivenWithParamIfNotNull_NotNullInput_OnReturnSingle_PassParameterToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -234,39 +233,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                         .WithParamIfNotNull(paramName, paramValue);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
                                                                                                                                      && x.Value == paramValue)), It.IsAny<CancellationToken>()));
         }
 
-        [Theory]
-        [InlineData("String")]
-        [InlineData(11)]
-        [InlineData(12.5)]
-        [InlineData(true)]
-        [InlineData(null)]
-        public async Task GivenAllowNullUnspecified_OnReturnIdentity_ReturnValue(object returnValue)
-        {
-            // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
-
-            Mock<IDbExecutor> dbExecutor = new();
-
-            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(returnValue);
-            
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, storedProc);
-
-            // Act
-            var id = await sut.ReturnIdentity();
-
-            id.ShouldBe(returnValue);
-        }
-
         [Fact]
-        public async Task GivenWithParamIfNotNull_NullInput_OnReturnIdentity_DontPassParameterToExecute()
+        public async Task GivenWithParamIfNotNull_NullInput_OnReturnSingle_DontPassParameterToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -279,14 +254,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
-            var id = await sut.ReturnIdentity();
+            await sut.ReturnSingle<object>();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task GivenCancellation_OnReturnIdentity_PassTokenToExecute()
+        public async Task GivenCancellation_OnReturnSingle_PassTokenToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -299,10 +274,10 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var token = cancelSource.Token;
 
             // Act
-            var id = await sut.ReturnIdentity(cancellationToken: token);
+            await sut.ReturnSingle<object>(token);
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
         }
     }
 }
