@@ -1,5 +1,4 @@
-﻿using DrSproc.EntityMapping;
-using DrSproc.Exceptions;
+﻿using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
@@ -16,8 +15,6 @@ namespace DrSproc.Main
         private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
-
-
 
         public SprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProc storedProc)
         {
@@ -62,7 +59,11 @@ namespace DrSproc.Main
 
         public IEnumerable<T> ReturnMulti<T>()
         {
-            throw new NotImplementedException();
+            var db = new TDatabase();
+
+            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+
+            return _entityMapper.MapMultiUsingReflection<T>(reader);
         }
 
         public T ReturnSingle<T>()
