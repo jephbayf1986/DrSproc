@@ -59,19 +59,23 @@ namespace DrSproc.Main.Builders
 
         public IMultiReturnBuilder<T> ReturnMulti<T>()
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
+
+            return new MultiReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput);
         }
 
         public ISingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true)
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
+
+            return new SingleReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput, allowNull);
         }
 
         public IIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
-            var sprocInput = new StoredProcInput(_storedProc, null);
+            var sprocInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
 
-            return new IdentityReturnBuilder<TDatabase>(_dbExecutor, sprocInput);
+            return new IdentityReturnBuilder<TDatabase>(_dbExecutor, sprocInput, allowNull);
         }
 
         public void Go()

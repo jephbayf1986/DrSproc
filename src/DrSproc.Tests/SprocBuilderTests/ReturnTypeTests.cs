@@ -28,5 +28,41 @@ namespace DrSproc.Tests.SprocBuilderTests
             // Assert
             result.ShouldBeOfType<IdentityReturnBuilder<ContosoDb>>();
         }
+
+        [Fact]
+        public void GivenNoParamsOrTransaction_OnReturnSingle_CreateSingleReturnBuilderOfSameType()
+        {
+            // Arrange
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            StoredProc sproc = new(RandomHelpers.RandomString());
+
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+
+            // Act
+            var result = sut.ReturnSingle<TestSubClass>();
+
+            // Assert
+            result.ShouldBeOfType<SingleReturnBuilder<ContosoDb, TestSubClass>>();
+        }
+
+        [Fact]
+        public void GivenNoParamsOrTransaction_OnReturnMulti_CreateMultiReturnBuilderOfSameType()
+        {
+            // Arrange
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            StoredProc sproc = new(RandomHelpers.RandomString());
+
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+
+            // Act
+            var result = sut.ReturnMulti<TestSubClass>();
+
+            // Assert
+            result.ShouldBeOfType<MultiReturnBuilder<ContosoDb, TestSubClass>>();
+        }
     }
 }

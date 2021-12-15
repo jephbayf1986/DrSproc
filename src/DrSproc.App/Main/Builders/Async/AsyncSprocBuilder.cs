@@ -54,17 +54,23 @@ namespace DrSproc.Main.Builders.Async
 
         public IAsyncMultiReturnBuilder<T> ReturnMulti<T>()
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, _paramData);
+
+            return new AsyncMultiReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput);
         }
 
         public IAsyncSingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true)
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, _paramData);
+
+            return new AsyncSingleReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput, allowNull);
         }
 
         public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, _paramData);
+
+            return new AsyncIdentityReturnBuilder<TDatabase>(_dbExecutor, sprocInput, allowNull);
         }
 
         public Task Go(CancellationToken cancellationToken = default)
