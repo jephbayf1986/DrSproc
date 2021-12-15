@@ -12,12 +12,12 @@ namespace DrSproc.Builders
 
         ISprocBuilder WithTimeOut(TimeSpan timeout);
 
-        void Go();
+        IMultiReturnBuilder<T> ReturnMulti<T>();
+
+        ISingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true);
 
         IIdentityReturnBuilder ReturnIdentity(bool allowNull = true);
 
-        ISingleReturnBuilder<T> ReturnSingle<T>();
-
-        IMultiReturnBuilder<T> ReturnMulti<T>();
+        void Go();
     }
 }

@@ -62,14 +62,16 @@ namespace DrSproc.Main.Builders
             throw new NotImplementedException();
         }
 
-        public ISingleReturnBuilder<T> ReturnSingle<T>()
+        public ISingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true)
         {
             throw new NotImplementedException();
         }
 
-        public IIdentityReturnBuilder ReturnIdentity(bool allowNull)
+        public IIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
-            throw new NotImplementedException();
+            var sprocInput = new StoredProcInput(_storedProc, null);
+
+            return new IdentityReturnBuilder<TDatabase>(_dbExecutor, sprocInput);
         }
 
         public void Go()

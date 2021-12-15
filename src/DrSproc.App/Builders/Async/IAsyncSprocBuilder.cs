@@ -14,7 +14,7 @@ namespace DrSproc.Builders.Async
 
         IAsyncMultiReturnBuilder<T> ReturnMulti<T>();
 
-        IAsyncSingleReturnBuilder<T> ReturnSingle<T>();
+        IAsyncSingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true);
 
         IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true);
 

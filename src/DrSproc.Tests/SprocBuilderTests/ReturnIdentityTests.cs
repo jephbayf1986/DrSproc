@@ -20,12 +20,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
 
-            var sproc = new StoredProc(RandomHelpers.RandomString());
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput
-            {
-                StoredProc = sproc
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -44,12 +41,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var sproc = new StoredProc(RandomHelpers.RandomString());
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput
-            {
-                StoredProc = sproc
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -69,10 +63,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -91,10 +82,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -113,11 +101,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-                Parameters = new Dictionary<string, object>()
-            };
+            var paramList = new Dictionary<string, object>();
+
+            var input = new StoredProcInput(storedProc, paramList);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -141,15 +127,13 @@ namespace DrSproc.Tests.SprocBuilderTests
             var param2Name = "@Param2";
             object param2Val = RandomHelpers.IntBetween(20, 50);
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-                Parameters = new Dictionary<string, object>()
+            var paramList = new Dictionary<string, object>()
                 {
                     { param1Name, param1Val},
                     { param2Name, param2Val}
-                }
-            };
+                };
+
+            var input = new StoredProcInput(storedProc, paramList);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -173,11 +157,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var timeoutSeconds = RandomHelpers.IntBetween(100, 500);
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-                TimeOutSeconds = timeoutSeconds,    
-            };
+            var input = new StoredProcInput(storedProc, timeoutSeconds: timeoutSeconds);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -204,10 +184,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(returnValue);
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
 
@@ -229,10 +206,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: true);
 
@@ -255,10 +229,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var input = new StoredProcInput
-            {
-                StoredProc = storedProc,
-            };
+            var input = new StoredProcInput(storedProc);
 
             IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: false);
 

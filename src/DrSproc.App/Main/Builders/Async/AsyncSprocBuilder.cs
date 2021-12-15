@@ -57,12 +57,12 @@ namespace DrSproc.Main.Builders.Async
             throw new NotImplementedException();
         }
 
-        public IAsyncSingleReturnBuilder<T> ReturnSingle<T>()
+        public IAsyncSingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull)
+        public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
             throw new NotImplementedException();
         }
