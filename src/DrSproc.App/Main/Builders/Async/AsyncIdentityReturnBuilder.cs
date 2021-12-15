@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncIdentityReturnBuilder<TDatabase> : IAsyncIdentityReturnBuilder where TDatabase : IDatabase, new()
+    internal class AsyncIdentityReturnBuilder<TDatabase> : IAsyncIdentityReturnBuilder 
+        where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly StoredProc _storedProc;
