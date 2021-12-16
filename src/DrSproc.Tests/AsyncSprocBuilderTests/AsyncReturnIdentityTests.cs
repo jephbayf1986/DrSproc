@@ -150,7 +150,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         }
 
         [Fact]
-        public async Task GivenCancellation_OnGo_PassTokenToExecute()
+        public async Task GivenCancellation_OnGo_PassTokenToExecuteReturnIdentityAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());

@@ -37,9 +37,13 @@ namespace DrSproc.Main.Builders.Async
             throw new NotImplementedException();
         }
 
-        public Task<TReturn> Go(CancellationToken cancellationToken = default)
+        public async Task<TReturn> Go(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var db = new TDatabase();
+
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+
+            return default;
         }
     }
 }

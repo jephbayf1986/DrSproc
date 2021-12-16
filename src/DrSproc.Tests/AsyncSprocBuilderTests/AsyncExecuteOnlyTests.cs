@@ -13,7 +13,7 @@ using Xunit;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
 {
-    public class AsyncGoTests
+    public class AsyncExecuteOnlyTests
     {
         [Fact]
         public async Task GivenNoParametersOrTransaction_OnGo_Execute()
@@ -275,7 +275,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         }
 
         [Fact]
-        public async Task GivenCancellation_OnGo_PassTokenToExecute()
+        public async Task GivenCancellation_OnGo_PassTokenToExecuteAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());

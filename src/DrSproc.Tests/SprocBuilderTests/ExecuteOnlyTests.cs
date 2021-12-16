@@ -274,7 +274,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenTimeoutSpan_OnGo_PassToExecuteInSeconds()
+        public void GivenTimeoutSpan_OnGo_PassInSecondsToExecute() 
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
