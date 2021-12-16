@@ -4,20 +4,18 @@ using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
 {
-    public class AsyncAsyncSingleReturnBuilderTests
+    public class AsyncReturnMultiTests
     {
         [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_ExecuteReturnReaderAsync()
+        public async Task GivenNoParametersOrTransaction_OnGo_ExecuteReturnReaderAsync()
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
@@ -27,17 +25,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public void GivenNoParametersOrTransaction_OnGo_PassDatabaseConnectionStringToExecuteReturnReaderAsync()
+        public async Task GivenNoParametersOrTransaction_OnGo_PassDatabaseConnectionStringToExecuteReturnReaderAsync()
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
@@ -49,17 +47,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(connectionString, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public void GivenStoredProc_OnGo_PassStoredProcNameToExecuteReturnReaderAsync()
+        public async Task GivenStoredProc_OnGo_PassStoredProcNameToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
@@ -70,17 +68,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public void GivenNullParameters_OnGo_PassEmptyDictonaryToExecuteReturnReaderAsync()
+        public async Task GivenNullParameters_OnGo_PassEmptyDictonaryToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -90,17 +88,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), null, It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public void GivenEmptyParameters_OnGo_PassEmptyDictonaryToExecuteReturnReaderAsync()
+        public async Task GivenEmptyParameters_OnGo_PassEmptyDictonaryToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -112,17 +110,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc, paramList);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public void GivenParameters_OnGo_PassToExecuteReturnReaderAsync()
+        public async Task GivenParameters_OnGo_PassToExecuteReturnReaderAsync()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -143,10 +141,10 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc, paramList);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             // Act
-            sut.Go();
+            await sut.Go();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<string>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
@@ -166,7 +164,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var input = new StoredProcInput(storedProc);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
             var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
             var token = cancelSource.Token;

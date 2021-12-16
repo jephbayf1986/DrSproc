@@ -33,7 +33,11 @@ namespace DrSproc.Main.Builders
         }
         public IEnumerable<TReturn> Go()
         {
-            throw new NotImplementedException();
+            var db = new TDatabase();
+
+            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+
+            return default;
         }
     }
 }
