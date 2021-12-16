@@ -4,6 +4,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DrSproc.Main.Builders
 {
@@ -35,12 +36,17 @@ namespace DrSproc.Main.Builders
             return new SingleReturnBuilder<TDatabase, TMapping, TReturn>(_dbExecutor, _entityMapper, storedProcInput, _allowNull);
         }
 
-        public virtual TReturn Go()
+        public TReturn Go()
         {
             var db = new TDatabase();
 
             var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
+            return GetModelFromReader(reader);
+        }
+
+        protected virtual TReturn GetModelFromReader(IDataReader reader)
+        {
             return _entityMapper.MapUsingReflection<TReturn>(reader);
         }
     }
@@ -54,12 +60,8 @@ namespace DrSproc.Main.Builders
         {
         }
 
-        public override TReturn Go()
+        protected override TReturn GetModelFromReader(IDataReader reader)
         {
-            var db = new TDatabase();
-
-            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
-
             return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader);
         }
     }
