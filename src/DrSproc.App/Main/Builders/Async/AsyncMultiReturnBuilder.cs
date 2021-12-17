@@ -1,11 +1,10 @@
-﻿using DrSproc.Builders;
-using DrSproc.Builders.Async;
+﻿using DrSproc.Builders.Async;
 using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
-using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +13,11 @@ namespace DrSproc.Main.Builders.Async
     internal class AsyncMultiReturnBuilder<TDatabase, TReturn> : IAsyncMultiReturnBuilder<TReturn>
         where TDatabase : IDatabase, new()
     {
-        private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityMapper _entityMapper;
-        private readonly StoredProc _storedProc;
-        private IDictionary<string, object> _paramData;
-        private int? _timeOutSeconds = null;
+        protected readonly IDbExecutor _dbExecutor;
+        protected readonly IEntityMapper _entityMapper;
+        protected readonly StoredProc _storedProc;
+        protected IDictionary<string, object> _paramData;
+        protected int? _timeOutSeconds = null;
 
         public AsyncMultiReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput)
         {
@@ -32,7 +31,9 @@ namespace DrSproc.Main.Builders.Async
 
         public IAsyncMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
         {
-            throw new NotImplementedException();
+            var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
+
+            return new AsyncMultiReturnBuilder<TDatabase, TMapping, TReturn>(_dbExecutor, _entityMapper, storedProcInput);
         }
 
         public async Task<IEnumerable<TReturn>> Go(CancellationToken cancellationToken = default)
@@ -41,7 +42,27 @@ namespace DrSproc.Main.Builders.Async
 
             var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
-            return default;
+            return GetModelFromReader(reader);
+        }
+
+        protected virtual IEnumerable<TReturn> GetModelFromReader(IDataReader reader)
+        {
+            return _entityMapper.MapMultiUsingReflection<TReturn>(reader);
+        }
+    }
+
+    internal class AsyncMultiReturnBuilder<TDatabase, TMapping, TReturn> : AsyncMultiReturnBuilder<TDatabase, TReturn>
+        where TDatabase : IDatabase, new()
+        where TMapping : CustomMapper<TReturn>
+    {
+        public AsyncMultiReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput)
+            : base(dbExecutor, entityMapper, storedProcInput)
+        {
+        }
+
+        protected override IEnumerable<TReturn> GetModelFromReader(IDataReader reader)
+        {
+            return _entityMapper.MapMultiUsingCustomMapping<TReturn, TMapping>(reader);
         }
     }
 }
