@@ -4,7 +4,9 @@ using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Xunit;
 
@@ -173,55 +175,115 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
         }
 
+
         [Fact]
-        public void GivenNoMapperSpecified_OnReturnMulti_PassExecuteReturnReaderResult_ToMapMultiUsingReflection()
+        public void GivenNoMapperSpecified_OnGo_PassExecuteReturnReaderResultToMapUsingReflection()
         {
-            //// Arrange
-            //var storedProc = new StoredProc(RandomHelpers.RandomString());
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            //Mock<IDbExecutor> dbExecutor = new();
-            //Mock<IEntityMapper> entityMapper = new();
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            //var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var input = new StoredProcInput(storedProc);
 
-            //Mock<IDataReader> returnReader = new();
+            MultiReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
-            //dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
-            //    .Returns(returnReader.Object);
+            Mock<IDataReader> returnReader = new();
 
-            //// Act
-            //sut.ReturnMulti<TestClassForMapping>();
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
 
-            //// Assert
-            //entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object));
+            // Act
+            sut.Go();
+
+            // Assert
+            entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object));
         }
 
         [Fact]
-        public void GivenNoMapperSpecified_OnReturnMulti_ReturnResultOfMapMultiUsingReflection()
+        public void GivenNoMapperSpecified_OnGo_ReturnResultOfMapUsingReflection()
         {
-            //// Arrange
-            //var storedProc = new StoredProc(RandomHelpers.RandomString());
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            //Mock<IDbExecutor> dbExecutor = new();
-            //Mock<IEntityMapper> entityMapper = new();
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
 
-            //var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var input = new StoredProcInput(storedProc);
 
-            //TestClassForMapping expectedFirstResult = new();
+            MultiReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input);
 
-            //IEnumerable<TestClassForMapping> expectedReturn = new List<TestClassForMapping>()
-            //{
-            //    expectedFirstResult
-            //};
+            List<TestClassForMapping> expectedReturn = new()
+            {
+                new TestClassForMapping(),
+                new TestClassForMapping()
+            };
 
-            //entityMapper.Setup(x => x.MapMultiUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
-            //    .Returns(expectedReturn);
+            entityMapper.Setup(x => x.MapMultiUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+                .Returns(expectedReturn);
 
-            //// Act
-            //var result = sut.ReturnMulti<TestClassForMapping>();
+            // Act
+            var result = sut.Go();
 
-            //// Assert
-            //result.FirstOrDefault().ShouldBe(expectedFirstResult);
+            // Assert
+            result.ShouldBe(expectedReturn);
+        }
+
+        [Fact]
+        public void GivenCustomMapperProvided_OnGo_PassExecuteReturnReaderResultToMapUsingCustomMapping()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            var sut = new MultiReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input)
+                                                                                .UseCustomMapping<TestClassMapper>();
+
+            Mock<IDataReader> returnReader = new();
+
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            entityMapper.Verify(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object));
+        }
+
+        [Fact]
+        public void GivenCustomMapperSpecified_OnGo_ReturnResultOfMapUsingCustomMapping()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            var sut = new MultiReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input)
+                                                                                .UseCustomMapping<TestClassMapper>();
+
+            List<TestClassForMapping> expectedReturn = new()
+            {
+                new TestClassForMapping(),
+                new TestClassForMapping()
+            };
+
+            entityMapper.Setup(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
+                .Returns(expectedReturn);
+
+            // Act
+            var result = sut.Go();
+
+            // Assert
+            result.ShouldBe(expectedReturn);
         }
     }
 }
