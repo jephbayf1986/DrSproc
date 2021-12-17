@@ -1,5 +1,6 @@
 ﻿using DrSproc.Builders.Async;
 using DrSproc.EntityMapping;
+using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
@@ -34,7 +35,9 @@ namespace DrSproc.Main.Builders.Async
 
         public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
         {
-            throw new NotImplementedException();
+            var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
+
+            return new AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn>(_dbExecutor, _entityMapper, storedProcInput, _allowNull);
         }
 
         public async Task<TReturn> Go(CancellationToken cancellationToken = default)
@@ -43,7 +46,12 @@ namespace DrSproc.Main.Builders.Async
 
             var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
-            return default;
+            var result = GetModelFromReader(reader);
+
+            if (!_allowNull && result == null)
+                throw DrSprocNullReturnException.ThrowObjectNull(_storedProc);
+
+            return result;
         }
 
         protected virtual TReturn GetModelFromReader(IDataReader reader)
