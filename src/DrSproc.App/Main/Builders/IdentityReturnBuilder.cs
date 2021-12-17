@@ -31,7 +31,7 @@ namespace DrSproc.Main.Builders
             var identity = _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
             if (!_allowNull && identity == null)
-                throw DrSprocNullReturnException.ThrowForSproc(_storedProc);
+                throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);
 
             return identity;
         }

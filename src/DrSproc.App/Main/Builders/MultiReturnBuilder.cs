@@ -27,7 +27,7 @@ namespace DrSproc.Main.Builders
             _timeOutSeconds = storedProcInput.TimeOutSeconds;
         }
 
-        public ISingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
+        public IMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
         {
             throw new NotImplementedException();
         }

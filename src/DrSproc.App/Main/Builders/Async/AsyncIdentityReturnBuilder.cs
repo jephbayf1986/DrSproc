@@ -31,7 +31,7 @@ namespace DrSproc.Main.Builders.Async
             var identity = await _dbExecutor.ExecuteReturnIdentityAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
             if (!_allowNull && identity == null)
-                throw DrSprocNullReturnException.ThrowForSproc(_storedProc);
+                throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);
 
             return identity;
         }

@@ -1,11 +1,11 @@
-﻿using DrSproc.Builders;
-using DrSproc.Builders.Async;
+﻿using DrSproc.Builders.Async;
 using DrSproc.EntityMapping;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +14,12 @@ namespace DrSproc.Main.Builders.Async
     internal class AsyncSingleReturnBuilder<TDatabase, TReturn> : IAsyncSingleReturnBuilder<TReturn>
         where TDatabase : IDatabase, new()
     {
-        private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityMapper _entityMapper;
-        private readonly StoredProc _storedProc;
-        private IDictionary<string, object> _paramData;
-        private int? _timeOutSeconds = null;
-        private bool _allowNull;
+        protected readonly IDbExecutor _dbExecutor;
+        protected readonly IEntityMapper _entityMapper;
+        protected readonly StoredProc _storedProc;
+        protected IDictionary<string, object> _paramData;
+        protected int? _timeOutSeconds = null;
+        protected bool _allowNull;
 
         public AsyncSingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
         {
@@ -32,7 +32,7 @@ namespace DrSproc.Main.Builders.Async
             _allowNull = allowNull;
         }
 
-        public ISingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
+        public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
         {
             throw new NotImplementedException();
         }
@@ -44,6 +44,26 @@ namespace DrSproc.Main.Builders.Async
             var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
             return default;
+        }
+
+        protected virtual TReturn GetModelFromReader(IDataReader reader)
+        {
+            return _entityMapper.MapUsingReflection<TReturn>(reader);
+        }
+    }
+
+    internal class AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn> : AsyncSingleReturnBuilder<TDatabase, TReturn>
+        where TDatabase : IDatabase, new()
+        where TMapping : CustomMapper<TReturn>
+    {
+        public AsyncSingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
+            : base(dbExecutor, entityMapper, storedProcInput, allowNull)
+        {
+        }
+
+        protected override TReturn GetModelFromReader(IDataReader reader)
+        {
+            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader);
         }
     }
 }

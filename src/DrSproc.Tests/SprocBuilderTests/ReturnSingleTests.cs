@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using Xunit;
+using DrSproc.Exceptions;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
@@ -275,6 +276,110 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             result.ShouldBe(expectedReturn);
+        }
+
+        [Fact]
+        public void GivenNoMapping_AllowNullsAndMapUsingReflectionReturnsNull_OnGo_ReturnNull()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            SingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: true);
+
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+                .Returns((TestClassForMapping)null);
+
+            // Act
+            var result = sut.Go();
+
+            // Assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GivenMapping_AllowNullsAndMapUsingReflectionReturnsNull_OnGo_ReturnNull()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: true)
+                                                                                .UseCustomMapping<TestClassMapper>();
+
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
+                .Returns((TestClassForMapping)null);
+
+            // Act
+            var result = sut.Go();
+
+            // Assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GivenNoMapping_NotAllowNullsAndMapUsingReflectionReturnsNull_OnGo_ThrowMeaningfulError()
+        {
+            // Arrange
+            var sprocName = RandomHelpers.RandomString();
+            var storedProc = new StoredProc(sprocName);
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            SingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: false);
+
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+                .Returns((TestClassForMapping)null);
+
+            // Act
+            var action = () => sut.Go();
+
+            // Assert
+            Should.Throw<DrSprocNullReturnException>(action)
+                .Message.ShouldSatisfyAllConditions(x => x.ToLower().ShouldContain("object"),
+                                                    x => x.ToLower().ShouldContain("null"),
+                                                    x => x.ToLower().ShouldContain("allow"),
+                                                    x => x.ToLower().ShouldContain(sprocName.ToLower()));
+        }
+
+        [Fact]
+        public void GivenMapping_NotAllowNullsAndMapUsingReflectionReturnsNull_OnGo_ThrowMeaningfulError()
+        {
+            // Arrange
+            var sprocName = RandomHelpers.RandomString();
+            var storedProc = new StoredProc(sprocName);
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var input = new StoredProcInput(storedProc);
+
+            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: false)
+                                                                                .UseCustomMapping<TestClassMapper>();
+
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
+                .Returns((TestClassForMapping)null);
+
+            // Act
+            var action = () => sut.Go();
+
+            // Assert
+            Should.Throw<DrSprocNullReturnException>(action)
+                .Message.ShouldSatisfyAllConditions(x => x.ToLower().ShouldContain("object"),
+                                                    x => x.ToLower().ShouldContain("null"),
+                                                    x => x.ToLower().ShouldContain("allow"),
+                                                    x => x.ToLower().ShouldContain(sprocName.ToLower()));
         }
     }
 }

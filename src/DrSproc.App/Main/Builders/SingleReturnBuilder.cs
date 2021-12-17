@@ -1,5 +1,6 @@
 ﻿using DrSproc.Builders;
 using DrSproc.EntityMapping;
+using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
@@ -42,7 +43,12 @@ namespace DrSproc.Main.Builders
 
             var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
-            return GetModelFromReader(reader);
+            var result = GetModelFromReader(reader);
+
+            if (!_allowNull && result == null)
+                throw DrSprocNullReturnException.ThrowObjectNull(_storedProc);
+
+            return result;
         }
 
         protected virtual TReturn GetModelFromReader(IDataReader reader)
