@@ -16,9 +16,9 @@ namespace DrSproc.Tests.Shared
 
         public decimal Height { get; set; } = RandomHelpers.IntBetween(150, 220);
 
-        public decimal Width { get; set; } = RandomHelpers.IntBetween(150, 220);
+        public decimal? Width { get; set; } = RandomHelpers.IntBetween(150, 220);
 
-        public DateTime DateOfBirth { get; set; } = RandomHelpers.DateInPast(RandomHelpers.IntBetween(4000, 30000));
+        public DateTime? DateOfBirth { get; set; } = RandomHelpers.DateInPast(RandomHelpers.IntBetween(4000, 30000));
 
         public string FullName
         {
@@ -31,7 +31,7 @@ namespace DrSproc.Tests.Shared
 
     public class TestSubClass
     {
-        public int Id { get; set; } = RandomHelpers.IntBetween(10, 30);
+        public int? Id { get; set; } = RandomHelpers.IntBetween(10, 30);
 
         public string Name { get; set; } = RandomHelpers.RandomString();
 
