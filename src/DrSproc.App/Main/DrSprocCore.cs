@@ -3,7 +3,7 @@ using DrSproc.Main.EntityMapping;
 
 namespace DrSproc.Main
 {
-    internal class DrSprocCore : DrSproc
+    internal class DrSprocCore : IDrSproc
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;

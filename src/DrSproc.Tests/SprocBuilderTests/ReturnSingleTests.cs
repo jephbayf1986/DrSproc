@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using Xunit;
 using DrSproc.Exceptions;
+using System;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
@@ -343,7 +344,7 @@ namespace DrSproc.Tests.SprocBuilderTests
                 .Returns((TestClassForMapping)null);
 
             // Act
-            var action = () => sut.Go();
+            Func<object> action = () => sut.Go();
 
             // Assert
             Should.Throw<DrSprocNullReturnException>(action)
@@ -372,7 +373,7 @@ namespace DrSproc.Tests.SprocBuilderTests
                 .Returns((TestClassForMapping)null);
 
             // Act
-            var action = () => sut.Go();
+            Func<object> action = () => sut.Go();
 
             // Assert
             Should.Throw<DrSprocNullReturnException>(action)
