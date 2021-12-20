@@ -21,9 +21,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sproc = new StoredProc(RandomHelpers.RandomString());  
+            StoredProc storedProc = new(RandomHelpers.RandomString());  
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             sut.Go();
@@ -41,9 +41,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sproc = new StoredProc(RandomHelpers.RandomString());
+            StoredProc storedProc = new(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
 
             // Act
             sut.Go();

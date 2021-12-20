@@ -11,9 +11,10 @@ namespace DrSproc.Main.EntityMapping
         public TReturn MapUsingCustomMapping<TReturn, TMapper>(IDataReader reader, StoredProc storedProc) 
             where TMapper : CustomMapper<TReturn>, new()
         {
-            var mapper = GetMapper<TReturn, TMapper>(reader, storedProc);
-
-            return mapper.Map();
+            using (var mapper = GetMapper<TReturn, TMapper>(reader, storedProc))
+            {
+                return mapper.Map();
+            }
         }
 
         public TReturn MapUsingReflection<TReturn>(IDataReader reader, StoredProc storedProc)
@@ -24,9 +25,10 @@ namespace DrSproc.Main.EntityMapping
         public IEnumerable<TReturn> MapMultiUsingCustomMapping<TReturn, TMapper>(IDataReader reader, StoredProc storedProc) 
             where TMapper : CustomMapper<TReturn>, new()
         {
-            var mapper = GetMapper<TReturn, TMapper>(reader, storedProc);
-
-            return mapper.MapMulti();
+            using (var mapper = GetMapper<TReturn, TMapper>(reader, storedProc))
+            {
+                return mapper.MapMulti();
+            }
         }
 
         public IEnumerable<TReturn> MapMultiUsingReflection<TReturn>(IDataReader reader, StoredProc storedProc)
