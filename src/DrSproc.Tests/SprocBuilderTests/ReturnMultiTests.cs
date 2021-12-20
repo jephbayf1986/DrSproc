@@ -198,7 +198,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object));
+            entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object, storedProc));
         }
 
         [Fact]
@@ -220,7 +220,7 @@ namespace DrSproc.Tests.SprocBuilderTests
                 new TestClassForMapping()
             };
 
-            entityMapper.Setup(x => x.MapMultiUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+            entityMapper.Setup(x => x.MapMultiUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
                 .Returns(expectedReturn);
 
             // Act
@@ -253,7 +253,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object));
+            entityMapper.Verify(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object, storedProc));
         }
 
         [Fact]
@@ -276,7 +276,7 @@ namespace DrSproc.Tests.SprocBuilderTests
                 new TestClassForMapping()
             };
 
-            entityMapper.Setup(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
+            entityMapper.Setup(x => x.MapMultiUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
                 .Returns(expectedReturn);
 
             // Act

@@ -29,7 +29,8 @@ namespace DrSproc.Main.Builders.Async
             _timeOutSeconds = storedProcInput.TimeOutSeconds;
         }
 
-        public IAsyncMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
+        public IAsyncMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
+            where TMapping : CustomMapper<TReturn>, new()
         {
             var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
 
@@ -47,13 +48,13 @@ namespace DrSproc.Main.Builders.Async
 
         protected virtual IEnumerable<TReturn> GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapMultiUsingReflection<TReturn>(reader);
+            return _entityMapper.MapMultiUsingReflection<TReturn>(reader, _storedProc);
         }
     }
 
     internal class AsyncMultiReturnBuilder<TDatabase, TMapping, TReturn> : AsyncMultiReturnBuilder<TDatabase, TReturn>
         where TDatabase : IDatabase, new()
-        where TMapping : CustomMapper<TReturn>
+        where TMapping : CustomMapper<TReturn>, new()
     {
         public AsyncMultiReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput)
             : base(dbExecutor, entityMapper, storedProcInput)
@@ -62,7 +63,7 @@ namespace DrSproc.Main.Builders.Async
 
         protected override IEnumerable<TReturn> GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapMultiUsingCustomMapping<TReturn, TMapping>(reader);
+            return _entityMapper.MapMultiUsingCustomMapping<TReturn, TMapping>(reader, _storedProc);
         }
     }
 }

@@ -202,7 +202,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object));
+            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object, storedProc));
         }
 
         [Fact]
@@ -220,7 +220,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             TestClassForMapping expectedReturn = new();
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
                 .Returns(expectedReturn);
 
             // Act
@@ -253,7 +253,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object));
+            entityMapper.Verify(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object, storedProc));
         }
 
         [Fact]
@@ -272,7 +272,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             TestClassForMapping expectedReturn = new();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
                 .Returns(expectedReturn);
 
             // Act
@@ -295,8 +295,8 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: true);
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
-                .Returns((TestClassForMapping)null);
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+                .Returns(value: null);
 
             // Act
             var result = await sut.Go();
@@ -319,8 +319,8 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: true)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
-                .Returns((TestClassForMapping)null);
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+                .Returns(value: null);
 
             // Act
             var result = await sut.Go();
@@ -343,8 +343,8 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: false);
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>()))
-                .Returns((TestClassForMapping)null);
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+                .Returns(value: null);
 
             // Act
             Func<Task> action = () => sut.Go();
@@ -372,8 +372,8 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: false)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>()))
-                .Returns((TestClassForMapping)null);
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+                .Returns(value: null);
 
             // Act
             Func<Task> action = () => sut.Go();

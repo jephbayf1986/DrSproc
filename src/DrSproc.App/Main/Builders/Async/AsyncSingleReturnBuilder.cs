@@ -4,7 +4,6 @@ using DrSproc.Exceptions;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -33,7 +32,8 @@ namespace DrSproc.Main.Builders.Async
             _allowNull = allowNull;
         }
 
-        public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
+        public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
+            where TMapping : CustomMapper<TReturn>, new()
         {
             var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
 
@@ -56,13 +56,13 @@ namespace DrSproc.Main.Builders.Async
 
         protected virtual TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingReflection<TReturn>(reader);
+            return _entityMapper.MapUsingReflection<TReturn>(reader, _storedProc);
         }
     }
 
     internal class AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn> : AsyncSingleReturnBuilder<TDatabase, TReturn>
         where TDatabase : IDatabase, new()
-        where TMapping : CustomMapper<TReturn>
+        where TMapping : CustomMapper<TReturn>, new()
     {
         public AsyncSingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
             : base(dbExecutor, entityMapper, storedProcInput, allowNull)
@@ -71,7 +71,7 @@ namespace DrSproc.Main.Builders.Async
 
         protected override TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader);
+            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader, _storedProc);
         }
     }
 }

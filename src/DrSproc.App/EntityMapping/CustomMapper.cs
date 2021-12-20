@@ -2,34 +2,56 @@
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace DrSproc.EntityMapping
 {
-    public abstract class CustomMapper<T>
+    public abstract class CustomMapper<T> : IDisposable
     {
-        private InProcessStoredProc _conditions; 
-        
-        internal void SetInProcessConditions(InProcessStoredProc conditions)
+        private IDataReader _dataReader;
+        private StoredProc _storedProc;
+
+        internal void SetReader(IDataReader dataReader)
         {
-            _conditions = conditions;   
+            _dataReader = dataReader;
+        }
+
+        internal void SetStoredProc(StoredProc storedProc)
+        {
+            _storedProc = storedProc;
         }
 
         public abstract T Map();
 
+        internal IEnumerable<T> MapMulti()
+        {
+            var mappedItems = new List<T>();
+
+            while (_dataReader.Read())
+            {
+                mappedItems.Add(Map());
+            }
+
+            return mappedItems;
+        }
+
         protected string ReadString(string fieldName, bool allowNull = true, string defaultIfNull = null)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             return value?.ToString() ?? defaultIfNull;
         }
 
         protected int ReadInt(string fieldName, bool allowNull = false, int defaultIfNull = default)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return defaultIfNull;
@@ -37,14 +59,14 @@ namespace DrSproc.EntityMapping
             var isValidType = int.TryParse(value.ToString(), out int result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(int), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected int? ReadNullableInt(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
@@ -54,9 +76,10 @@ namespace DrSproc.EntityMapping
 
         protected double ReadDouble(string fieldName, bool allowNull = false, double defaultIfNull = default)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return defaultIfNull;
@@ -64,14 +87,14 @@ namespace DrSproc.EntityMapping
             var isValidType = double.TryParse(value.ToString(), out double result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(double), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected double? ReadNullableDouble(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
@@ -81,9 +104,10 @@ namespace DrSproc.EntityMapping
 
         protected decimal ReadDecimal(string fieldName, bool allowNull = false, decimal defaultIfNull = default)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return defaultIfNull;
@@ -91,14 +115,14 @@ namespace DrSproc.EntityMapping
             var isValidType = decimal.TryParse(value.ToString(), out decimal result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(decimal), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected decimal? ReadNullableDecimal(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
@@ -108,9 +132,10 @@ namespace DrSproc.EntityMapping
 
         protected bool ReadBoolean(string fieldName, bool allowNull = false, bool defaultIfNull = false)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return defaultIfNull;
@@ -125,14 +150,14 @@ namespace DrSproc.EntityMapping
             var isValidType = bool.TryParse(stringVal, out bool result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(bool), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected bool? ReadNullableBoolean(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
@@ -142,9 +167,10 @@ namespace DrSproc.EntityMapping
 
         protected DateTime ReadDateTime(string fieldName, bool allowNull = false, DateTime defaultIfNull = default)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!allowNull) value.CheckNotNull(_conditions, fieldName);
+            if (!allowNull && value.IsNull())
+                ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return defaultIfNull;
@@ -152,14 +178,14 @@ namespace DrSproc.EntityMapping
             var isValidType = DateTime.TryParse(value.ToString(), out DateTime result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(DateTime), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected DateTime? ReadNullableDateTime(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
@@ -169,9 +195,10 @@ namespace DrSproc.EntityMapping
 
         protected Guid ReadGuid(string fieldName, bool generateNewIfNull = false)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
-            if (!generateNewIfNull) value.CheckNotNull(_conditions, fieldName);
+            if (!generateNewIfNull && value.IsNull())
+                    ThrowNullError(fieldName);
 
             if (value.IsNull())
                 return new Guid();
@@ -179,19 +206,43 @@ namespace DrSproc.EntityMapping
             var isValidType = Guid.TryParse(value.ToString(), out Guid result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_conditions, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
 
         protected Guid? ReadNullableGuid(string fieldName)
         {
-            var value = _conditions.GetField(fieldName);
+            var value = GetField(fieldName);
 
             if (value.IsNull())
                 return null;
 
             return ReadGuid(fieldName);
         }
+
+        private object GetField(string fieldName)
+        {
+            try
+            {
+                return _dataReader[fieldName];
+            }
+            catch
+            {
+                throw DrSprocEntityMappingException.FieldDoesntExist(_storedProc, fieldName);
+            }
+        }
+
+        private void ThrowNullError(string fieldName)
+        {
+            throw DrSprocEntityMappingException.RequiredFieldIsNull(_storedProc, fieldName);
+        }
+
+        public void Dispose()
+        {
+            if (_dataReader != null)
+                _dataReader.Dispose();
+        }
+
     }
 }

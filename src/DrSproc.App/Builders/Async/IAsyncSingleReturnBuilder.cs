@@ -6,7 +6,8 @@ namespace DrSproc.Builders.Async
 {
     public interface IAsyncSingleReturnBuilder<TReturn>
     {
-        IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>;
+        IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
+            where TMapping : CustomMapper<TReturn>, new();
 
         Task<TReturn> Go(CancellationToken cancellationToken = default);
     }

@@ -5,7 +5,7 @@ namespace DrSproc.Builders
 {
     public interface IMultiReturnBuilder<TReturn>
     {
-        IMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>;
+        IMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>, new();
 
         IEnumerable<TReturn> Go();
     }

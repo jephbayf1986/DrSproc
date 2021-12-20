@@ -30,7 +30,8 @@ namespace DrSproc.Main.Builders
             _allowNull = allowNull;
         }
 
-        public ISingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() where TMapping : CustomMapper<TReturn>
+        public ISingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
+            where TMapping : CustomMapper<TReturn>, new()
         {
             var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
 
@@ -53,13 +54,13 @@ namespace DrSproc.Main.Builders
 
         protected virtual TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingReflection<TReturn>(reader);
+            return _entityMapper.MapUsingReflection<TReturn>(reader, _storedProc);
         }
     }
 
     internal class SingleReturnBuilder<TDatabase, TMapping, TReturn> : SingleReturnBuilder<TDatabase, TReturn>
         where TDatabase : IDatabase, new()
-        where TMapping : CustomMapper<TReturn>
+        where TMapping : CustomMapper<TReturn>, new()
     {
         public SingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
             : base(dbExecutor, entityMapper, storedProcInput, allowNull)
@@ -68,7 +69,7 @@ namespace DrSproc.Main.Builders
 
         protected override TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader);
+            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader, _storedProc);
         }
     }
 }
