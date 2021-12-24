@@ -6,7 +6,7 @@ namespace DrSproc.Exceptions
     public class DrSprocEntityMappingException : Exception
     {
         private DrSprocEntityMappingException(StoredProc sproc, string message)
-            : base($"The following error occurred while Dr Sproc attempted to read from the database {null} and sproc '{null}': " + message)
+            : base($"The following error occurred while Dr Sproc attempted to read from sproc '{sproc.GetStoredProcFullName()}': " + message)
         {
         }
 
