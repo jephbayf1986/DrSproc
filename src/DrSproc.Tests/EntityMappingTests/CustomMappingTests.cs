@@ -43,7 +43,14 @@ namespace DrSproc.Tests.EntityMappingTests
             // Assert
             result.ShouldSatisfyAllConditions(x => x.Id.ShouldBe(expectedReturn.Id),
                                               x => x.FullName.ShouldBe(expectedReturn.FullName),
-                                              x => x.Description.ShouldBe(expectedReturn.Description));
+                                              x => x.Description.ShouldBe(expectedReturn.Description),
+                                              x => x.DateOfBirth.Value.Date.ShouldBe(expectedReturn.DateOfBirth.Value.Date),
+                                              x => x.Width.ShouldBe(expectedReturn.Width),
+                                              x => x.Height.ShouldBe(expectedReturn.Height),
+                                              x => x.Frequency.ShouldBe(expectedReturn.Frequency),
+                                              x => x.SubClass.ShouldSatisfyAllConditions(s => s.Id.ShouldBe(expectedReturn.SubClass.Id),
+                                                                                        s => s.Name.ShouldBe(expectedReturn.SubClass.Name),
+                                                                                        s => s.Description.ShouldBe(expectedReturn.SubClass.Description)));
         }
 
         [Fact]
