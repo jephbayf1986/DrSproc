@@ -18,6 +18,8 @@ namespace DrSproc.Tests.Shared
 
         public decimal? Width { get; set; } = RandomHelpers.IntBetween(150, 220);
 
+        public int Frequency { get; set; } = RandomHelpers.IntBetween(300, 800);
+
         public DateTime? DateOfBirth { get; set; } = RandomHelpers.DateInPast(RandomHelpers.IntBetween(4000, 30000));
 
         public string FullName
