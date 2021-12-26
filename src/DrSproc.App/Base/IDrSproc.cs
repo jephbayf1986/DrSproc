@@ -24,5 +24,7 @@
         /// <typeparam name="T">ITargetDb</typeparam>
         /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
         ITargetDatabase Use<T>() where T : IDatabase, new();
+         
+        ITransactionManager UseTransaction(ITransaction transaction);
     }
 }

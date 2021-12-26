@@ -18,5 +18,10 @@ namespace DrSproc.Main
         {
             return new TargetDatabase<T>(_dbExecutor, _entityMapper);
         }
+
+        public ITransactionManager UseTransaction(ITransaction transaction)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

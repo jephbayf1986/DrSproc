@@ -27,7 +27,7 @@ namespace DrSproc.Base
         /// </summary>
         /// <typeparam name="T">ITargetDb</typeparam>
         /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
-        public static ITargetDatabase Use<T>() 
+        public static ITargetDatabaseBase Use<T>() 
             where T : IDatabase, new()
         {
             var drSproc = new DrSprocCore(new DbExecutor(), new EntityMapper());
