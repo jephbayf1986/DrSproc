@@ -52,11 +52,6 @@ namespace DrSproc.Main.Builders
             return this;
         }
 
-        public ISprocBuilder WithTransactionId(Guid transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IMultiReturnBuilder<T> ReturnMulti<T>()
         {
             var sprocInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);

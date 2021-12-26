@@ -47,11 +47,6 @@ namespace DrSproc.Main.Builders.Async
             return WithParam(paramName, input);
         }
 
-        public IAsyncSprocBuilder WithTransactionId(Guid transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IAsyncMultiReturnBuilder<T> ReturnMulti<T>()
         {
             var sprocInput = new StoredProcInput(_storedProc, _paramData);

@@ -5,8 +5,6 @@ using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
-using System;
-using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
@@ -47,16 +45,6 @@ namespace DrSproc.Main
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
             return new AsyncSprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
-        }
-
-        public Task RollbackTransaction(Guid transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITargetDatabase SetTransactionId(Guid transactionId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

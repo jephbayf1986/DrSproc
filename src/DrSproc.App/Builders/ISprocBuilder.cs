@@ -4,8 +4,6 @@ namespace DrSproc.Builders
 {
     public interface ISprocBuilder
     {
-        ISprocBuilder WithTransactionId(Guid transactionId);
-        
         ISprocBuilder WithParam(string paramName, object input);
 
         ISprocBuilder WithParamIfNotNull(string paramName, object input);

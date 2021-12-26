@@ -1,7 +1,5 @@
 ﻿using DrSproc.Builders;
 using DrSproc.Builders.Async;
-using System;
-using System.Threading.Tasks;
 
 namespace DrSproc
 {
@@ -14,8 +12,6 @@ namespace DrSproc
     /// </summary>
     public interface ITargetDatabase
     {
-        ITargetDatabase SetTransactionId(Guid transactionId);
-
         /// <summary>
         /// <b>Execute</b> <br />
         /// Creates a class for building up an Stored Procedure Call for the default schema (eg. dbo)
@@ -79,7 +75,5 @@ namespace DrSproc
         /// <param name="storedProcedureName">Name of Stored Procedure</param>
         /// <returns>Asynchronous Sproc Builder for a stored procedure for any schema</returns>
         IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName);
-
-        Task RollbackTransaction(Guid transactionId);
     }
 }
