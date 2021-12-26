@@ -1,4 +1,5 @@
 ﻿using DrSproc.EntityMapping;
+using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,17 @@ namespace DrSproc.Main.EntityMapping
 
         public TReturn MapUsingReflection<TReturn>(IDataReader reader, StoredProc storedProc)
         {
-            throw new NotImplementedException();
+            TReturn result = default;
+
+            using (reader)
+            {
+                if (reader.Read())
+                {
+                    result = reader.CreateWithReflection<TReturn>();
+                }
+
+                return result;
+            }
         }
 
         public IEnumerable<TReturn> MapMultiUsingCustomMapping<TReturn, TMapper>(IDataReader reader, StoredProc storedProc) 

@@ -223,14 +223,12 @@ namespace DrSproc.EntityMapping
 
         private object GetField(string fieldName)
         {
-            try
-            {
-                return _dataReader[fieldName];
-            }
-            catch
-            {
+            var fieldFound = _dataReader.TryGetField(fieldName, out object value);
+
+            if (!fieldFound)
                 throw DrSprocEntityMappingException.FieldDoesntExist(_storedProc, fieldName);
-            }
+
+            return value;
         }
 
         private void ThrowNullError(string fieldName)
