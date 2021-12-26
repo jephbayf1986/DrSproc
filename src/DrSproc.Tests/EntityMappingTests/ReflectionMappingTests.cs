@@ -11,7 +11,7 @@ namespace DrSproc.Tests.EntityMappingTests
     public class ReflectionMappingTests
     {
         [Fact]
-        public void GivenMapperAndReaderHasCorrectFieldsAndTypes_OnMapUsingCustomMapping_ReturnObject()
+        public void GivenSimpleFlatModel_WhenReaderHasCorrectFieldsAndTypes_ReturnObject() 
         {
             // Arrange
             StoredProc storedProc = new(RandomHelpers.RandomString());
