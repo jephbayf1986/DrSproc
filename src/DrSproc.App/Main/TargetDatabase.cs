@@ -76,7 +76,7 @@ namespace DrSproc.Main
             throw new System.NotImplementedException();
         }
 
-        public ITransaction NewTransaction()
+        public ITransaction BeginTransaction()
         {
             throw new System.NotImplementedException();
         }

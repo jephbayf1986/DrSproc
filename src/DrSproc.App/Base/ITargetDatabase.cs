@@ -2,6 +2,6 @@
 {
     public interface ITargetDatabase : ITargetDatabaseBase
     {
-        ITransaction NewTransaction();
+        ITransaction BeginTransaction();
     }
 }
