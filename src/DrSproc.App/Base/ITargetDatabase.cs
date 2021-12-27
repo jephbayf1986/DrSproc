@@ -1,7 +1,9 @@
 ﻿namespace DrSproc
 {
-    public interface ITargetDatabase : ITargetDatabaseBase
+    public interface ITargetDatabase : ITargetBase
     {
-        ITransaction BeginTransaction();
+        ITargetTransaction BeginTransaction();
+
+        ITargetTransaction BeginTransaction(out ITransaction transaction);
     }
 }

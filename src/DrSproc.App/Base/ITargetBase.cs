@@ -10,7 +10,7 @@ namespace DrSproc
     /// Inject the DrSproc interface in order to access this via the '<i>Use</i>' Method.
     /// </para>
     /// </summary>
-    public interface ITargetDatabaseBase
+    public interface ITargetBase
     {
         /// <summary>
         /// <b>Execute</b> <br />

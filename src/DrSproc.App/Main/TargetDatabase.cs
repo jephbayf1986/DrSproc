@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class TargetDatabase<T> : ITargetDatabase, ITransactionManager where T : IDatabase, new() 
+    internal class TargetDatabase<T> : ITargetDatabase, ITargetTransaction where T : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
@@ -76,7 +76,12 @@ namespace DrSproc.Main
             throw new System.NotImplementedException();
         }
 
-        public ITransaction BeginTransaction()
+        public ITargetTransaction BeginTransaction()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ITargetTransaction BeginTransaction(out ITransaction transaction)
         {
             throw new System.NotImplementedException();
         }
