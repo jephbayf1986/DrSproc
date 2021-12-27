@@ -18,7 +18,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetLogic<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -36,7 +36,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetLogic<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -55,7 +55,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetLogic<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -73,7 +73,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetLogic<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();

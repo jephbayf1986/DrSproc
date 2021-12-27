@@ -1,10 +1,21 @@
-﻿using System;
+﻿using DrSproc.Models;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DrSproc
 {
     public interface ITransaction
     {
+        DateTime? BeginTime { get; }
+
+        DateTime? RollbackTime { get; }
+
+        DateTime? CommitTime { get; }
+
+        TransactionStatus? Status { get; }
+
+        int TotalRowsAffected { get; }
+
+        IEnumerable<StoredProcedureCall> GetStoredProcedureCallsSoFar();
     }
 }

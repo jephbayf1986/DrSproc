@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class TargetDatabase<T> : ITargetDatabase, ITargetTransaction where T : IDatabase, new() 
+    internal class TargetLogic<T> : ITargetDatabase, ITargetTransaction where T : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
         private readonly ITransaction _transaction;
 
-        public TargetDatabase(IDbExecutor dbExecutor, IEntityMapper entityMapper)
+        public TargetLogic(IDbExecutor dbExecutor, IEntityMapper entityMapper)
         {
             _dbExecutor = dbExecutor;
             _entityMapper = entityMapper;
         }
 
-        public TargetDatabase(IDbExecutor dbExecutor, IEntityMapper entityMapper, ITransaction transaction)
+        public TargetLogic(IDbExecutor dbExecutor, IEntityMapper entityMapper, ITransaction transaction)
         {
             _dbExecutor = dbExecutor;
             _entityMapper = entityMapper;
