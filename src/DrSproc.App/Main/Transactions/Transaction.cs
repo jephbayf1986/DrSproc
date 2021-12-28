@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DrSproc.Main.Transactions
 {
-    internal class Transaction : IDbTransaction, ITransaction
+    internal class Transaction : ITransactionActions, ITransaction
     {
         private DateTime? _beingTime;
         private DateTime? _rollbackTime;

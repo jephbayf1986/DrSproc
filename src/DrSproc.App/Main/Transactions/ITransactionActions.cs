@@ -1,6 +1,6 @@
 ﻿namespace DrSproc.Main.Transactions
 {
-    internal interface IDbTransaction
+    internal interface ITransactionActions
     {
         void BeginTransaction();
 
