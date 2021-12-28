@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main
 {
-    internal class TargetLogic<T> : ITargetDatabase, ITargetTransaction where T : IDatabase, new() 
+    internal class TargetLogic<TDatabase> : ITargetDatabase, ITargetTransaction
+        where TDatabase : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
@@ -21,7 +22,7 @@ namespace DrSproc.Main
             _entityMapper = entityMapper;
         }
 
-        public TargetLogic(IDbExecutor dbExecutor, IEntityMapper entityMapper, ITransaction transaction)
+        public TargetLogic(IDbExecutor dbExecutor, IEntityMapper entityMapper, ITransaction<TDatabase> transaction)
         {
             _dbExecutor = dbExecutor;
             _entityMapper = entityMapper;
@@ -32,28 +33,28 @@ namespace DrSproc.Main
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            return new SprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
+            return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            return new AsyncSprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
+            return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, sproc);
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            return new SprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
+            return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            return new AsyncSprocBuilder<T>(_dbExecutor, _entityMapper, sproc);
+            return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, sproc);
         }
 
         public void RollbackTransaction()
