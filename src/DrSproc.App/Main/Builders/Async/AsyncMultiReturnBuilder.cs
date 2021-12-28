@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncMultiReturnBuilder<TDatabase, TReturn> : IAsyncMultiReturnBuilder<TReturn>
+    internal class AsyncMultiReturnBuilder<TDatabase, TReturn> : DbConnector<TDatabase>, IAsyncMultiReturnBuilder<TReturn>
         where TDatabase : IDatabase, new()
     {
         protected readonly IDbExecutor _dbExecutor;
@@ -41,7 +41,7 @@ namespace DrSproc.Main.Builders.Async
         {
             var db = new TDatabase();
 
-            var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
             return GetModelFromReader(reader);
         }

@@ -24,5 +24,15 @@ namespace DrSproc.Tests.Shared
         {
             return Guid.NewGuid().ToString();
         }
+
+        public static string RandomConnectionString()
+        {
+            var server = RandomString();
+            var db = RandomString();
+            var userName = RandomString();
+            var password = RandomString();
+
+            return $"Server={server};Database={db};User Id={userName};Password={password};";
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DrSproc.Main.Builders
 {
-    internal class MultiReturnBuilder<TDatabase, TReturn> : IMultiReturnBuilder<TReturn> 
+    internal class MultiReturnBuilder<TDatabase, TReturn> : DbConnector<TDatabase>, IMultiReturnBuilder<TReturn> 
         where TDatabase : IDatabase, new()
     {
         protected readonly IDbExecutor _dbExecutor;
@@ -37,9 +37,7 @@ namespace DrSproc.Main.Builders
 
         public IEnumerable<TReturn> Go()
         {
-            var db = new TDatabase();
-
-            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            var reader = _dbExecutor.ExecuteReturnReader(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
             return GetModelFromReader(reader);
         }

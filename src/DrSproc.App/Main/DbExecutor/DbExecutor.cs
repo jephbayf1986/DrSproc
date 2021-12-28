@@ -1,6 +1,7 @@
 ﻿using DrSproc.Main.Connectivity.ConnectivityHelpers;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,10 +9,8 @@ namespace DrSproc.Main.DbExecutor
 {
     internal class DbExecutor : IDbExecutor
     {
-        public IDataReader ExecuteReturnReader(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public IDataReader ExecuteReturnReader(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            var connection = connectionString.CreateConnection();
-
             using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
             {
                 connection.Open();
@@ -20,10 +19,8 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public async Task<IDataReader> ExecuteReturnReaderAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        public async Task<IDataReader> ExecuteReturnReaderAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            var connection = connectionString.CreateConnection();
-
             using (var command = connection.CreateSprocCommand(procedureName, parameters, 0))
             {
                 await connection.OpenAsync(cancellationToken);
@@ -32,9 +29,8 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public object ExecuteReturnIdentity(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public object ExecuteReturnIdentity(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            using (var connection = connectionString.CreateConnection())
             using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
             {
                 connection.Open();
@@ -43,9 +39,8 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public async Task<object> ExecuteReturnIdentityAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        public async Task<object> ExecuteReturnIdentityAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            using (var connection = connectionString.CreateConnection())
             using (var command = connection.CreateSprocCommand(procedureName, parameters, 0))
             {
                 await connection.OpenAsync(cancellationToken);
@@ -54,9 +49,8 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public void Execute(string connectionString, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        public void Execute(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
         {
-            using (var connection = connectionString.CreateConnection())
             using (var command = connection.CreateSprocCommand(procedureName, parameters, commandTimeout))
             {
                 connection.Open();
@@ -65,9 +59,8 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public async Task ExecuteAsync(string connectionString, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            using (var connection = connectionString.CreateConnection())
             using (var command = connection.CreateSprocCommand(procedureName, parameters, 0))
             {
                 await connection.OpenAsync(cancellationToken);

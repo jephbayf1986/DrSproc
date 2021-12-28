@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DrSproc.Main.Builders
 {
-    internal class IdentityReturnBuilder<TDatabase> : IIdentityReturnBuilder 
+    internal class IdentityReturnBuilder<TDatabase> : DbConnector<TDatabase>, IIdentityReturnBuilder
         where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
@@ -26,9 +26,7 @@ namespace DrSproc.Main.Builders
 
         public object Go()
         {
-            var db = new TDatabase();
-
-            var identity = _dbExecutor.ExecuteReturnIdentity(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            var identity = _dbExecutor.ExecuteReturnIdentity(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
             if (!_allowNull && identity == null)
                 throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);

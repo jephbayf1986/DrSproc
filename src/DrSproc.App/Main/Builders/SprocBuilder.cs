@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 namespace DrSproc.Main.Builders
 {
-    internal class SprocBuilder<TDatabase> : ISprocBuilder where TDatabase : IDatabase, new()
+    internal class SprocBuilder<TDatabase> : DbConnector<TDatabase>, ISprocBuilder 
+        where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
@@ -75,9 +76,7 @@ namespace DrSproc.Main.Builders
 
         public void Go()
         {
-            var db = new TDatabase();
-
-            _dbExecutor.Execute(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            _dbExecutor.Execute(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
         }
     }
 }

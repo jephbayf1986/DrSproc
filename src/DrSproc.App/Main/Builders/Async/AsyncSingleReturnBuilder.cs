@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncSingleReturnBuilder<TDatabase, TReturn> : IAsyncSingleReturnBuilder<TReturn>
+    internal class AsyncSingleReturnBuilder<TDatabase, TReturn> : DbConnector<TDatabase>, IAsyncSingleReturnBuilder<TReturn>
         where TDatabase : IDatabase, new()
     {
         protected readonly IDbExecutor _dbExecutor;
@@ -42,9 +42,7 @@ namespace DrSproc.Main.Builders.Async
 
         public async Task<TReturn> Go(CancellationToken cancellationToken = default)
         {
-            var db = new TDatabase();
-
-            var reader = await _dbExecutor.ExecuteReturnReaderAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
             var result = GetModelFromReader(reader);
 

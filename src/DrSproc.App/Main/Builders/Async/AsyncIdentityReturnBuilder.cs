@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncIdentityReturnBuilder<TDatabase> : IAsyncIdentityReturnBuilder 
+    internal class AsyncIdentityReturnBuilder<TDatabase> : DbConnector<TDatabase>, IAsyncIdentityReturnBuilder
         where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
@@ -26,9 +26,7 @@ namespace DrSproc.Main.Builders.Async
 
         public async Task<object> Go(CancellationToken cancellationToken = default)
         {
-            var db = new TDatabase();
-
-            var identity = await _dbExecutor.ExecuteReturnIdentityAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var identity = await _dbExecutor.ExecuteReturnIdentityAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
 
             if (!_allowNull && identity == null)
                 throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);

@@ -9,7 +9,7 @@ using System.Data;
 
 namespace DrSproc.Main.Builders
 {
-    internal class SingleReturnBuilder<TDatabase, TReturn> : ISingleReturnBuilder<TReturn> 
+    internal class SingleReturnBuilder<TDatabase, TReturn> : DbConnector<TDatabase>, ISingleReturnBuilder<TReturn> 
         where TDatabase : IDatabase, new()
     {
         protected readonly IDbExecutor _dbExecutor;
@@ -40,9 +40,7 @@ namespace DrSproc.Main.Builders
 
         public TReturn Go()
         {
-            var db = new TDatabase();
-
-            var reader = _dbExecutor.ExecuteReturnReader(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            var reader = _dbExecutor.ExecuteReturnReader(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
 
             var result = GetModelFromReader(reader);
 

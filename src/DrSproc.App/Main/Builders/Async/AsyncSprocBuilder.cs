@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncSprocBuilder<TDatabase> : IAsyncSprocBuilder where TDatabase : IDatabase, new()
+    internal class AsyncSprocBuilder<TDatabase> : DbConnector<TDatabase>, IAsyncSprocBuilder 
+        where TDatabase : IDatabase, new()
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
@@ -72,7 +73,7 @@ namespace DrSproc.Main.Builders.Async
         {
             var db = new TDatabase();
 
-            return _dbExecutor.ExecuteAsync(db.GetConnectionString(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            return _dbExecutor.ExecuteAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
         }
     }
 }

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace DrSproc
 {
+    public interface ITransaction<TDatabase> : ITransaction
+        where TDatabase : IDatabase, new()
+    {
+    }
+
     public interface ITransaction
     {
         DateTime? BeginTime { get; }
