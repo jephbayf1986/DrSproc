@@ -23,15 +23,15 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
                                                                                                                                                    && x.Value == param1Val)
                                                                                                                                         && d.Any(x => x.Key == param2Name
-                                                                                                                                                   && x.Value == param2Val)), It.IsAny<int?>()));
+                                                                                                                                                   && x.Value == param2Val)), It.IsAny<SqlTransaction>(), It.IsAny<int?>()));
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), timeoutSeconds));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), timeoutSeconds));
         }
 
         [Theory]
@@ -182,7 +182,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(returnValue);
 
             var input = new StoredProcInput(storedProc);
@@ -204,7 +204,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(null);
 
             var input = new StoredProcInput(storedProc);
@@ -227,7 +227,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<int?>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(null);
 
             var input = new StoredProcInput(storedProc);
