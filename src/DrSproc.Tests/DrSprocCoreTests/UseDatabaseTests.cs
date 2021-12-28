@@ -23,7 +23,7 @@ namespace DrSproc.Tests.DrSprocCoreTests
             var db = sut.Use<ContosoDb>();
 
             // Assert
-            db.ShouldBeOfType<TargetLogic<ContosoDb>>();
+            db.ShouldBeOfType<TargetDatabase<ContosoDb>>();
         }
 
         [Fact]

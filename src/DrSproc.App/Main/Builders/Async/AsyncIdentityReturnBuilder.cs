@@ -1,35 +1,31 @@
 ﻿using DrSproc.Builders.Async;
 using DrSproc.Exceptions;
-using DrSproc.Main.DbExecutor;
-using DrSproc.Main.Shared;
+using DrSproc.Main.Builders.BuilderBases;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncIdentityReturnBuilder<TDatabase> : DbConnector<TDatabase>, IAsyncIdentityReturnBuilder
+    internal class AsyncIdentityReturnBuilder<TDatabase> : BuilderBase, IAsyncIdentityReturnBuilder
         where TDatabase : IDatabase, new()
     {
-        private readonly IDbExecutor _dbExecutor;
-        private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
         private bool _allowNull;
 
-        public AsyncIdentityReturnBuilder(IDbExecutor dbExecutor, StoredProcInput storedProcInput, bool allowNull = true)
+        public AsyncIdentityReturnBuilder(BuilderBase builderBase, IDictionary<string, object> paramData, bool allowNull)
+            : base(builderBase)
         {
-            _dbExecutor = dbExecutor;
-            _storedProc = storedProcInput.StoredProc;
-            _paramData = storedProcInput.Parameters;
+            _paramData = paramData;
             _allowNull = allowNull;
         }
 
         public async Task<object> Go(CancellationToken cancellationToken = default)
         {
-            var identity = await _dbExecutor.ExecuteReturnIdentityAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var identity = await ExecuteReturnIdentityAsync(_paramData, cancellationToken);
 
             if (!_allowNull && identity == null)
-                throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);
+                throw DrSprocNullReturnException.ThrowIdentityNull(StoredProcName);
 
             return identity;
         }

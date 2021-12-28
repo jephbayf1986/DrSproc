@@ -1,36 +1,30 @@
 ﻿using DrSproc.Builders.Async;
+using DrSproc.Main.Builders.BuilderBases;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
-using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncSprocBuilder<TDatabase> : DbConnector<TDatabase>, IAsyncSprocBuilder 
+    internal class AsyncSprocBuilder<TDatabase> : MappingBuilderBase, IAsyncSprocBuilder 
         where TDatabase : IDatabase, new()
     {
-        private readonly IDbExecutor _dbExecutor;
-        private readonly IEntityMapper _entityMapper;
-        private readonly StoredProc _storedProc;
-
         private IDictionary<string, object> _paramData;
 
-        public AsyncSprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProc storedProc)
+        public AsyncSprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, SqlConnection connection, SqlTransaction transaction, StoredProc storedProc)
+            : base(dbExecutor, entityMapper, connection, transaction, storedProc)
         {
-            _dbExecutor = dbExecutor;
-            _entityMapper = entityMapper;
-            _storedProc = storedProc;
-
             _paramData = new Dictionary<string, object>();
         }
 
         public IAsyncSprocBuilder WithParam(string paramName, object input)
         {
-            paramName.CheckForInvaldInput(_storedProc, _paramData);
+            paramName.CheckForInvaldInput(StoredProcName, _paramData);
 
             if (!paramName.StartsWith("@"))
                 paramName = $"@{paramName}";
@@ -50,30 +44,22 @@ namespace DrSproc.Main.Builders.Async
 
         public IAsyncMultiReturnBuilder<T> ReturnMulti<T>()
         {
-            var sprocInput = new StoredProcInput(_storedProc, _paramData);
-
-            return new AsyncMultiReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput);
+            return new AsyncMultiReturnBuilder<TDatabase, T>(this, _paramData);
         }
 
         public IAsyncSingleReturnBuilder<T> ReturnSingle<T>(bool allowNull = true)
         {
-            var sprocInput = new StoredProcInput(_storedProc, _paramData);
-
-            return new AsyncSingleReturnBuilder<TDatabase, T>(_dbExecutor, _entityMapper, sprocInput, allowNull);
+            return new AsyncSingleReturnBuilder<TDatabase, T>(this, _paramData, allowNull);
         }
 
         public IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true)
         {
-            var sprocInput = new StoredProcInput(_storedProc, _paramData);
-
-            return new AsyncIdentityReturnBuilder<TDatabase>(_dbExecutor, sprocInput, allowNull);
+            return new AsyncIdentityReturnBuilder<TDatabase>(this, _paramData, allowNull);
         }
 
         public Task Go(CancellationToken cancellationToken = default)
         {
-            var db = new TDatabase();
-
-            return _dbExecutor.ExecuteAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            return ExecuteAsync(_paramData, cancellationToken);
         }
     }
 }

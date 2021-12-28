@@ -17,7 +17,7 @@ namespace DrSproc.Main
         public ITargetDatabase Use<T>() 
             where T : IDatabase, new()
         {
-            return new TargetLogic<T>(_dbExecutor, _entityMapper);
+            return new TargetDatabase<T>(_dbExecutor, _entityMapper);
         }
 
         public ITargetTransaction UseTransaction<T>(ITransaction<T> transaction)

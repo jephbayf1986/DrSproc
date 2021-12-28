@@ -1,11 +1,13 @@
 ﻿using DrSproc.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
-namespace DrSproc.Main.Transactions
+namespace DrSproc.Main.Transaction
 {
-    internal class Transaction : ITransactionActions, ITransaction
+    internal class Transaction<TDatabase> : ITransactionActions, ITransaction<TDatabase>
+        where TDatabase : IDatabase, new()
     {
         private DateTime? _beingTime;
         private DateTime? _rollbackTime;
@@ -13,6 +15,9 @@ namespace DrSproc.Main.Transactions
         private TransactionStatus? _status;
 
         private ICollection<StoredProcedureCall> _procedureCalls;
+
+        private SqlConnection sqlConnection;
+        private SqlTransaction sqlTransaction;
 
         public Transaction()
         {
@@ -51,6 +56,12 @@ namespace DrSproc.Main.Transactions
         {
             _commitTime = DateTime.Now;
             _status |= TransactionStatus.Committed;
+        }
+
+        public void Dispose()
+        {
+            sqlTransaction?.Dispose();
+            sqlConnection?.Dispose();
         }
     }
 }

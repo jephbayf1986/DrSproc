@@ -9,7 +9,7 @@ namespace DrSproc
     {
     }
 
-    public interface ITransaction
+    public interface ITransaction : IDisposable
     {
         DateTime? BeginTime { get; }
 

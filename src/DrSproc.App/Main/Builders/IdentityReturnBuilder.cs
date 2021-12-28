@@ -1,35 +1,31 @@
 ﻿using DrSproc.Builders;
 using DrSproc.Exceptions;
-using DrSproc.Main.DbExecutor;
-using DrSproc.Main.Shared;
+using DrSproc.Main.Builders.BuilderBases;
 using System.Collections.Generic;
 
 namespace DrSproc.Main.Builders
 {
-    internal class IdentityReturnBuilder<TDatabase> : DbConnector<TDatabase>, IIdentityReturnBuilder
+    internal class IdentityReturnBuilder<TDatabase> : BuilderBase, IIdentityReturnBuilder
         where TDatabase : IDatabase, new()
     {
-        private readonly IDbExecutor _dbExecutor;
-        private readonly StoredProc _storedProc;
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
         private bool _allowNull;
 
-        public IdentityReturnBuilder(IDbExecutor dbExecutor, StoredProcInput storedProcInput, bool allowNull = true)
+        public IdentityReturnBuilder(BuilderBase builderBase, IDictionary<string, object> paramData, int? timeOutSeconds, bool allowNull)
+            : base(builderBase)
         {
-            _dbExecutor = dbExecutor;
-            _storedProc = storedProcInput.StoredProc;
-            _paramData = storedProcInput.Parameters;
-            _timeOutSeconds = storedProcInput.TimeOutSeconds;
+            _paramData = paramData;
+            _timeOutSeconds = timeOutSeconds;
             _allowNull = allowNull;
         }
 
         public object Go()
         {
-            var identity = _dbExecutor.ExecuteReturnIdentity(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, _timeOutSeconds);
+            var identity = ExecuteReturnIdentity(_paramData, _timeOutSeconds);
 
             if (!_allowNull && identity == null)
-                throw DrSprocNullReturnException.ThrowIdentityNull(_storedProc);
+                throw DrSprocNullReturnException.ThrowIdentityNull(StoredProcName);
 
             return identity;
         }

@@ -1,6 +1,5 @@
 ﻿using DrSproc.Exceptions;
 using DrSproc.Main.EntityMapping;
-using DrSproc.Main.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,16 +9,16 @@ namespace DrSproc.EntityMapping
     public abstract class CustomMapper<T> : IDisposable
     {
         private IDataReader _dataReader;
-        private StoredProc _storedProc;
-
+        private string _storedProcName;
+        
         internal void SetReader(IDataReader dataReader)
         {
             _dataReader = dataReader;
         }
 
-        internal void SetStoredProc(StoredProc storedProc)
+        internal void SetStoredProcName(string storedProcName)
         {
-            _storedProc = storedProc;
+            _storedProcName = storedProcName;
         }
 
         public abstract T Map();
@@ -59,7 +58,7 @@ namespace DrSproc.EntityMapping
             var isValidType = int.TryParse(value.ToString(), out int result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -87,7 +86,7 @@ namespace DrSproc.EntityMapping
             var isValidType = double.TryParse(value.ToString(), out double result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -115,7 +114,7 @@ namespace DrSproc.EntityMapping
             var isValidType = decimal.TryParse(value.ToString(), out decimal result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -150,7 +149,7 @@ namespace DrSproc.EntityMapping
             var isValidType = bool.TryParse(stringVal, out bool result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -178,7 +177,7 @@ namespace DrSproc.EntityMapping
             var isValidType = DateTime.TryParse(value.ToString(), out DateTime result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -206,7 +205,7 @@ namespace DrSproc.EntityMapping
             var isValidType = Guid.TryParse(value.ToString(), out Guid result);
 
             if (!isValidType)
-                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProc, fieldName, typeof(Guid), value.GetType(), value);
+                throw DrSprocEntityMappingException.FieldOfWrongDataType(_storedProcName, fieldName, typeof(Guid), value.GetType(), value);
 
             return result;
         }
@@ -226,14 +225,14 @@ namespace DrSproc.EntityMapping
             var fieldFound = _dataReader.TryGetField(fieldName, out object value);
 
             if (!fieldFound)
-                throw DrSprocEntityMappingException.FieldDoesntExist(_storedProc, fieldName);
+                throw DrSprocEntityMappingException.FieldDoesntExist(_storedProcName, fieldName);
 
             return value;
         }
 
         private void ThrowNullError(string fieldName)
         {
-            throw DrSprocEntityMappingException.RequiredFieldIsNull(_storedProc, fieldName);
+            throw DrSprocEntityMappingException.RequiredFieldIsNull(_storedProcName, fieldName);
         }
 
         public void Dispose()
@@ -241,6 +240,5 @@ namespace DrSproc.EntityMapping
             if (_dataReader != null)
                 _dataReader.Dispose();
         }
-
     }
 }

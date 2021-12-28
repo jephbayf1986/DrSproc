@@ -1,23 +1,22 @@
-﻿using DrSproc.Main.Shared;
-using System;
+﻿using System;
 
 namespace DrSproc.Exceptions
 {
     public class DrSprocNullReturnException : Exception
     {
-        private DrSprocNullReturnException(StoredProc storedProc, string message)
-            : base($"The following error occurred while Dr Sproc attempted to read a non-null return object from sproc '{storedProc.GetStoredProcFullName()}': {message}")
+        private DrSprocNullReturnException(string storedProcName, string message)
+            : base($"The following error occurred while Dr Sproc attempted to read a non-null return object from sproc '{storedProcName}': {message}")
         {
         }
 
-        internal static DrSprocNullReturnException ThrowIdentityNull(StoredProc storedProc)
+        internal static DrSprocNullReturnException ThrowIdentityNull(string storedProcName)
         {
-            return new DrSprocNullReturnException(storedProc, "A null identity was returned and the input specified to not allow nulls");
+            return new DrSprocNullReturnException(storedProcName, "A null identity was returned and the input specified to not allow nulls");
         }
 
-        internal static DrSprocNullReturnException ThrowObjectNull(StoredProc storedProc)
+        internal static DrSprocNullReturnException ThrowObjectNull(string storedProcName)
         {
-            return new DrSprocNullReturnException(storedProc, "A null object was returned and the input specified to not allow nulls");
+            return new DrSprocNullReturnException(storedProcName, "A null object was returned and the input specified to not allow nulls");
         }
     }
 }

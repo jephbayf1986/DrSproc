@@ -1,5 +1,4 @@
 ﻿using DrSproc.Exceptions;
-using DrSproc.Main.Shared;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,13 +14,13 @@ namespace DrSproc.Main.Helpers
             return paramName;
         }
 
-        public static void CheckForInvaldInput(this string paramName, StoredProc storedProc, IDictionary<string, object> existingParams)
+        public static void CheckForInvaldInput(this string paramName, string storedProcName, IDictionary<string, object> existingParams)
         {
             if (string.IsNullOrWhiteSpace(paramName))
-                throw DrSprocParameterException.NullOrBlankParameter(storedProc, paramName);
+                throw DrSprocParameterException.NullOrBlankParameter(storedProcName, paramName);
 
             if (paramName.TrimEnd().Any(c => char.IsWhiteSpace(c)))
-                throw DrSprocParameterException.WhiteSpaceInsideParameter(storedProc, paramName.AppendAsperandIfNecessary());
+                throw DrSprocParameterException.WhiteSpaceInsideParameter(storedProcName, paramName.AppendAsperandIfNecessary());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace DrSproc.Main.Transactions
+﻿namespace DrSproc.Main.Transaction
 {
     internal interface ITransactionActions
     {

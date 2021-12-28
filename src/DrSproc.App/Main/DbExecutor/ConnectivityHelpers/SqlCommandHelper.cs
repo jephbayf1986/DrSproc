@@ -3,11 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace DrSproc.Main.Connectivity.ConnectivityHelpers
+namespace DrSproc.Main.DbExecutor.ConnectivityHelpers
 {
     internal static class SqlCommandHelper
     {
-        internal static SqlCommand CreateSprocCommand(this SqlConnection connection, string procedureName, IDictionary<string, object> parameters, int? commandTimeout = null)
+        internal static SqlCommand CreateSprocCommand(this SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, int? commandTimeout)
         {
             var command = new SqlCommand(procedureName, connection);
 
@@ -17,6 +17,9 @@ namespace DrSproc.Main.Connectivity.ConnectivityHelpers
             {
                 command.CommandTimeout = commandTimeout.Value;
             }
+
+            if (sqlTransaction != null)
+                command.Transaction = sqlTransaction;
 
             command.CommandText = procedureName;
 

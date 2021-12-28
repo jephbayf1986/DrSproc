@@ -1,9 +1,7 @@
 ﻿using DrSproc.Builders.Async;
 using DrSproc.EntityMapping;
 using DrSproc.Exceptions;
-using DrSproc.Main.DbExecutor;
-using DrSproc.Main.EntityMapping;
-using DrSproc.Main.Shared;
+using DrSproc.Main.Builders.BuilderBases;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -11,50 +9,40 @@ using System.Threading.Tasks;
 
 namespace DrSproc.Main.Builders.Async
 {
-    internal class AsyncSingleReturnBuilder<TDatabase, TReturn> : DbConnector<TDatabase>, IAsyncSingleReturnBuilder<TReturn>
+    internal class AsyncSingleReturnBuilder<TDatabase, TReturn> : MappingBuilderBase, IAsyncSingleReturnBuilder<TReturn>
         where TDatabase : IDatabase, new()
     {
-        protected readonly IDbExecutor _dbExecutor;
-        protected readonly IEntityMapper _entityMapper;
-        protected readonly StoredProc _storedProc;
         protected IDictionary<string, object> _paramData;
-        protected int? _timeOutSeconds = null;
         protected bool _allowNull;
 
-        public AsyncSingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
+        public AsyncSingleReturnBuilder(MappingBuilderBase builderBase, IDictionary<string, object> paramData, bool allowNull)
+            : base(builderBase)
         {
-            _dbExecutor = dbExecutor;
-            _entityMapper = entityMapper;
-
-            _storedProc = storedProcInput.StoredProc;
-            _paramData = storedProcInput.Parameters;
-            _timeOutSeconds = storedProcInput.TimeOutSeconds;
+            _paramData = paramData;
             _allowNull = allowNull;
         }
 
-        public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
+        public IAsyncSingleReturnBuilder<TReturn> UseCustomMapping<TMapping>()
             where TMapping : CustomMapper<TReturn>, new()
         {
-            var storedProcInput = new StoredProcInput(_storedProc, _paramData, _timeOutSeconds);
-
-            return new AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn>(_dbExecutor, _entityMapper, storedProcInput, _allowNull);
+            return new AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn>(this, _paramData, _allowNull);
         }
 
         public async Task<TReturn> Go(CancellationToken cancellationToken = default)
         {
-            var reader = await _dbExecutor.ExecuteReturnReaderAsync(GetSqlConnection(), _storedProc.GetStoredProcFullName(), _paramData, cancellationToken);
+            var reader = await ExecuteReturnReaderAsync(_paramData, cancellationToken);
 
             var result = GetModelFromReader(reader);
 
             if (!_allowNull && result == null)
-                throw DrSprocNullReturnException.ThrowObjectNull(_storedProc);
+                throw DrSprocNullReturnException.ThrowObjectNull(StoredProcName);
 
             return result;
         }
 
         protected virtual TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingReflection<TReturn>(reader, _storedProc);
+            return MapUsingReflection<TReturn>(reader);
         }
     }
 
@@ -62,14 +50,14 @@ namespace DrSproc.Main.Builders.Async
         where TDatabase : IDatabase, new()
         where TMapping : CustomMapper<TReturn>, new()
     {
-        public AsyncSingleReturnBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, StoredProcInput storedProcInput, bool allowNull = true)
-            : base(dbExecutor, entityMapper, storedProcInput, allowNull)
+        public AsyncSingleReturnBuilder(MappingBuilderBase builderBase, IDictionary<string, object> paramData, bool allowNull)
+            : base(builderBase, paramData, allowNull)
         {
         }
 
         protected override TReturn GetModelFromReader(IDataReader reader)
         {
-            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader, _storedProc);
+            return MapUsingCustomMapping<TReturn, TMapping>(reader);
         }
     }
 }
