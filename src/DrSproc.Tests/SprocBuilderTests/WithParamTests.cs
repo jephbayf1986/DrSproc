@@ -7,6 +7,7 @@ using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
 using System;
+using System.Data.SqlClient;
 using Xunit;
 
 namespace DrSproc.Tests.SprocBuilderTests
@@ -17,6 +18,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         public void GivenNullParamName_OnWithParams_ThrowInformativeError() 
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
@@ -24,7 +26,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(null, RandomHelpers.RandomString());
@@ -40,6 +42,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         public void GivenBlankParamName_OnWithParams_ThrowInformativeError()
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
@@ -47,7 +50,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(string.Empty, RandomHelpers.RandomString());
@@ -68,6 +71,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         public void GivenWhiteSpaceInMiddleOfParamName_OnWithParams_ThrowInformativeError(string paramName)
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
@@ -75,7 +79,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var sproc = new StoredProc(sprocName);
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             Func<object?> action = () => sut.WithParam(paramName, RandomHelpers.IntBetween(1, 10));

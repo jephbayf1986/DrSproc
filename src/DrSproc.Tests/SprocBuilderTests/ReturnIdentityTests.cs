@@ -44,9 +44,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -64,9 +64,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -83,9 +83,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -104,9 +104,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var paramList = new Dictionary<string, object>();
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -134,9 +134,9 @@ namespace DrSproc.Tests.SprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, null, true);
 
             // Act
             sut.Go();
@@ -158,9 +158,9 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var timeoutSeconds = RandomHelpers.IntBetween(100, 500);
 
-            var input = new StoredProcInput(storedProc, timeoutSeconds: timeoutSeconds);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, timeoutSeconds, true);
 
             // Act
             sut.Go();
@@ -185,37 +185,15 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(returnValue);
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
             // Act
             var id = sut.Go();
 
             // Assert
             id.ShouldBe(returnValue);
-        }
-        
-        [Fact]
-        public void GivenAllowNullTrue_WhenExecuteReturnIdentityReturnsNull_OnGo_ReturnNull()
-        {
-            // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
-
-            Mock<IDbExecutor> dbExecutor = new();
-
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
-                .Returns(null);
-
-            var input = new StoredProcInput(storedProc);
-
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: true);
-
-            // Act
-            var id = sut.Go();
-
-            //// Assert
-            id.ShouldBeNull();
         }
         
         [Fact]
@@ -230,9 +208,9 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            IdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: false);
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, false);
 
             // Act
             Func<object> action = () => sut.Go();
