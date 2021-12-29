@@ -20,6 +20,7 @@ namespace DrSproc.Main.Builders.BuilderBases
             _dbExecutor = dbExecutor;
             _connection = connection;
             _transaction = transaction;
+            _storedProc = storedProc;
         }
 
         public BuilderBase(BuilderBase builderBase)
