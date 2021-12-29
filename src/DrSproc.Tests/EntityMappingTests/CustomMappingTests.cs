@@ -1,6 +1,5 @@
 ﻿using DrSproc.Exceptions;
 using DrSproc.Main.EntityMapping;
-using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -16,7 +15,7 @@ namespace DrSproc.Tests.EntityMappingTests
         public void GivenMapperAndReaderHasCorrectFieldsAndTypes_OnMapUsingCustomMapping_ReturnObject()
         {
             // Arrange
-            StoredProc storedProc = new(RandomHelpers.RandomString());
+            var storedProcName = RandomHelpers.RandomString();
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -38,7 +37,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc);
+            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName);
 
             // Assert
             result.ShouldSatisfyAllConditions(x => x.Id.ShouldBe(expectedReturn.Id),
@@ -58,7 +57,6 @@ namespace DrSproc.Tests.EntityMappingTests
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
-            StoredProc storedProc = new(storedProcName);
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -81,7 +79,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc));
+            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName));
 
             // Assert
             Should.Throw<DrSprocEntityMappingException>(action)
@@ -94,7 +92,6 @@ namespace DrSproc.Tests.EntityMappingTests
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
-            StoredProc storedProc = new(storedProcName);
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -116,7 +113,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc));
+            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName));
 
             // Assert
             Should.Throw<DrSprocEntityMappingException>(action)
@@ -129,7 +126,6 @@ namespace DrSproc.Tests.EntityMappingTests
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
-            StoredProc storedProc = new(storedProcName);
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -151,7 +147,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc));
+            var action = (() => sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName));
 
             // Assert
             Should.Throw<DrSprocEntityMappingException>(action)
@@ -165,7 +161,6 @@ namespace DrSproc.Tests.EntityMappingTests
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
-            StoredProc storedProc = new(storedProcName);
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -187,7 +182,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc);
+            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName);
 
             // Assert
             result.Frequency.ShouldBe(default);
@@ -198,7 +193,6 @@ namespace DrSproc.Tests.EntityMappingTests
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
-            StoredProc storedProc = new(storedProcName);
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -220,7 +214,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProc);
+            var result = sut.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(dataReader.Object, storedProcName);
 
             // Assert
             result.Height.ShouldBe(TestClassMapper.Height_DefaultIfNull);

@@ -1,5 +1,4 @@
 ﻿using DrSproc.Main.EntityMapping;
-using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -14,7 +13,7 @@ namespace DrSproc.Tests.EntityMappingTests
         public void GivenSimpleFlatModel_WhenReaderHasCorrectFieldsAndTypes_ReturnObject() 
         {
             // Arrange
-            StoredProc storedProc = new(RandomHelpers.RandomString());
+            var storedProcName = RandomHelpers.RandomString();
 
             var dataReader = new Mock<IDataReader>();
             dataReader.Setup(m => m.FieldCount).Returns(1);
@@ -29,7 +28,7 @@ namespace DrSproc.Tests.EntityMappingTests
             EntityMapper sut = new();
 
             // Act
-            var result = sut.MapUsingReflection<TestSubClass>(dataReader.Object, storedProc);
+            var result = sut.MapUsingReflection<TestSubClass>(dataReader.Object, storedProcName);
 
             // Assert
             result.ShouldSatisfyAllConditions(s => s.Id.ShouldBe(expectedReturn.Id),
