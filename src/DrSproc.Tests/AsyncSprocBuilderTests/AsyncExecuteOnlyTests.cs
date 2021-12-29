@@ -20,18 +20,19 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         public async Task GivenNoParametersOrTransaction_OnGo_Execute()
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -40,18 +41,19 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -61,16 +63,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProcName = RandomHelpers.RandomString();
             var storedProc = new StoredProc(storedProcName);
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -84,16 +87,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(schemaName, storedProcName);
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, storedProc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -102,16 +106,17 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -120,19 +125,20 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Test";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -141,13 +147,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "Another";
             var expectedParamInput = $"@{paramName}";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -155,7 +162,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
-                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -164,13 +171,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@TrailingSpaces    ";
             var expectedParamInput = paramName.Trim();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -178,7 +186,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
-                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<CancellationToken>()));
+                                                                                                                                && d.ContainsKey(expectedParamInput)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -187,6 +195,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
@@ -194,7 +203,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var expectedParamInput = $"@{paramName}";
             object paramValue = "ParamVal";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                     .WithParam(paramName, paramValue);
 
             // Act
@@ -202,7 +211,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
-                                                                                                                                          && x.Value == paramValue)), It.IsAny<CancellationToken>()));
+                                                                                                                                          && x.Value == paramValue)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Theory]
@@ -214,10 +223,11 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            IAsyncSprocBuilder sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            IAsyncSprocBuilder sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
 
             for (int i = 0; i < numberOfParams; i++)
             {
@@ -228,7 +238,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -237,13 +247,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Optional";
             object paramValue = 15;
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                         .WithParamIfNotNull(paramName, paramValue);
 
             // Act
@@ -251,7 +262,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
-                                                                                                                                     && x.Value == paramValue)), It.IsAny<CancellationToken>()));
+                                                                                                                                     && x.Value == paramValue)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -260,19 +271,20 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             var paramName = "@Optional";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -281,10 +293,11 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, storedProc);
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
 
             var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
             var token = cancelSource.Token;
@@ -293,7 +306,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go(token);
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
+            dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), token));
         }
     }
 }

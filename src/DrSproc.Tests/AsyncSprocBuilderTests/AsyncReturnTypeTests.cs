@@ -5,6 +5,7 @@ using DrSproc.Main.Shared;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
+using System.Data.SqlClient;
 using Xunit;
 
 namespace DrSproc.Tests.AsyncSprocBuilderTests
@@ -15,12 +16,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         public void GivenNoParamsOrTransaction_OnReturnIdentity_CreateAsyncIdentityReturnBuilder()
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             var result = sut.ReturnIdentity();
@@ -33,12 +35,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         public void GivenNoParamsOrTransaction_OnReturnSingle_CreateAsyncSingleReturnBuilderOfSameType()
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             var result = sut.ReturnSingle<TestSubClass>();
@@ -51,12 +54,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         public void GivenNoParamsOrTransaction_OnReturnMulti_CreateAsyncMultiReturnBuilderOfSameType()
         {
             // Arrange
+            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
 
             // Act
             var result = sut.ReturnMulti<TestSubClass>();

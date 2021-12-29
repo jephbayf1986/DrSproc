@@ -24,19 +24,18 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -46,19 +45,18 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var connectionString = new ContosoDb().GetConnectionString();
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -69,17 +67,16 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProc = new StoredProc(storedProcName);
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -89,17 +86,16 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -109,19 +105,18 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
             var paramList = new Dictionary<string, object>();
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, default);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -131,7 +126,6 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
             var param1Name = "@Param1";
             object param1Val = RandomHelpers.RandomString();
@@ -144,9 +138,9 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, default);
 
             // Act
             await sut.Go();
@@ -155,7 +149,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
                                                                                                                                                    && x.Value == param1Val)
                                                                                                                                         && d.Any(x => x.Key == param2Name
-                                                                                                                                                   && x.Value == param2Val)), It.IsAny<CancellationToken>()));
+                                                                                                                                                   && x.Value == param2Val)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -165,11 +159,10 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
             Mock<IDbExecutor> dbExecutor = new();
-            Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
             var token = cancelSource.Token;
@@ -178,32 +171,33 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go(token);
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
+            dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), token));
         }
 
         [Fact]
         public async Task GivenNoMapperSpecified_OnGo_PassExecuteReturnReaderResultToMapUsingReflection()
         {
             // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
+            var storedProcName = RandomHelpers.RandomString();
+            var storedProc = new StoredProc(storedProcName);
 
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, default);
 
             Mock<IDataReader> returnReader = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+            dbExecutor.Setup(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(returnReader.Object);
 
             // Act
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object, storedProc));
+            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object, storedProcName));
         }
 
         [Fact]
@@ -212,16 +206,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input);
+            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, default);
 
             TestClassForMapping expectedReturn = new();
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(expectedReturn);
 
             // Act
@@ -235,26 +228,27 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         public async Task GivenCustomMapperProvided_OnGo_PassExecuteReturnReaderResultToMapUsingCustomMapping()
         {
             // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
+            var storedProcName = RandomHelpers.RandomString();
+            var storedProc = new StoredProc(storedProcName);
 
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
-            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input)
+            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, default)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
             Mock<IDataReader> returnReader = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+            dbExecutor.Setup(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(returnReader.Object);
 
             // Act
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object, storedProc));
+            entityMapper.Verify(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object, storedProcName));
         }
 
         [Fact]
@@ -263,17 +257,16 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input)
+            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, default)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
             TestClassForMapping expectedReturn = new();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(expectedReturn);
 
             // Act
@@ -289,14 +282,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: true);
+            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, true);
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(value: null);
 
             // Act
@@ -312,15 +304,14 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: true)
+            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, true)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(value: null);
 
             // Act
@@ -337,14 +328,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sprocName = RandomHelpers.RandomString();
             var storedProc = new StoredProc(sprocName);
 
-            Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(dbExecutor.Object, entityMapper.Object, input, allowNull: false);
+            AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, false);
 
-            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingReflection<TestClassForMapping>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(value: null);
 
             // Act
@@ -368,12 +358,12 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(dbExecutor.Object, entityMapper.Object, input, allowNull: false)
+            var sut = new AsyncSingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, false)
                                                                                 .UseCustomMapping<TestClassMapper>();
 
-            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<StoredProc>()))
+            entityMapper.Setup(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(It.IsAny<IDataReader>(), It.IsAny<string>()))
                 .Returns(value: null);
 
             // Act

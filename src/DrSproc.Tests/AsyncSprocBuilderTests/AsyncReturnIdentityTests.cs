@@ -25,15 +25,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -46,15 +46,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -66,15 +66,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -85,15 +85,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -106,15 +106,15 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var paramList = new Dictionary<string, object>();
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, true);
 
             // Act
             await sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<CancellationToken>()));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -136,9 +136,9 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var input = new StoredProcInput(storedProc, paramList);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, true);
 
             // Act
             await sut.Go();
@@ -147,7 +147,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
                                                                                                                                                    && x.Value == param1Val)
                                                                                                                                         && d.Any(x => x.Key == param2Name
-                                                                                                                                                   && x.Value == param2Val)), It.IsAny<CancellationToken>()));
+                                                                                                                                                   && x.Value == param2Val)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
         }
 
         [Fact]
@@ -158,9 +158,9 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
             var token = cancelSource.Token;
@@ -169,7 +169,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go(token);
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), token));
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), token));
         }
 
         [Theory]
@@ -185,12 +185,12 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(returnValue);
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             var id = await sut.Go();
@@ -207,12 +207,12 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(null);
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: true);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
             // Act
             var id = await sut.Go();
@@ -230,12 +230,12 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<CancellationToken>()))
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(null);
 
-            var input = new StoredProcInput(storedProc);
+            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc);
 
-            AsyncIdentityReturnBuilder<ContosoDb> sut = new(dbExecutor.Object, input, allowNull: false);
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, false);
 
             // Act
             Func<Task> action = () => sut.Go();
