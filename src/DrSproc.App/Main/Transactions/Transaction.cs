@@ -1,4 +1,6 @@
-﻿using DrSproc.Models;
+﻿using DrSproc.Main.Transactions.Helpers;
+using DrSproc.Models;
+using DrSproc.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -6,31 +8,32 @@ using System.Linq;
 
 namespace DrSproc.Main.Transaction
 {
-    internal class Transaction<TDatabase> : ITransactionActions, ITransaction<TDatabase>
+    internal class Transaction<TDatabase> : ITransaction<TDatabase>
         where TDatabase : IDatabase, new()
     {
-        private DateTime? _beingTime;
-        private DateTime? _rollbackTime;
-        private DateTime? _commitTime;
-        private TransactionStatus? _status;
-
         private ICollection<StoredProcedureCall> _procedureCalls;
 
         private SqlConnection sqlConnection;
         private SqlTransaction sqlTransaction;
 
-        public Transaction()
+        public Transaction(TransactionIsolation? isolationLevel = null)
         {
             _procedureCalls = new List<StoredProcedureCall>();
+            
+            var db = new TDatabase();
+            
+            sqlConnection = new SqlConnection(db.GetConnectionString());
+
+            BeginTransaction(isolationLevel);
         }
 
-        public DateTime? BeginTime => _beingTime;
+        public DateTime? BeginTime { get; private set; }
 
-        public DateTime? RollbackTime => _rollbackTime;
+        public DateTime? RollbackTime { get; private set; }
 
-        public DateTime? CommitTime => _commitTime;
+        public DateTime? CommitTime { get; private set; }
 
-        public TransactionStatus? Status => _status;
+        public TransactionState? State { get; private set; }
 
         public int TotalRowsAffected
             => _procedureCalls.Sum(x => x.RowsAffected);
@@ -40,22 +43,28 @@ namespace DrSproc.Main.Transaction
             return _procedureCalls;
         }
 
-        public void BeginTransaction()
+        private void BeginTransaction(TransactionIsolation? isolationLevel)
         {
-            _beingTime = DateTime.Now;
-            _status = TransactionStatus.InProcess;
+            sqlTransaction = sqlConnection.BeginTransaction(isolationLevel.ToIsolationLevel());
+
+            BeginTime = DateTime.Now;
+            State = TransactionState.InProcess;
         }
 
-        public void RollbackTransaction()
+        public void Commit() 
         {
-            _rollbackTime = DateTime.Now;
-            _status |= TransactionStatus.RolledBack;
+            sqlTransaction.Commit();
+
+            CommitTime = DateTime.Now;
+            State = TransactionState.Committed;
         }
 
-        public void CommitTransaction()
+        public void Rollback()
         {
-            _commitTime = DateTime.Now;
-            _status |= TransactionStatus.Committed;
+            sqlTransaction.Rollback();
+
+            RollbackTime = DateTime.Now;
+            State = TransactionState.RolledBack;
         }
 
         public void Dispose()

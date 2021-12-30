@@ -2,7 +2,7 @@
 
 namespace DrSproc
 {
-    public interface ITargetTransaction : ITargetBase
+    public interface ITargetTransaction : ITargetDatabase
     {
         void RollbackTransaction();
 

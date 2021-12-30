@@ -1,4 +1,5 @@
 ﻿using DrSproc.Models;
+using DrSproc.Transactions;
 using System;
 using System.Collections.Generic;
 
@@ -17,10 +18,14 @@ namespace DrSproc
 
         DateTime? CommitTime { get; }
 
-        TransactionStatus? Status { get; }
+        TransactionState? State { get; }
 
         int TotalRowsAffected { get; }
 
         IEnumerable<StoredProcedureCall> GetStoredProcedureCallsSoFar();
+
+        void Commit();
+
+        void Rollback();
     }
 }

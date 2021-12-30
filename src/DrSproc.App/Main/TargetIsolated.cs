@@ -9,13 +9,13 @@ using System.Data.SqlClient;
 
 namespace DrSproc.Main
 {
-    internal class TargetDatabase<TDatabase> : ITargetDatabase
+    internal class TargetIsolated<TDatabase> : ITargetIsolated
         where TDatabase : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
 
-        public TargetDatabase(IDbExecutor dbExecutor, IEntityMapper entityMapper)
+        public TargetIsolated(IDbExecutor dbExecutor, IEntityMapper entityMapper)
         {
             _dbExecutor = dbExecutor;
             _entityMapper = entityMapper;

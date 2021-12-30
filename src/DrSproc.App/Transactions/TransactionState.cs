@@ -1,6 +1,6 @@
-﻿namespace DrSproc.Models
+﻿namespace DrSproc.Transactions
 {
-    public enum TransactionStatus
+    public enum TransactionState
     {
         InProcess,
         RolledBack,

@@ -14,14 +14,19 @@ namespace DrSproc.Main
             _entityMapper = entityMapper;
         }
 
-        public ITargetDatabase Use<T>() 
+        public ITargetIsolated Use<T>() 
             where T : IDatabase, new()
         {
-            return new TargetDatabase<T>(_dbExecutor, _entityMapper);
+            return new TargetIsolated<T>(_dbExecutor, _entityMapper);
         }
 
-        public ITargetTransaction UseTransaction<T>(ITransaction<T> transaction)
+        public ITargetTransaction Use<T>(ITransaction<T> transaction)
             where T : IDatabase, new()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ITransaction<T> BeginTransaction<T>() where T : IDatabase, new()
         {
             throw new System.NotImplementedException();
         }
