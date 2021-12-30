@@ -6,23 +6,23 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace DrSproc.Main.Transaction
+namespace DrSproc.Main.Transactions
 {
-    internal class Transaction<TDatabase> : ITransaction<TDatabase>
+    internal class Transaction<TDatabase> : ITransaction<TDatabase>, IInternalTransaction<TDatabase>
         where TDatabase : IDatabase, new()
     {
         private ICollection<StoredProcedureCall> _procedureCalls;
 
-        private SqlConnection sqlConnection;
-        private SqlTransaction sqlTransaction;
+        private SqlConnection _sqlConnection;
+        private SqlTransaction _sqlTransaction;
 
         public Transaction(TransactionIsolation? isolationLevel = null)
         {
             _procedureCalls = new List<StoredProcedureCall>();
-            
+
             var db = new TDatabase();
-            
-            sqlConnection = new SqlConnection(db.GetConnectionString());
+
+            _sqlConnection = new SqlConnection(db.GetConnectionString());
 
             BeginTransaction(isolationLevel);
         }
@@ -38,6 +38,10 @@ namespace DrSproc.Main.Transaction
         public int TotalRowsAffected
             => _procedureCalls.Sum(x => x.RowsAffected);
 
+        public SqlConnection SqlConnection => _sqlConnection;
+
+        public SqlTransaction SqlTransaction => _sqlTransaction;
+
         public IEnumerable<StoredProcedureCall> GetStoredProcedureCallsSoFar()
         {
             return _procedureCalls;
@@ -45,15 +49,15 @@ namespace DrSproc.Main.Transaction
 
         private void BeginTransaction(TransactionIsolation? isolationLevel)
         {
-            sqlTransaction = sqlConnection.BeginTransaction(isolationLevel.ToIsolationLevel());
+            _sqlTransaction = _sqlConnection.BeginTransaction(isolationLevel.ToIsolationLevel());
 
             BeginTime = DateTime.Now;
             State = TransactionState.InProcess;
         }
 
-        public void Commit() 
+        public void Commit()
         {
-            sqlTransaction.Commit();
+            _sqlTransaction.Commit();
 
             CommitTime = DateTime.Now;
             State = TransactionState.Committed;
@@ -61,7 +65,7 @@ namespace DrSproc.Main.Transaction
 
         public void Rollback()
         {
-            sqlTransaction.Rollback();
+            _sqlTransaction.Rollback();
 
             RollbackTime = DateTime.Now;
             State = TransactionState.RolledBack;
@@ -69,8 +73,8 @@ namespace DrSproc.Main.Transaction
 
         public void Dispose()
         {
-            sqlTransaction?.Dispose();
-            sqlConnection?.Dispose();
+            _sqlTransaction?.Dispose();
+            _sqlConnection?.Dispose();
         }
     }
 }
