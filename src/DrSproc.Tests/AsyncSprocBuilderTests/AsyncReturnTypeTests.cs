@@ -22,7 +22,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnIdentity();
@@ -41,7 +41,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnSingle<TestSubClass>();
@@ -60,7 +60,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnMulti<TestSubClass>();

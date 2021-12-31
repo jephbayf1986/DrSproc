@@ -25,7 +25,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, default);
 
@@ -46,7 +46,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, default);
 
@@ -66,7 +66,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, default);
 
@@ -85,7 +85,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, default);
 
@@ -106,7 +106,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var paramList = new Dictionary<string, object>();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, default);
 
@@ -136,7 +136,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, default);
 
@@ -158,7 +158,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, default);
 
@@ -188,7 +188,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(returnValue);
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
 
@@ -211,7 +211,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(null);
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, false);
 

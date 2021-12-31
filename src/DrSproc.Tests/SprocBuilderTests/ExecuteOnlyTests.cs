@@ -25,7 +25,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             StoredProc storedProc = new(RandomHelpers.RandomString());  
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             sut.Go();
@@ -46,7 +46,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             StoredProc storedProc = new(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             sut.Go();
@@ -66,7 +66,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             sut.Go();
@@ -90,7 +90,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             sut.Go();
@@ -109,7 +109,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             sut.Go();
@@ -130,7 +130,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var paramName = "@Test";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -153,7 +153,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             var paramName = "Another";
             var expectedParamInput = $"@{paramName}";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -177,7 +177,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             var paramName = "@TrailingSpaces    ";
             var expectedParamInput = paramName.Trim();
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -202,7 +202,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             var expectedParamInput = $"@{paramName}";
             object paramValue = "ParamVal";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, paramValue);
 
             // Act
@@ -226,7 +226,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            ISprocBuilder sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             for(int i = 0; i < numberOfParams; i++)
             {
@@ -253,7 +253,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             var paramName = "@Optional";
             object paramValue = 15;
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParamIfNotNull(paramName, paramValue);
 
             // Act
@@ -276,7 +276,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var paramName = "@Optional";
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
@@ -299,7 +299,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             var timeoutSeconds = 111;
             var timeoutSpan = TimeSpan.FromSeconds(timeoutSeconds);
 
-            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithTimeOut(timeoutSpan);
 
             // Act

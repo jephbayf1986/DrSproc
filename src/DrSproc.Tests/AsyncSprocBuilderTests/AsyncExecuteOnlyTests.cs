@@ -26,7 +26,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             await sut.Go();
@@ -47,7 +47,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var sproc = new StoredProc(RandomHelpers.RandomString());
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             await sut.Go();
@@ -67,7 +67,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             await sut.Go();
@@ -91,7 +91,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             await sut.Go();
@@ -110,7 +110,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
             await sut.Go();
@@ -131,7 +131,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var paramName = "@Test";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -154,7 +154,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var paramName = "Another";
             var expectedParamInput = $"@{paramName}";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -178,7 +178,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var paramName = "@TrailingSpaces    ";
             var expectedParamInput = paramName.Trim();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, null);
 
             // Act
@@ -203,7 +203,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var expectedParamInput = $"@{paramName}";
             object paramValue = "ParamVal";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParam(paramName, paramValue);
 
             // Act
@@ -227,7 +227,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            IAsyncSprocBuilder sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            IAsyncSprocBuilder sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             for (int i = 0; i < numberOfParams; i++)
             {
@@ -254,7 +254,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var paramName = "@Optional";
             object paramValue = 15;
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                         .WithParamIfNotNull(paramName, paramValue);
 
             // Act
@@ -277,7 +277,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var paramName = "@Optional";
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc)
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc)
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
@@ -297,7 +297,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, null, storedProc);
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             var cancelSource = new CancellationTokenSource(RandomHelpers.IntBetween(1, 1000));
             var token = cancelSource.Token;

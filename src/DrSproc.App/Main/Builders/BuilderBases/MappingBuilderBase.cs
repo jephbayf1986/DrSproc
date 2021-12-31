@@ -2,6 +2,7 @@
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,8 +13,14 @@ namespace DrSproc.Main.Builders.BuilderBases
     {
         private readonly IEntityMapper _entityMapper;
 
-        protected MappingBuilderBase(IDbExecutor dbExecutor, IEntityMapper entityMapper, SqlConnection connection, SqlTransaction transaction, StoredProc storedProc)
-            : base(dbExecutor, connection, transaction, storedProc)
+        protected MappingBuilderBase(IDbExecutor dbExecutor, IEntityMapper entityMapper, SqlConnection connection, StoredProc storedProc)
+            : base(dbExecutor, connection, storedProc)
+        {
+            _entityMapper = entityMapper;
+        }
+
+        protected MappingBuilderBase(IDbExecutor dbExecutor, IEntityMapper entityMapper, IInternalTransaction transactio, StoredProc storedProc)
+            : base(dbExecutor, transactio, storedProc)
         {
             _entityMapper = entityMapper;
         }

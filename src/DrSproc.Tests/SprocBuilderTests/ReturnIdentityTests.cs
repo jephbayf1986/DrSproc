@@ -23,7 +23,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, default);
 
@@ -44,7 +44,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, default);
 
@@ -64,7 +64,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, default);
 
@@ -83,7 +83,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, default);
 
@@ -104,7 +104,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var paramList = new Dictionary<string, object>();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, default);
 
@@ -134,7 +134,7 @@ namespace DrSproc.Tests.SprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, paramList, null, default);
 
@@ -158,7 +158,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var timeoutSeconds = RandomHelpers.IntBetween(100, 500);
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, timeoutSeconds, default);
 
@@ -185,7 +185,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(returnValue);
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
@@ -208,7 +208,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
                 .Returns(null);
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, false);
 

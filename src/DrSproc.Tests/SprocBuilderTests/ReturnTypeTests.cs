@@ -22,7 +22,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnIdentity();
@@ -41,7 +41,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnSingle<TestSubClass>();
@@ -60,7 +60,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             StoredProc sproc = new(RandomHelpers.RandomString());
 
-            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, null, sproc);
+            SprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
             var result = sut.ReturnMulti<TestSubClass>();

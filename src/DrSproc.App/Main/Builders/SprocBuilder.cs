@@ -4,6 +4,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Helpers;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,8 +17,14 @@ namespace DrSproc.Main.Builders
         private IDictionary<string, object> _paramData;
         private int? _timeOutSeconds = null;
 
-        public SprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, SqlConnection connection, SqlTransaction transaction, StoredProc storedProc)
-            : base(dbExecutor, entityMapper, connection, transaction, storedProc)
+        public SprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, SqlConnection connection, StoredProc storedProc)
+            : base(dbExecutor, entityMapper, connection, storedProc)
+        {
+            _paramData = new Dictionary<string, object>();
+        }
+
+        public SprocBuilder(IDbExecutor dbExecutor, IEntityMapper entityMapper, IInternalTransaction transaction, StoredProc storedProc)
+            : base(dbExecutor, entityMapper, transaction, storedProc)
         {
             _paramData = new Dictionary<string, object>();
         }

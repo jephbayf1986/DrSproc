@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DrSproc.Main.Transactions
 {
-    internal class Transaction<TDatabase> : ITransaction<TDatabase>, IInternalTransaction<TDatabase>
+    internal class Transaction<TDatabase> : ITransaction<TDatabase>, IInternalTransaction
         where TDatabase : IDatabase, new()
     {
         private ICollection<StoredProcedureCall> _procedureCalls;

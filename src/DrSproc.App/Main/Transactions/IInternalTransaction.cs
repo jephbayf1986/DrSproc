@@ -2,8 +2,7 @@
 
 namespace DrSproc.Main.Transactions
 {
-    internal interface IInternalTransaction<TDatabase>
-        where TDatabase : IDatabase, new()
+    internal interface IInternalTransaction
     {
         SqlConnection SqlConnection { get;}
         

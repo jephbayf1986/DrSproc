@@ -27,7 +27,7 @@ namespace DrSproc.Main
 
             using (var connection = GetSqlConnection())
             {
-                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, null, sproc);
+                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
             }
         }
 
@@ -37,7 +37,7 @@ namespace DrSproc.Main
 
             using (var connection = GetSqlConnection())
             {
-                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, null, sproc);
+                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
             }
         }
 
@@ -47,7 +47,7 @@ namespace DrSproc.Main
 
             using (var connection = GetSqlConnection())
             {
-                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, null, sproc);
+                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
             }
         }
 
@@ -57,7 +57,7 @@ namespace DrSproc.Main
 
             using (var connection = GetSqlConnection())
             {
-                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, null, sproc);
+                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
             }
         }
 

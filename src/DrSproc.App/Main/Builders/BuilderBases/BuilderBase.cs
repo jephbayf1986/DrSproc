@@ -1,5 +1,6 @@
 ﻿using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -15,11 +16,19 @@ namespace DrSproc.Main.Builders.BuilderBases
         private readonly SqlTransaction _transaction;
         private readonly StoredProc _storedProc;
 
-        public BuilderBase(IDbExecutor dbExecutor, SqlConnection connection, SqlTransaction transaction, StoredProc storedProc)
+        public BuilderBase(IDbExecutor dbExecutor, SqlConnection connection, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
             _connection = connection;
-            _transaction = transaction;
+            _transaction = null;
+            _storedProc = storedProc;
+        }
+
+        public BuilderBase(IDbExecutor dbExecutor, IInternalTransaction transaction, StoredProc storedProc)
+        {
+            _dbExecutor = dbExecutor;
+            _connection = transaction.SqlConnection;
+            _transaction = transaction.SqlTransaction;
             _storedProc = storedProc;
         }
 

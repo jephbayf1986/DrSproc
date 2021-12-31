@@ -25,7 +25,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -46,7 +46,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -66,7 +66,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -85,7 +85,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -106,7 +106,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             var paramList = new Dictionary<string, object>();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList);
 
@@ -136,7 +136,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                     { param2Name, param2Val}
                 };
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList);
 
@@ -158,7 +158,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IDbExecutor> dbExecutor = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -183,7 +183,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
             AsyncMultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null);
 
@@ -207,7 +207,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IEntityMapper> entityMapper = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
             AsyncMultiReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null);
 
@@ -237,7 +237,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
             var sut = new AsyncMultiReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null)
                                                                                 .UseCustomMapping<TestClassMapper>();
@@ -262,7 +262,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             Mock<IEntityMapper> entityMapper = new();
 
-            var builderBase = BuilderHelper.GetBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
             var sut = new AsyncMultiReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null)
                                                                                 .UseCustomMapping<TestClassMapper>();
