@@ -2,12 +2,13 @@
 using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
+using DrSproc.Main.Transactions;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.TargetDatabaseTests
+namespace DrSproc.Tests.TargetTransactionTests
 {
     public class ExecuteAsyncTests
     {
@@ -18,7 +19,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            Transaction<ContosoDb> transaction = new();
+
+            TargetTransaction<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, transaction);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -36,7 +39,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            Transaction<ContosoDb> transaction = new();
+
+            TargetTransaction<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, transaction);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -55,7 +60,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            Transaction<ContosoDb> transaction = new();
+
+            TargetTransaction<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, transaction);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -73,7 +80,9 @@ namespace DrSproc.Tests.TargetDatabaseTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            Transaction<ContosoDb> transaction = new();
+
+            TargetTransaction<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, transaction);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -84,6 +93,5 @@ namespace DrSproc.Tests.TargetDatabaseTests
             // Assert
             sproc.ShouldBeOfType<AsyncSprocBuilder<ContosoDb>>();
         }
-
     }
 }

@@ -21,15 +21,15 @@
         /// </code>
         /// </para>
         /// </summary>
-        /// <typeparam name="T">ITargetDb</typeparam>
+        /// <typeparam name="TDatabase">ITargetDb</typeparam>
         /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
-        ITargetIsolated Use<T>() 
-            where T : IDatabase, new();
-         
-        ITargetTransaction Use<T>(ITransaction<T> transaction)
-            where T : IDatabase, new ();
+        ITargetIsolated<TDatabase> Use<TDatabase>() 
+            where TDatabase : IDatabase, new();
+        
+        ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)
+            where TDatabase : IDatabase, new ();
 
-        ITransaction<T> BeginTransaction<T>()
-            where T : IDatabase, new ();
+        ITransaction<TDatabase> BeginTransaction<TDatabase>()
+            where TDatabase : IDatabase, new ();
     }
 }

@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace DrSproc.Main
 {
-    internal class TargetIsolated<TDatabase> : ITargetIsolated
+    internal class TargetIsolated<TDatabase> : ITargetIsolated<TDatabase>
         where TDatabase : IDatabase, new() 
     {
         private readonly IDbExecutor _dbExecutor;
@@ -66,7 +66,7 @@ namespace DrSproc.Main
             throw new System.NotImplementedException();
         }
 
-        public ITargetTransaction BeginTransaction(out ITransaction transaction)
+        public ITargetTransaction BeginTransaction(out ITransaction<TDatabase> transaction)
         {
             throw new System.NotImplementedException();
         }

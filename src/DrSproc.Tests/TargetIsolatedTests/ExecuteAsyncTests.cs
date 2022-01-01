@@ -1,5 +1,5 @@
 ﻿using DrSproc.Main;
-using DrSproc.Main.Builders;
+using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Tests.Shared;
@@ -7,9 +7,9 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.TargetDatabaseTests
+namespace DrSproc.Tests.TargetIsolatedTests
 {
-    public class ExecuteTests
+    public class ExecuteAsyncTests
     {
         [Fact]
         public void Execute_WithoutSchema_ShouldReturnNotNullInstance()
@@ -23,7 +23,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(sprocName);
+            var sproc = sut.ExecuteAsync(sprocName);
 
             // Assert
             sproc.ShouldNotBeNull();
@@ -42,7 +42,7 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(schema, sprocName);
+            var sproc = sut.ExecuteAsync(schema, sprocName);
 
             // Assert
             sproc.ShouldNotBeNull();
@@ -60,10 +60,10 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(sprocName);
+            var sproc = sut.ExecuteAsync(sprocName);
 
             // Assert
-            sproc.ShouldBeOfType<SprocBuilder<ContosoDb>>();
+            sproc.ShouldBeOfType<AsyncSprocBuilder<ContosoDb>>();
         }
 
         [Fact]
@@ -79,10 +79,10 @@ namespace DrSproc.Tests.TargetDatabaseTests
             var sprocName = RandomHelpers.RandomString();
 
             // Act
-            var sproc = sut.Execute(schema, sprocName);
+            var sproc = sut.ExecuteAsync(schema, sprocName);
 
             // Assert
-            sproc.ShouldBeOfType<SprocBuilder<ContosoDb>>();
+            sproc.ShouldBeOfType<AsyncSprocBuilder<ContosoDb>>();
         }
     }
 }
