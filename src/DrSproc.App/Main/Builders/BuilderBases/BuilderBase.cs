@@ -80,15 +80,18 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected void LogToTransaction(IDictionary<string, object> parameters, int? rowsAffected = null, int? rowsReturned = null)
         {
-            var log = new TransactionLog
+            if (_logStoredProcudure != null)
             {
-                StoredProcedureName = StoredProcName,
-                Parameters = parameters,
-                RowsAffected = rowsAffected,
-                RowsReturned = rowsReturned
-            };
+                var log = new TransactionLog
+                {
+                    StoredProcedureName = StoredProcName,
+                    Parameters = parameters,
+                    RowsAffected = rowsAffected,
+                    RowsReturned = rowsReturned
+                };
 
-            if (_logStoredProcudure != null) _logStoredProcudure(log);
+                _logStoredProcudure(log);
+            }
         }
     }
 }
