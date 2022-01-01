@@ -1,4 +1,6 @@
-﻿namespace DrSproc
+﻿using DrSproc.Transactions;
+
+namespace DrSproc
 {
     /// <summary>
     /// <b>IDrSproc</b> <br />
@@ -29,7 +31,7 @@
         ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)
             where TDatabase : IDatabase, new ();
 
-        ITransaction<TDatabase> BeginTransaction<TDatabase>()
+        ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null)
             where TDatabase : IDatabase, new ();
     }
 }

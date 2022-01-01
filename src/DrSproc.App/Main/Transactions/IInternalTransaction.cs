@@ -1,5 +1,4 @@
-﻿using DrSproc.Transactions;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace DrSproc.Main.Transactions
 {
@@ -8,9 +7,5 @@ namespace DrSproc.Main.Transactions
         SqlConnection SqlConnection { get;}
         
         SqlTransaction SqlTransaction { get;}
-
-        TransactionState? State { get; }
-
-        void BeginTransaction();
     }
 }

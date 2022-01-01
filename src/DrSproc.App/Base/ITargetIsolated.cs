@@ -1,10 +1,12 @@
-﻿namespace DrSproc
+﻿using DrSproc.Transactions;
+
+namespace DrSproc
 {
     public interface ITargetIsolated<TDatabase> : ITargetDatabase
         where TDatabase : IDatabase, new()
     {
-        ITargetTransaction BeginTransaction();
+        ITargetTransaction BeginTransaction(TransactionIsolation? isolationLevel = null);
 
-        ITargetTransaction BeginTransaction(out ITransaction<TDatabase> transaction);
+        ITargetTransaction BeginTransaction(out ITransaction<TDatabase> transaction, TransactionIsolation? isolationLevel = null);
     }
 }

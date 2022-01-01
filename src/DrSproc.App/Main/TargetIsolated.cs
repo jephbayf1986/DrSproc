@@ -5,6 +5,8 @@ using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
+using DrSproc.Transactions;
 using System.Data.SqlClient;
 
 namespace DrSproc.Main
@@ -61,14 +63,24 @@ namespace DrSproc.Main
             }
         }
 
-        public ITargetTransaction BeginTransaction()
+        public ITargetTransaction BeginTransaction(TransactionIsolation? isolationLevel = null)
         {
-            throw new System.NotImplementedException();
+            var transaction = new Transaction<TDatabase>();
+
+            transaction.BeginTransaction(isolationLevel);
+
+            return new TargetTransaction<TDatabase>(_dbExecutor, _entityMapper, transaction);
         }
 
-        public ITargetTransaction BeginTransaction(out ITransaction<TDatabase> transaction)
+        public ITargetTransaction BeginTransaction(out ITransaction<TDatabase> transaction, TransactionIsolation? isolationLevel = null)
         {
-            throw new System.NotImplementedException();
+            var transactionInstance = new Transaction<TDatabase>();
+
+            transactionInstance.BeginTransaction(isolationLevel);
+
+            transaction = transactionInstance;
+
+            return new TargetTransaction<TDatabase>(_dbExecutor, _entityMapper, transaction);
         }
 
         private SqlConnection GetSqlConnection()

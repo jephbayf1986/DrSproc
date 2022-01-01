@@ -15,16 +15,14 @@ namespace DrSproc.Main.Transactions
 
         private SqlConnection _sqlConnection;
         private SqlTransaction _sqlTransaction;
-        private TransactionIsolation? _isolation;
 
-        public Transaction(TransactionIsolation? isolationLevel = null)
+        public Transaction()
         {
             _procedureCalls = new List<StoredProcedureCall>();
 
             var db = new TDatabase();
 
             _sqlConnection = new SqlConnection(db.GetConnectionString());
-            _isolation = isolationLevel;
         }
 
         public DateTime? BeginTime { get; private set; }
@@ -47,9 +45,9 @@ namespace DrSproc.Main.Transactions
             return _procedureCalls;
         }
 
-        public void BeginTransaction()
+        internal void BeginTransaction(TransactionIsolation? isolationLevel)
         {
-            _sqlTransaction = _sqlConnection.BeginTransaction(_isolation.ToIsolationLevel());
+            _sqlTransaction = _sqlConnection.BeginTransaction(isolationLevel.ToIsolationLevel());
 
             BeginTime = DateTime.Now;
             State = TransactionState.InProcess;

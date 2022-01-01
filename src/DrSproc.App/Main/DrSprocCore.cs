@@ -1,5 +1,7 @@
 ﻿using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
+using DrSproc.Main.Transactions;
+using DrSproc.Transactions;
 
 namespace DrSproc.Main
 {
@@ -23,13 +25,17 @@ namespace DrSproc.Main
         public ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)
             where TDatabase : IDatabase, new()
         {
-            throw new System.NotImplementedException();
+            return new TargetTransaction<TDatabase>(_dbExecutor, _entityMapper, transaction);
         }
 
-        public ITransaction<TDatabase> BeginTransaction<TDatabase>() 
+        public ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null) 
             where TDatabase : IDatabase, new()
         {
-            throw new System.NotImplementedException();
+            var transaction = new Transaction<TDatabase>();
+
+            transaction.BeginTransaction(isolationLevel);
+
+            return transaction;
         }
     }
 }
