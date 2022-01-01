@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace DrSproc
 {
@@ -6,10 +7,10 @@ namespace DrSproc
     {
         void RollbackTransaction();
 
-        Task RollbackTransactionAsync();
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
 
         void CommitTransaction();
 
-        Task CommitTransactionAsync();
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -6,7 +6,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
 using DrSproc.Main.Transactions;
-using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DrSproc.Main
@@ -55,22 +55,22 @@ namespace DrSproc.Main
 
         public void CommitTransaction()
         {
-            throw new NotImplementedException();
+            _transaction.Commit();
         }
 
-        public Task CommitTransactionAsync()
+        public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => _transaction.Commit(), cancellationToken);
         }
 
         public void RollbackTransaction()
         {
-            throw new NotImplementedException();
+            _transaction.Rollback();
         }
 
-        public Task RollbackTransactionAsync()
+        public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => _transaction.Rollback(), cancellationToken);
         }
     }
 }
