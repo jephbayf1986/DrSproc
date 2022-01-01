@@ -197,7 +197,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object, storedProcName));
+            entityMapper.Verify(x => x.MapMultiUsingReflection<TestSubClass>(returnReader.Object, storedProcName));
         }
 
         [Fact]

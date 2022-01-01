@@ -194,7 +194,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapMultiUsingReflection<TestClassForMapping>(returnReader.Object, storedProcName));
+            entityMapper.Verify(x => x.MapMultiUsingReflection<TestSubClass>(returnReader.Object, storedProcName));
         }
 
         [Fact]
@@ -238,7 +238,8 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
-            MultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null);
+            var sut = new MultiReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null)
+                                                                                .UseCustomMapping<TestClassMapper>();
 
             Mock<IDataReader> returnReader = new();
 
@@ -262,7 +263,8 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            MultiReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, null);
+            var sut = new MultiReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null)
+                                                                                .UseCustomMapping<TestClassMapper>();
 
             List<TestClassForMapping> expectedReturn = new()
             {

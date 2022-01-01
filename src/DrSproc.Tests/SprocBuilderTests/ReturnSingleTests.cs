@@ -195,7 +195,7 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object, storedProcName));
+            entityMapper.Verify(x => x.MapUsingReflection<TestSubClass>(returnReader.Object, storedProcName));
         }
 
         [Fact]

@@ -43,12 +43,13 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
+            var connection = new SqlConnection(connectionString);
 
             Mock<IDbExecutor> dbExecutor = new();
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, connection: connection);
 
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
@@ -197,7 +198,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             await sut.Go();
 
             // Assert
-            entityMapper.Verify(x => x.MapUsingReflection<TestClassForMapping>(returnReader.Object, storedProcName));
+            entityMapper.Verify(x => x.MapUsingReflection<TestSubClass>(returnReader.Object, storedProcName));
         }
 
         [Fact]
