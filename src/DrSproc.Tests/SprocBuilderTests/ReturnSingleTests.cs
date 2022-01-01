@@ -27,7 +27,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -41,14 +41,15 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
+            var connection = new SqlConnection(connectionString);
 
             Mock<IDbExecutor> dbExecutor = new();
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, connection: connection);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -68,7 +69,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -78,7 +79,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenNullParameters_OnGo_PassEmptyDictonaryToExecuteReturnReader()
+        public void GivenNullParameters_OnGo_PassNullDictonaryToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -87,7 +88,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
 
             // Act
             sut.Go();
@@ -108,7 +109,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, null, true);
 
             // Act
             sut.Go();
@@ -138,7 +139,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, null, true);
 
             // Act
             sut.Go();
@@ -162,7 +163,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, timeoutSeconds, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, timeoutSeconds, true);
 
             // Act
             sut.Go();
@@ -183,7 +184,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
-            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
 
             Mock<IDataReader> returnReader = new();
 
@@ -207,7 +208,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            SingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, null, default);
+            SingleReturnBuilder<ContosoDb, TestClassForMapping> sut = new(builderBase, null, null, true);
 
             TestClassForMapping expectedReturn = new();
 
@@ -233,7 +234,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, entityMapper: entityMapper);
 
-            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null, default)
+            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null, true)
                                                                   .UseCustomMapping<TestClassMapper>();
 
             Mock<IDataReader> returnReader = new();
@@ -258,7 +259,7 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, entityMapper: entityMapper);
 
-            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null, default)
+            var sut = new SingleReturnBuilder<ContosoDb, TestClassForMapping>(builderBase, null, null, true)
                                                                      .UseCustomMapping<TestClassMapper>();
 
             TestClassForMapping expectedReturn = new();

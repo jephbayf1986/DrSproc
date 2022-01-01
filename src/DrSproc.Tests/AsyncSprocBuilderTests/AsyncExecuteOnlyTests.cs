@@ -40,8 +40,8 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
+            var connection = new SqlConnection(connectionString);
 
-            var connection = new SqlConnection(RandomHelpers.RandomConnectionString());
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 

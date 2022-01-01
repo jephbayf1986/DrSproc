@@ -39,12 +39,13 @@ namespace DrSproc.Tests.SprocBuilderTests
         {
             // Arrange
             var connectionString = new ContosoDb().GetConnectionString();
+            var connection = new SqlConnection(connectionString);
 
             Mock<IDbExecutor> dbExecutor = new();
 
             var storedProc = new StoredProc(RandomHelpers.RandomString());
 
-            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor);
+            var builderBase = BuilderHelper.GetIsolatedBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, connection: connection);
 
             MultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null);
 
