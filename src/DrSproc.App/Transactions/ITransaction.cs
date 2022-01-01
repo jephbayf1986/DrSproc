@@ -1,5 +1,4 @@
-﻿using DrSproc.Models;
-using DrSproc.Transactions;
+﻿using DrSproc.Transactions;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +21,11 @@ namespace DrSproc
 
         int TotalRowsAffected { get; }
 
-        IEnumerable<StoredProcedureCall> GetStoredProcedureCallsSoFar();
+        int TotalRowsReturned { get; }
+
+        int TotalRowsAffectedOrReturned { get; }
+
+        IEnumerable<TransactionLog> GetStoredProcedureCallsSoFar();
 
         void Commit();
 

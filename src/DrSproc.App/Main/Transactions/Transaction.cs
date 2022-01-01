@@ -1,5 +1,4 @@
 ﻿using DrSproc.Main.Transactions.Helpers;
-using DrSproc.Models;
 using DrSproc.Transactions;
 using System;
 using System.Collections.Generic;
@@ -11,14 +10,14 @@ namespace DrSproc.Main.Transactions
     internal class Transaction<TDatabase> : ITransaction<TDatabase>, IInternalTransaction
         where TDatabase : IDatabase, new()
     {
-        private ICollection<StoredProcedureCall> _procedureCalls;
+        private ICollection<TransactionLog> _transactionLogs;
 
         private SqlConnection _sqlConnection;
         private SqlTransaction _sqlTransaction;
 
         public Transaction()
         {
-            _procedureCalls = new List<StoredProcedureCall>();
+            _transactionLogs = new List<TransactionLog>();
 
             var db = new TDatabase();
 
@@ -34,15 +33,26 @@ namespace DrSproc.Main.Transactions
         public TransactionState? State { get; private set; }
 
         public int TotalRowsAffected
-            => _procedureCalls.Sum(x => x.RowsAffected);
+            => _transactionLogs.Where(x => x.RowsAffected != null).Sum(x => x.RowsAffected.Value);
+
+        public int TotalRowsReturned
+            => _transactionLogs.Where(x => x.RowsReturned != null).Sum(x => x.RowsReturned.Value);
+
+        public int TotalRowsAffectedOrReturned
+            => TotalRowsAffected + TotalRowsReturned;
 
         public SqlConnection SqlConnection => _sqlConnection;
 
         public SqlTransaction SqlTransaction => _sqlTransaction;
 
-        public IEnumerable<StoredProcedureCall> GetStoredProcedureCallsSoFar()
+        public IEnumerable<TransactionLog> GetStoredProcedureCallsSoFar()
         {
-            return _procedureCalls;
+            return _transactionLogs;
+        }
+
+        public void LogStoredProcedureCall(TransactionLog transactionLog)
+        {
+            _transactionLogs.Add(transactionLog);
         }
 
         internal void BeginTransaction(TransactionIsolation? isolationLevel)

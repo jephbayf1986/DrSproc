@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using DrSproc.Transactions;
+using System.Data.SqlClient;
 
 namespace DrSproc.Main.Transactions
 {
@@ -7,5 +8,7 @@ namespace DrSproc.Main.Transactions
         SqlConnection SqlConnection { get;}
         
         SqlTransaction SqlTransaction { get;}
+
+        void LogStoredProcedureCall(TransactionLog transactionLog);
     }
 }

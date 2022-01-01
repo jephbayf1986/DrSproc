@@ -16,8 +16,8 @@ namespace DrSproc.Main.DbExecutor
 
         Task<object> ExecuteReturnIdentityAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, CancellationToken cancellationToken = default);
 
-        void Execute(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, int? commandTimeout);
+        int Execute(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, int? commandTimeout);
         
-        Task ExecuteAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, CancellationToken cancellationToken = default);
+        Task<int> ExecuteAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, CancellationToken cancellationToken = default);
     }
 }

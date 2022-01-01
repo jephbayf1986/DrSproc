@@ -53,25 +53,25 @@ namespace DrSproc.Main.DbExecutor
             }
         }
 
-        public void Execute(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, int? commandTimeout)
+        public int Execute(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, int? commandTimeout)
         {
             using (var command = connection.CreateSprocCommand(procedureName, parameters, sqlTransaction, commandTimeout))
             {
                 if (connection.IsNotOpen())
                     connection.Open();
 
-                command.ExecuteNonQuery();
+                return command.ExecuteNonQuery();
             }
         }
 
-        public async Task ExecuteAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, CancellationToken cancellationToken = default)
+        public async Task<int> ExecuteAsync(SqlConnection connection, string procedureName, IDictionary<string, object> parameters, SqlTransaction sqlTransaction, CancellationToken cancellationToken = default)
         {
             using (var command = connection.CreateSprocCommand(procedureName, parameters, sqlTransaction, 0))
             {
                 if (connection.IsNotOpen())
                     await connection.OpenAsync(cancellationToken);
 
-                await command.ExecuteNonQueryAsync(cancellationToken);
+                return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
     }

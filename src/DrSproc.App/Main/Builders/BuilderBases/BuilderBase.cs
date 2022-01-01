@@ -1,6 +1,8 @@
 ﻿using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
 using DrSproc.Main.Transactions;
+using DrSproc.Transactions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -15,6 +17,7 @@ namespace DrSproc.Main.Builders.BuilderBases
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
         private readonly StoredProc _storedProc;
+        private readonly Action<TransactionLog> _logStoredProcudure;
 
         public BuilderBase(IDbExecutor dbExecutor, SqlConnection connection, StoredProc storedProc)
         {
@@ -30,6 +33,8 @@ namespace DrSproc.Main.Builders.BuilderBases
             _connection = transaction.SqlConnection;
             _transaction = transaction.SqlTransaction;
             _storedProc = storedProc;
+
+            _logStoredProcudure = transaction.LogStoredProcedureCall;
         }
 
         public BuilderBase(BuilderBase builderBase)
@@ -71,6 +76,19 @@ namespace DrSproc.Main.Builders.BuilderBases
         protected Task ExecuteAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
             return _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+        }
+
+        protected void LogToTransaction(IDictionary<string, object> parameters, int? rowsAffected = null, int? rowsReturned = null)
+        {
+            var log = new TransactionLog
+            {
+                StoredProcedureName = StoredProcName,
+                Parameters = parameters,
+                RowsAffected = rowsAffected,
+                RowsReturned = rowsReturned
+            };
+
+            if (_logStoredProcudure != null) _logStoredProcudure(log);
         }
     }
 }

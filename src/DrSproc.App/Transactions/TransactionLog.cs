@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace DrSproc.Models
+namespace DrSproc.Transactions
 {
-    public class StoredProcedureCall
+    public class TransactionLog
     {
-        public string DatabaseName { get; internal set; }
-
         public string StoredProcedureName { get; internal set; }
 
         public IDictionary<string, object> Parameters { get; internal set; }
 
-        public int RowsAffected { get; internal set; }
+        public int? RowsReturned { get; internal set; }
+
+        public int? RowsAffected { get; internal set; }
     }
 }
