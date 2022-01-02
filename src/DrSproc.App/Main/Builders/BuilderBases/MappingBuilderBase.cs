@@ -19,8 +19,8 @@ namespace DrSproc.Main.Builders.BuilderBases
             _entityMapper = entityMapper;
         }
 
-        protected MappingBuilderBase(IDbExecutor dbExecutor, IEntityMapper entityMapper, IInternalTransaction transactio, StoredProc storedProc)
-            : base(dbExecutor, transactio, storedProc)
+        protected MappingBuilderBase(IDbExecutor dbExecutor, IEntityMapper entityMapper, IInternalTransaction transaction, StoredProc storedProc)
+            : base(dbExecutor, transaction, storedProc)
         {
             _entityMapper = entityMapper;
         }

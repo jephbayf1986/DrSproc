@@ -43,6 +43,7 @@ namespace DrSproc.Main.Builders.BuilderBases
             _connection = builderBase._connection;
             _transaction = builderBase._transaction;
             _storedProc = builderBase._storedProc;
+            _logStoredProcudure = builderBase._logStoredProcudure;
         }
 
         protected string StoredProcName
@@ -60,26 +61,34 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected object ExecuteReturnIdentity(IDictionary<string, object> parameters, int? commandTimeOut)
         {
-            return _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+            var identity = _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+
+            LogToTransaction(parameters, rowsReturned: identity == null ? 0 : 1);
+
+            return identity;
         }
 
-        protected Task<object> ExecuteReturnIdentityAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        protected async Task<object> ExecuteReturnIdentityAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            return _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+            var identity = await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+
+            LogToTransaction(parameters, rowsReturned: identity == null ? 0 : 1);
+
+            return identity;
         }
 
         protected void Execute(IDictionary<string, object> parameters, int? commandTimeOut)
         {
             var rowsAffected = _dbExecutor.Execute(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
-            LogToTransaction(parameters, rowsAffected);
+            LogToTransaction(parameters, rowsAffected: rowsAffected);
         }
 
         protected async Task ExecuteAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
             var rowsAffected = await _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
-            LogToTransaction(parameters, rowsAffected);
+            LogToTransaction(parameters, rowsAffected: rowsAffected);
         }
 
         protected void LogToTransaction(IDictionary<string, object> parameters, int? rowsAffected = null, int? rowsReturned = null)

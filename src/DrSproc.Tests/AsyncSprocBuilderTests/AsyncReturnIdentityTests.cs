@@ -248,5 +248,83 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
         }
+
+        [Fact]
+        public async Task GivenTransaction_OnGo_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(RandomHelpers.IntBetween(1, 10));
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GivenTransaction_WhenNullReturnedFromExecuteReturnIdentityAsync_UpdateTransactionWithZeroLinesInLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(null);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsReturned.ShouldBe(0);
+        }
+
+        [Fact]
+        public async Task GivenTransaction_WhenNotNullReturnedFromExecuteReturnIdentityAsync_UpdateTransactionWithOneLineInLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
+
+            dbExecutor.Setup(x => x.ExecuteReturnIdentityAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(RandomHelpers.IntBetween(1, 10));
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsReturned.ShouldBe(1);
+        }
     }
 }
