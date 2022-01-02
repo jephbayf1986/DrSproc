@@ -2,6 +2,7 @@
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -280,6 +281,27 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             result.ShouldBe(expectedReturn);
+        }
+
+        [Fact]
+        public void GivenTransaction_OnGo_PassTransactionConnectionAndTranToExecuteReturnReader()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            MultiReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnReader(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
         }
     }
 }

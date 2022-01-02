@@ -2,6 +2,7 @@
 using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.Shared;
+using DrSproc.Main.Transactions;
 using DrSproc.Tests.Shared;
 using Moq;
 using Shouldly;
@@ -225,6 +226,27 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     x => x.ToLower().ShouldContain("null"),
                                                     x => x.ToLower().ShouldContain("allow"),
                                                     x => x.ToLower().ShouldContain(sprocName.ToLower()));
+        }
+
+        [Fact]
+        public async Task GivenTransaction_OnGo_PassTransactionConnectionAndTranToExecuteReturnIdentityAsync()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            AsyncIdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, true);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnIdentityAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
         }
     }
 }

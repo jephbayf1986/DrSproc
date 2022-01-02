@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Xunit;
 using System;
 using System.Data.SqlClient;
+using DrSproc.Main.Transactions;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
@@ -222,6 +223,27 @@ namespace DrSproc.Tests.SprocBuilderTests
                                                     x => x.ToLower().ShouldContain("null"),
                                                     x => x.ToLower().ShouldContain("allow"),
                                                     x => x.ToLower().ShouldContain(sprocName.ToLower()));
+        }
+
+        [Fact]
+        public void GivenTransaction_OnGo_PassTransactionConnectionAndTranToExecuteReturnIdentity()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            dbExecutor.Verify(x => x.ExecuteReturnIdentity(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
         }
     }
 }
