@@ -1,4 +1,5 @@
 ﻿using DrSproc.Builders.Async;
+using DrSproc.Main.Builders;
 using DrSproc.Main.Builders.Async;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
@@ -6,6 +7,7 @@ using DrSproc.Main.Shared;
 using DrSproc.Main.Transactions;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -328,6 +330,55 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task GivenTransaction_OnGo_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GivenTransaction_WhenRowsAffectedReturnedFromExecute_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
+
+            var rowsAffected = RandomHelpers.IntBetween(1, 20);
+            
+            dbExecutor.Setup(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(rowsAffected);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsAffected.ShouldBe(rowsAffected);
         }
     }
 }

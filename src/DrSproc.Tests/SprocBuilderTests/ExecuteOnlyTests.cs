@@ -6,6 +6,7 @@ using DrSproc.Main.Shared;
 using DrSproc.Main.Transactions;
 using DrSproc.Tests.Shared;
 using Moq;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -328,6 +329,55 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             // Assert
             dbExecutor.Verify(x => x.Execute(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
+        }
+
+        [Fact]
+        public void GivenTransaction_OnGo_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GivenTransaction_WhenRowsAffectedReturnedFromExecute_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+            Mock<IEntityMapper> entityMapper = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var sut = new SprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
+
+            var rowsAffected = RandomHelpers.IntBetween(1, 20);
+
+            dbExecutor.Setup(x => x.Execute(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
+                .Returns(rowsAffected);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsAffected.ShouldBe(rowsAffected);
         }
     }
 }

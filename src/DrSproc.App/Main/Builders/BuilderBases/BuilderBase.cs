@@ -70,12 +70,16 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected void Execute(IDictionary<string, object> parameters, int? commandTimeOut)
         {
-            _dbExecutor.Execute(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+            var rowsAffected = _dbExecutor.Execute(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+
+            LogToTransaction(parameters, rowsAffected);
         }
 
-        protected Task ExecuteAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        protected async Task ExecuteAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            return _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+            var rowsAffected = await _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+
+            LogToTransaction(parameters, rowsAffected);
         }
 
         protected void LogToTransaction(IDictionary<string, object> parameters, int? rowsAffected = null, int? rowsReturned = null)
