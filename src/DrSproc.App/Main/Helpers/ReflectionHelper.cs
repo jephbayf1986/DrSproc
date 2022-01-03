@@ -27,13 +27,15 @@ namespace DrSproc.Main.Helpers
 
                            var value = reader[x.Name];
 
+                           var fullNameWithParent = parentProperty == null ? x.Name : parentProperty + x.Name;
+
                            return new TypeProperty
                            {
                                Name = x.Name,
                                Type = xType,
                                IsNullable = nullable,
-                               SubProperties = xType.GetPropertiesWithMatchingValues(reader, parentProperty: x.Name),
-                               ValueFound = reader[x.Name]
+                               SubProperties = xType.GetPropertiesWithMatchingValues(reader, parentProperty: fullNameWithParent),
+                               ValueFound = reader[fullNameWithParent]
                            };
                         });
         }
