@@ -11,6 +11,7 @@ using Xunit;
 using System;
 using System.Data.SqlClient;
 using DrSproc.Main.Transactions;
+using System.Data;
 
 namespace DrSproc.Tests.SprocBuilderTests
 {
@@ -226,7 +227,7 @@ namespace DrSproc.Tests.SprocBuilderTests
         }
 
         [Fact]
-        public void GivenTransaction_OnGo_PassTransactionConnectionAndTranToExecuteReturnIdentity()
+        public void GivenTransaction_OnGo_PassTransactionConnectionAndTranToExecuteReturnReader()
         {
             // Arrange
             var storedProc = new StoredProc(RandomHelpers.RandomString());
@@ -243,7 +244,44 @@ namespace DrSproc.Tests.SprocBuilderTests
             sut.Go();
 
             // Assert
-            dbExecutor.Verify(x => x.ExecuteReturnIdentity(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
+            dbExecutor.Verify(x => x.ExecuteReturnReader(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
+        }
+
+        [Theory]
+        [InlineData("String")]
+        [InlineData(11)]
+        [InlineData(12.5)]
+        [InlineData(true)]
+        [InlineData(null)]
+        public void GivenTransaction_OnGo_ReturnIdentityResultFromExecuteReturnReaderFirstRowAndColumn(object returnValue)
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
+
+            Mock<IDataReader> returnReader = new();
+
+            returnReader.Setup(x => x.Read())
+                        .Returns(true);
+
+            returnReader.Setup(x => x.GetValue(0))
+                        .Returns(returnValue);
+
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
+
+            // Act
+            var id = sut.Go();
+
+            // Assert
+            id.ShouldBe(returnValue);
         }
 
         [Fact]
@@ -267,6 +305,39 @@ namespace DrSproc.Tests.SprocBuilderTests
             var log = transaction.GetStoredProcedureCallsSoFar();
 
             log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GivenTransaction_WhenRecordsAffectedFromExecuteReturnReader_UpdateTransactionRecordsAffected()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
+
+            var rowsAffected = RandomHelpers.IntBetween(1, 20);
+
+            Mock<IDataReader> returnReader = new();
+
+            returnReader.Setup(x => x.RecordsAffected)
+                        .Returns(rowsAffected);
+
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsAffected.ShouldBe(rowsAffected);
         }
     }
 }

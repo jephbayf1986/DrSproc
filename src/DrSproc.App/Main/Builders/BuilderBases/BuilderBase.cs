@@ -68,18 +68,28 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected object ExecuteReturnIdentity(IDictionary<string, object> parameters, int? commandTimeOut)
         {
-            var identity = _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+            if (_logStoredProcudure == null)
+                return _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
-            LogToTransaction(parameters, 0);
+            var reader = _dbExecutor.ExecuteReturnReader(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+
+            var identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+
+            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
 
             return identity;
         }
 
         protected async Task<object> ExecuteReturnIdentityAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            var identity = await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+            if (_logStoredProcudure == null)
+                return await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
-            LogToTransaction(parameters, 0);
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+
+            var identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+
+            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
 
             return identity;
         }
