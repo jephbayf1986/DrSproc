@@ -1,6 +1,7 @@
 ﻿using DrSproc.Main;
 using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
+using DrSproc.Transactions;
 
 namespace DrSproc.Base
 {
@@ -25,14 +26,30 @@ namespace DrSproc.Base
         /// </code>
         /// </para>
         /// </summary>
-        /// <typeparam name="T">ITargetDb</typeparam>
+        /// <typeparam name="TDatabase">ITargetDb</typeparam>
         /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
-        public static ITargetDatabase Use<T>() 
-            where T : IDatabase, new()
+        public static ITargetConnection Use<TDatabase>() 
+            where TDatabase : IDatabase, new()
         {
-            var drSproc = new DrSprocCore(new DbExecutor(), new EntityMapper());
+            var drSproc = new SqlConnector(new DbExecutor(), new EntityMapper());
 
-            return drSproc.Use<T>();
+            return drSproc.Use<TDatabase>();
+        }
+
+        public static ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)
+            where TDatabase : IDatabase, new()
+        {
+            var drSproc = new SqlConnector(new DbExecutor(), new EntityMapper());
+
+            return drSproc.Use<TDatabase>(transaction);
+        }
+
+        public static ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null)
+            where TDatabase : IDatabase, new()
+        {
+            var drSproc = new SqlConnector(new DbExecutor(), new EntityMapper());
+
+            return drSproc.BeginTransaction<TDatabase>(isolationLevel);
         }
     }
 }

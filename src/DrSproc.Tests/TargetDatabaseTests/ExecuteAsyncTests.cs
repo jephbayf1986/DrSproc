@@ -7,7 +7,7 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.TargetIsolatedTests
+namespace DrSproc.Tests.TargetDatabaseTests
 {
     public class ExecuteAsyncTests
     {
@@ -18,7 +18,7 @@ namespace DrSproc.Tests.TargetIsolatedTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -36,7 +36,7 @@ namespace DrSproc.Tests.TargetIsolatedTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();
@@ -55,7 +55,7 @@ namespace DrSproc.Tests.TargetIsolatedTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var sprocName = RandomHelpers.RandomString();
 
@@ -73,7 +73,7 @@ namespace DrSproc.Tests.TargetIsolatedTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            TargetIsolated<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
+            TargetDatabase<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object);
 
             var schema = RandomHelpers.RandomString();
             var sprocName = RandomHelpers.RandomString();

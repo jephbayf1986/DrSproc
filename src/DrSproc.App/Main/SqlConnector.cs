@@ -5,21 +5,21 @@ using DrSproc.Transactions;
 
 namespace DrSproc.Main
 {
-    internal class DrSprocCore : IDrSproc
+    internal class SqlConnector : ISqlConnector
     {
         private readonly IDbExecutor _dbExecutor;
         private readonly IEntityMapper _entityMapper;
 
-        public DrSprocCore(IDbExecutor executor, IEntityMapper entityMapper)
+        public SqlConnector(IDbExecutor executor, IEntityMapper entityMapper)
         {
             _dbExecutor = executor;
             _entityMapper = entityMapper;
         }
 
-        public ITargetIsolated<TDatabase> Use<TDatabase>() 
+        public ITargetDatabase<TDatabase> Use<TDatabase>() 
             where TDatabase : IDatabase, new()
         {
-            return new TargetIsolated<TDatabase>(_dbExecutor, _entityMapper);
+            return new TargetDatabase<TDatabase>(_dbExecutor, _entityMapper);
         }
 
         public ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)

@@ -3,7 +3,7 @@
 namespace DrSproc
 {
     /// <summary>
-    /// <b>IDrSproc</b> <br />
+    /// <b>Dr Sproc Sql Connector Interface for Dependency Injection</b> <br />
     /// A simple syntactically sweet way to call SQL stored procedures
     /// <para>
     /// Start by Setting the Target Database then more options will follow within the returned object. <br />
@@ -11,7 +11,7 @@ namespace DrSproc
     /// <i>Use This Interface for Dependency Injection to get the full testing capability</i>
     /// </para>
     /// </summary>
-    public interface IDrSproc
+    public interface ISqlConnector
     {
         /// <summary>
         /// <b>Database to Use</b> <br />
@@ -25,7 +25,7 @@ namespace DrSproc
         /// </summary>
         /// <typeparam name="TDatabase">ITargetDb</typeparam>
         /// <returns>A Target Database - With options for executing Sprocs within the Target Database</returns>  
-        ITargetIsolated<TDatabase> Use<TDatabase>() 
+        ITargetDatabase<TDatabase> Use<TDatabase>() 
             where TDatabase : IDatabase, new();
         
         ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)

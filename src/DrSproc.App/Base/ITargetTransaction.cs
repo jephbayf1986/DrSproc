@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace DrSproc
 {
-    public interface ITargetTransaction : ITargetDatabase
+    public interface ITargetTransaction : ITargetConnection
     {
         void RollbackTransaction();
 

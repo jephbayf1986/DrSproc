@@ -7,7 +7,7 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-namespace DrSproc.Tests.DrSprocCoreTests
+namespace DrSproc.Tests.SqlConnectorTests
 {
     public class UseDatabaseTests
     {
@@ -18,13 +18,13 @@ namespace DrSproc.Tests.DrSprocCoreTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
+            SqlConnector sut = new(dbExecutor.Object, entityMapper.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
 
             // Assert
-            db.ShouldBeOfType<TargetIsolated<ContosoDb>>();
+            db.ShouldBeOfType<TargetDatabase<ContosoDb>>();
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace DrSproc.Tests.DrSprocCoreTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
+            SqlConnector sut = new(dbExecutor.Object, entityMapper.Object);
 
             // Act
             var db = sut.Use<ContosoDb>();
@@ -50,7 +50,7 @@ namespace DrSproc.Tests.DrSprocCoreTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
+            SqlConnector sut = new(dbExecutor.Object, entityMapper.Object);
 
             var transaction = new Transaction<ContosoDb>();
 
@@ -68,7 +68,7 @@ namespace DrSproc.Tests.DrSprocCoreTests
             Mock<IDbExecutor> dbExecutor = new();
             Mock<IEntityMapper> entityMapper = new();
 
-            DrSprocCore sut = new(dbExecutor.Object, entityMapper.Object);
+            SqlConnector sut = new(dbExecutor.Object, entityMapper.Object);
 
             var transaction = new Transaction<ContosoDb>();
 
