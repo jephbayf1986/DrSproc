@@ -399,5 +399,59 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
         }
+
+        [Fact]
+        public async Task GivenTransaction_OnGo_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, transaction: transaction);
+
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task GivenTransaction_WhenRecordsAffectedFromExecuteReturnReaderAsync_UpdateTransactionRecordsAffected()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
+
+            var rowsAffected = RandomHelpers.IntBetween(1, 20);
+
+            Mock<IDataReader> returnReader = new();
+
+            returnReader.Setup(x => x.RecordsAffected)
+                        .Returns(rowsAffected);
+
+            dbExecutor.Setup(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(returnReader.Object);
+
+            // Act
+            await sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsAffected.ShouldBe(rowsAffected);
+        }
     }
 }

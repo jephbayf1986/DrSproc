@@ -395,5 +395,59 @@ namespace DrSproc.Tests.SprocBuilderTests
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReader(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<int?>()));
         }
+
+        [Fact]
+        public void GivenTransaction_OnGo_UpdateTransactionWithLog()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, transaction: transaction);
+
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.FirstOrDefault().ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GivenTransaction_WhenRecordsAffectedFromExecuteReturnReader_UpdateTransactionRecordsAffected()
+        {
+            // Arrange
+            var storedProc = new StoredProc(RandomHelpers.RandomString());
+
+            Mock<IDbExecutor> dbExecutor = new();
+
+            var transaction = new Transaction<ContosoDb>();
+
+            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
+
+            SingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, null, true);
+
+            var rowsAffected = RandomHelpers.IntBetween(1, 20);
+
+            Mock<IDataReader> returnReader = new();
+
+            returnReader.Setup(x => x.RecordsAffected)
+                        .Returns(rowsAffected);
+
+            dbExecutor.Setup(x => x.ExecuteReturnReader(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
+                .Returns(returnReader.Object);
+
+            // Act
+            sut.Go();
+
+            // Assert
+            var log = transaction.GetStoredProcedureCallsSoFar();
+
+            log.First().RowsAffected.ShouldBe(rowsAffected);
+        }
     }
 }

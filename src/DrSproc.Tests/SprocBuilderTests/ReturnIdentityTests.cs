@@ -260,9 +260,6 @@ namespace DrSproc.Tests.SprocBuilderTests
 
             IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
 
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
-                .Returns(RandomHelpers.IntBetween(1, 10));
-
             // Act
             sut.Go();
 
@@ -270,58 +267,6 @@ namespace DrSproc.Tests.SprocBuilderTests
             var log = transaction.GetStoredProcedureCallsSoFar();
 
             log.FirstOrDefault().ShouldNotBeNull();
-        }
-
-        [Fact]
-        public void GivenTransaction_WhenNullReturnedFromExecuteReturnIdentityAsync_UpdateTransactionWithZeroLinesInLog()
-        {
-            // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
-
-            Mock<IDbExecutor> dbExecutor = new();
-
-            var transaction = new Transaction<ContosoDb>();
-
-            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
-
-            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
-
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
-                .Returns(null);
-
-            // Act
-            sut.Go();
-
-            // Assert
-            var log = transaction.GetStoredProcedureCallsSoFar();
-
-            log.First().RowsReturned.ShouldBe(0);
-        }
-
-        [Fact]
-        public void GivenTransaction_WhenNotNullReturnedFromExecuteReturnIdentityAsync_UpdateTransactionWithOneLineInLog()
-        {
-            // Arrange
-            var storedProc = new StoredProc(RandomHelpers.RandomString());
-
-            Mock<IDbExecutor> dbExecutor = new();
-
-            var transaction = new Transaction<ContosoDb>();
-
-            var builderBase = BuilderHelper.GetTransactionBuilderBase<ContosoDb>(storedProc, dbExecutor: dbExecutor, transaction: transaction);
-
-            IdentityReturnBuilder<ContosoDb> sut = new(builderBase, null, null, true);
-
-            dbExecutor.Setup(x => x.ExecuteReturnIdentity(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<int?>()))
-                .Returns(RandomHelpers.IntBetween(1, 10));
-
-            // Act
-            sut.Go();
-
-            // Assert
-            var log = transaction.GetStoredProcedureCallsSoFar();
-
-            log.First().RowsReturned.ShouldBe(1);
         }
     }
 }

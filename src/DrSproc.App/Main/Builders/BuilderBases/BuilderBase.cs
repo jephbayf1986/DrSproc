@@ -50,19 +50,27 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected IDataReader ExecuteReturnReader(IDictionary<string, object> parameters, int? commandTimeOut)
         {
-            return _dbExecutor.ExecuteReturnReader(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+            var reader = _dbExecutor.ExecuteReturnReader(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+
+            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
+
+            return reader;
         }
 
-        protected Task<IDataReader> ExecuteReturnReaderAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
+        protected async Task<IDataReader> ExecuteReturnReaderAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
-            return _dbExecutor.ExecuteReturnReaderAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+            var reader = await _dbExecutor.ExecuteReturnReaderAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+
+            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
+
+            return reader;
         }
 
         protected object ExecuteReturnIdentity(IDictionary<string, object> parameters, int? commandTimeOut)
         {
             var identity = _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
-            LogToTransaction(parameters, rowsReturned: identity == null ? 0 : 1);
+            LogToTransaction(parameters, 0);
 
             return identity;
         }
@@ -71,7 +79,7 @@ namespace DrSproc.Main.Builders.BuilderBases
         {
             var identity = await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
-            LogToTransaction(parameters, rowsReturned: identity == null ? 0 : 1);
+            LogToTransaction(parameters, 0);
 
             return identity;
         }
@@ -80,17 +88,17 @@ namespace DrSproc.Main.Builders.BuilderBases
         {
             var rowsAffected = _dbExecutor.Execute(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
-            LogToTransaction(parameters, rowsAffected: rowsAffected);
+            LogToTransaction(parameters, rowsAffected);
         }
 
         protected async Task ExecuteAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
             var rowsAffected = await _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
-            LogToTransaction(parameters, rowsAffected: rowsAffected);
+            LogToTransaction(parameters, rowsAffected);
         }
 
-        protected void LogToTransaction(IDictionary<string, object> parameters, int? rowsAffected = null, int? rowsReturned = null)
+        protected void LogToTransaction(IDictionary<string, object> parameters, int rowsAffected)
         {
             if (_logStoredProcudure != null)
             {
@@ -98,8 +106,7 @@ namespace DrSproc.Main.Builders.BuilderBases
                 {
                     StoredProcedureName = StoredProcName,
                     Parameters = parameters,
-                    RowsAffected = rowsAffected,
-                    RowsReturned = rowsReturned
+                    RowsAffected = rowsAffected
                 };
 
                 _logStoredProcudure(log);

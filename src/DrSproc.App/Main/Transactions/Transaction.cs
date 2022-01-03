@@ -33,13 +33,7 @@ namespace DrSproc.Main.Transactions
         public TransactionState? State { get; private set; }
 
         public int TotalRowsAffected
-            => _transactionLogs.Where(x => x.RowsAffected != null).Sum(x => x.RowsAffected.Value);
-
-        public int TotalRowsReturned
-            => _transactionLogs.Where(x => x.RowsReturned != null).Sum(x => x.RowsReturned.Value);
-
-        public int TotalRowsAffectedOrReturned
-            => TotalRowsAffected + TotalRowsReturned;
+            => _transactionLogs.Sum(x => x.RowsAffected);
 
         public SqlConnection SqlConnection => _sqlConnection;
 

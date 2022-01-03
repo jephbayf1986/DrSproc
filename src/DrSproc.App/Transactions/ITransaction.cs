@@ -21,10 +21,6 @@ namespace DrSproc
 
         int TotalRowsAffected { get; }
 
-        int TotalRowsReturned { get; }
-
-        int TotalRowsAffectedOrReturned { get; }
-
         IEnumerable<TransactionLog> GetStoredProcedureCallsSoFar();
 
         void Commit();
