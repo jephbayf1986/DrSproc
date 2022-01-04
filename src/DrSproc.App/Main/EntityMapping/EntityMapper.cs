@@ -25,7 +25,7 @@ namespace DrSproc.Main.EntityMapping
             {
                 if (reader.Read())
                 {
-                    result = reader.CreateWithReflection<TReturn>();
+                    result = reader.CreateWithReflection<TReturn>(storedProcName);
                 }
 
                 return result;
