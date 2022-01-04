@@ -13,12 +13,17 @@ namespace DrSproc.Main.Helpers
 
             var propAndValues = returnType.GetPropertiesWithMatchingValues(reader);
 
-            return returnType.CreateTypeFromValues<T>(propAndValues);
+            T instance = Activator.CreateInstance<T>();
+
+            instance.SetInstancePropertyValues(propAndValues);
+
+            return instance;
         }
 
         private static IEnumerable<TypeProperty> GetPropertiesWithMatchingValues(this Type type, IDataReader reader, string parentProperty = null)
         {
             return type.GetProperties()
+                       .Where(x => x.CanWrite)
                        .Select(x => {
 
                            var nullable = x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -40,9 +45,9 @@ namespace DrSproc.Main.Helpers
                         });
         }
 
-        private static T CreateTypeFromValues<T>(this Type type, IEnumerable<TypeProperty> props)
+        private static void SetInstancePropertyValues(this object instance, IEnumerable<TypeProperty> props)
         {
-            T instance = Activator.CreateInstance<T>();
+            var type = instance.GetType();
 
             foreach(var prop in props)
             {
@@ -51,9 +56,16 @@ namespace DrSproc.Main.Helpers
                     type.GetProperty(prop.Name)
                         .SetValue(instance, prop.ValueFound);
                 }
-            }
+                else if (prop.SubProperties.Any())
+                {
+                    var subInstance = Activator.CreateInstance(prop.Type);
 
-            return instance;
+                    subInstance.SetInstancePropertyValues(prop.SubProperties);
+
+                    type.GetProperty(prop.Name)
+                        .SetValue(instance, subInstance);
+                }
+            }
         }
 
         private class TypeProperty

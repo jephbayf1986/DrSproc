@@ -32,12 +32,12 @@ namespace DrSproc.Tests.EntityMappingTests
 
             // Assert
             result.ShouldSatisfyAllConditions(s => s.Id.ShouldBe(expectedReturn.Id),
-                                             s => s.Name.ShouldBe(expectedReturn.Name),
-                                             s => s.Description.ShouldBe(expectedReturn.Description));
+                                              s => s.Name.ShouldBe(expectedReturn.Name),
+                                              s => s.Description.ShouldBe(expectedReturn.Description));
         }
 
         [Fact]
-        public void GivenMapperAndReaderHasCorrectFieldsAndTypes_OnMapUsingCustomMapping_ReturnObject()
+        public void GivenComplexNestedModel_WhenReaderHasCorrectNestedFieldNamesAndTypes_ReturnObject()
         {
             // Arrange
             var storedProcName = RandomHelpers.RandomString();
@@ -46,6 +46,7 @@ namespace DrSproc.Tests.EntityMappingTests
             dataReader.Setup(m => m.FieldCount).Returns(1);
 
             TestClassForMapping expectedReturn = new();
+            TestSubClass expectedSubClass = new();
 
             dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[nameof(expectedReturn.Id)]).Returns(expectedReturn.Id);
@@ -56,9 +57,9 @@ namespace DrSproc.Tests.EntityMappingTests
             dataReader.Setup(m => m[nameof(expectedReturn.Width)]).Returns(expectedReturn.Width);
             dataReader.Setup(m => m[nameof(expectedReturn.Height)]).Returns(expectedReturn.Height);
             dataReader.Setup(m => m[nameof(expectedReturn.Frequency)]).Returns(expectedReturn.Frequency);
-            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Id)]).Returns(expectedReturn.SubClass.Id);
-            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Name)]).Returns(expectedReturn.SubClass.Name);
-            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Description)]).Returns(expectedReturn.SubClass.Description);
+            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Id)]).Returns(expectedSubClass.Id);
+            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Name)]).Returns(expectedSubClass.Name);
+            dataReader.Setup(m => m[nameof(expectedReturn.SubClass) + nameof(expectedReturn.SubClass.Description)]).Returns(expectedSubClass.Description);
 
             EntityMapper sut = new();
 
@@ -74,9 +75,9 @@ namespace DrSproc.Tests.EntityMappingTests
                                               x => x.Width.ShouldBe(expectedReturn.Width),
                                               x => x.Height.ShouldBe(expectedReturn.Height),
                                               x => x.Frequency.ShouldBe(expectedReturn.Frequency),
-                                              x => x.SubClass.ShouldSatisfyAllConditions(s => s.Id.ShouldBe(expectedReturn.SubClass.Id),
-                                                                                        s => s.Name.ShouldBe(expectedReturn.SubClass.Name),
-                                                                                        s => s.Description.ShouldBe(expectedReturn.SubClass.Description)));
+                                              x => x.SubClass.ShouldSatisfyAllConditions(s => s.Id.ShouldBe(expectedSubClass.Id),
+                                                                                         s => s.Name.ShouldBe(expectedSubClass.Name),
+                                                                                         s => s.Description.ShouldBe(expectedSubClass.Description)));
         }
     }
 }
