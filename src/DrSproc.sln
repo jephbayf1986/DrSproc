@@ -5,7 +5,11 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrSproc.App", "DrSproc.App\DrSproc.App.csproj", "{A0A9F824-30DF-486D-8807-553CFEC9B34F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.Tests", "DrSproc.Tests\DrSproc.Tests.csproj", "{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrSproc.Tests", "DrSproc.Tests\DrSproc.Tests.csproj", "{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.Unity", "DrSproc.Unity\DrSproc.Unity.csproj", "{B3F60496-774A-4E92-A4A7-3743DACD78ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrSproc.DependencyInjection", "DrSproc.DependencyInjection\DrSproc.DependencyInjection.csproj", "{6E10D5F6-C4BE-4181-B70B-1647FA1D327C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B21FD46A-F760-4E5E-85A6-86A7B74F17C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F60496-774A-4E92-A4A7-3743DACD78ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F60496-774A-4E92-A4A7-3743DACD78ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F60496-774A-4E92-A4A7-3743DACD78ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F60496-774A-4E92-A4A7-3743DACD78ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E10D5F6-C4BE-4181-B70B-1647FA1D327C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E10D5F6-C4BE-4181-B70B-1647FA1D327C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E10D5F6-C4BE-4181-B70B-1647FA1D327C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E10D5F6-C4BE-4181-B70B-1647FA1D327C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
