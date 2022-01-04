@@ -3,7 +3,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DrSproc.NetCore
+namespace DrSproc.Registration
 {
     public static class DependencyInjectionExtensions
     {

@@ -3,7 +3,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using Unity;
 
-namespace DrSproc.Unity
+namespace DrSproc.Registration
 {
     public static class UnityExtensions
     {
