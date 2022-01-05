@@ -3,7 +3,7 @@ using DrSproc.Main.DbExecutor;
 using DrSproc.Main.EntityMapping;
 using DrSproc.Transactions;
 
-namespace DrSproc.Base
+namespace DrSproc
 {
     /// <summary>
     /// <b>DrSproc</b> <br />
@@ -14,7 +14,7 @@ namespace DrSproc.Base
     /// <i>Note: This is a static class, does not require injecting, but cannot use the full testing capability. To get this, inject IDrSproc instead</i>
     /// </para>
     /// </summary>
-    public static class DrSproc
+    public static class DoctorSproc
     {
         /// <summary>
         /// <b>Database to Use</b> <br />
