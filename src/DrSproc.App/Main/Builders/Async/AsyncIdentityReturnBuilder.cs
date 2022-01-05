@@ -20,7 +20,7 @@ namespace DrSproc.Main.Builders.Async
             _allowNull = allowNull;
         }
 
-        public async Task<object> Go(CancellationToken cancellationToken = default)
+        public async Task<object> GoAsync(CancellationToken cancellationToken = default)
         {
             var identity = await ExecuteReturnIdentityAsync(_paramData, cancellationToken);
 

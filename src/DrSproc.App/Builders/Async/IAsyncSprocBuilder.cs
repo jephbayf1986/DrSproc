@@ -15,6 +15,6 @@ namespace DrSproc.Builders.Async
 
         IAsyncIdentityReturnBuilder ReturnIdentity(bool allowNull = true);
 
-        Task Go(CancellationToken cancellationToken = default);
+        Task GoAsync(CancellationToken cancellationToken = default);
     }
 }

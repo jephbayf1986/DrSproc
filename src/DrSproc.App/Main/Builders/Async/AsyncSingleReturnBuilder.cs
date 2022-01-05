@@ -28,7 +28,7 @@ namespace DrSproc.Main.Builders.Async
             return new AsyncSingleReturnBuilder<TDatabase, TMapping, TReturn>(this, _paramData, _allowNull);
         }
 
-        public async Task<TReturn> Go(CancellationToken cancellationToken = default)
+        public async Task<TReturn> GoAsync(CancellationToken cancellationToken = default)
         {
             var reader = await ExecuteReturnReaderAsync(_paramData, cancellationToken);
 

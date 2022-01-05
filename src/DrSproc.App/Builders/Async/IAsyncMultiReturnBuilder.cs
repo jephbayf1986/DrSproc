@@ -10,6 +10,6 @@ namespace DrSproc.Builders.Async
         IAsyncMultiReturnBuilder<TReturn> UseCustomMapping<TMapping>() 
             where TMapping : CustomMapper<TReturn>, new();
 
-        Task<IEnumerable<TReturn>> Go(CancellationToken cancellationToken = default);
+        Task<IEnumerable<TReturn>> GoAsync(CancellationToken cancellationToken = default);
     }
 }

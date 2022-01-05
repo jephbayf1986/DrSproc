@@ -64,7 +64,7 @@ namespace DrSproc.Main.Builders.Async
             return new AsyncIdentityReturnBuilder<TDatabase>(this, _paramData, allowNull);
         }
 
-        public Task Go(CancellationToken cancellationToken = default)
+        public Task GoAsync(CancellationToken cancellationToken = default)
         {
             return ExecuteAsync(_paramData, cancellationToken);
         }

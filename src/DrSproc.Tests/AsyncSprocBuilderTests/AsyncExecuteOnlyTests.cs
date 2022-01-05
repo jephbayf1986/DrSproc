@@ -32,7 +32,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -53,7 +53,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, sproc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -73,7 +73,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -97,7 +97,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSprocBuilder<ContosoDb> sut = new(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), sprocFullName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -116,7 +116,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -138,7 +138,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.ContainsKey(paramName)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -161,7 +161,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
@@ -185,7 +185,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, null);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.ContainsKey(paramName)
@@ -210,7 +210,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParam(paramName, paramValue);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == expectedParamInput
@@ -238,7 +238,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             }
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Count() == numberOfParams), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -261,7 +261,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                         .WithParamIfNotNull(paramName, paramValue);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == paramName
@@ -284,7 +284,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                                                     .WithParamIfNotNull(paramName, null);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => !d.Any(x => x.Key == paramName)), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -306,7 +306,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var token = cancelSource.Token;
 
             // Act
-            await sut.Go(token);
+            await sut.GoAsync(token);
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), token));
@@ -326,7 +326,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
@@ -346,7 +346,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var sut = new AsyncSprocBuilder<ContosoDb>(dbExecutor.Object, entityMapper.Object, transaction, storedProc);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             var log = transaction.GetStoredProcedureCallsSoFar();
@@ -373,7 +373,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .ReturnsAsync(rowsAffected);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             var log = transaction.GetStoredProcedureCallsSoFar();

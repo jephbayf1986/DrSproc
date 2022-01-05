@@ -5,6 +5,6 @@ namespace DrSproc.Builders.Async
 {
     public interface IAsyncIdentityReturnBuilder
     {
-        Task<object> Go(CancellationToken cancellationToken = default);
+        Task<object> GoAsync(CancellationToken cancellationToken = default);
     }
 }

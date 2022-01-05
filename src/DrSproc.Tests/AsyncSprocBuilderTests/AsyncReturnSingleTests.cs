@@ -33,7 +33,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -55,7 +55,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.Is<SqlConnection>(x => x.ConnectionString == connectionString), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -75,7 +75,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), storedProcName, It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -94,7 +94,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), null, It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -115,7 +115,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d != null), It.IsAny<SqlTransaction>(), It.IsAny<CancellationToken>()));
@@ -145,7 +145,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, paramList, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.Is<IDictionary<string, object>>(d => d.Any(x => x.Key == param1Name
@@ -170,7 +170,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             var token = cancelSource.Token;
 
             // Act
-            await sut.Go(token);
+            await sut.GoAsync(token);
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(It.IsAny<SqlConnection>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), It.IsAny<SqlTransaction>(), token));
@@ -196,7 +196,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .ReturnsAsync(returnReader.Object);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             entityMapper.Verify(x => x.MapUsingReflection<TestSubClass>(returnReader.Object, storedProcName));
@@ -220,7 +220,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(expectedReturn);
 
             // Act
-            var result = await sut.Go();
+            var result = await sut.GoAsync();
 
             // Assert
             result.ShouldBe(expectedReturn);
@@ -247,7 +247,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .ReturnsAsync(returnReader.Object);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             entityMapper.Verify(x => x.MapUsingCustomMapping<TestClassForMapping, TestClassMapper>(returnReader.Object, storedProcName));
@@ -272,7 +272,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(expectedReturn);
 
             // Act
-            var result = await sut.Go();
+            var result = await sut.GoAsync();
 
             // Assert
             result.ShouldBe(expectedReturn);
@@ -294,7 +294,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(value: null);
 
             // Act
-            var result = await sut.Go();
+            var result = await sut.GoAsync();
 
             // Assert
             result.ShouldBeNull();
@@ -317,7 +317,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(value: null);
 
             // Act
-            var result = await sut.Go();
+            var result = await sut.GoAsync();
 
             // Assert
             result.ShouldBeNull();
@@ -340,7 +340,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(value: null);
 
             // Act
-            Func<Task> action = () => sut.Go();
+            Func<Task> action = () => sut.GoAsync();
 
             // Assert
             (await Should.ThrowAsync<DrSprocNullReturnException>(action))
@@ -369,7 +369,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .Returns(value: null);
 
             // Act
-            Func<Task> action = () => sut.Go();
+            Func<Task> action = () => sut.GoAsync();
 
             // Assert
             (await Should.ThrowAsync<DrSprocNullReturnException>(action))
@@ -394,7 +394,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             dbExecutor.Verify(x => x.ExecuteReturnReaderAsync(transaction.SqlConnection, It.IsAny<string>(), It.IsAny<IDictionary<string, object>>(), transaction.SqlTransaction, It.IsAny<CancellationToken>()));
@@ -413,7 +413,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
             AsyncSingleReturnBuilder<ContosoDb, TestSubClass> sut = new(builderBase, null, true);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             var log = transaction.GetStoredProcedureCallsSoFar();
@@ -446,7 +446,7 @@ namespace DrSproc.Tests.AsyncSprocBuilderTests
                 .ReturnsAsync(returnReader.Object);
 
             // Act
-            await sut.Go();
+            await sut.GoAsync();
 
             // Assert
             var log = transaction.GetStoredProcedureCallsSoFar();
