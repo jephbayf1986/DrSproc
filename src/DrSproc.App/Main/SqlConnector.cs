@@ -28,6 +28,14 @@ namespace DrSproc.Main
             return new TargetTransaction<TDatabase>(_dbExecutor, _entityMapper, transaction);
         }
 
+        public ITargetConnection UseOptional<TDatabase>(ITransaction transaction = null) where TDatabase : IDatabase, new()
+        {
+            if (transaction != null && transaction is ITransaction<TDatabase>)
+                return Use(transaction as ITransaction<TDatabase>);
+            else
+                return Use<TDatabase>();
+        }
+
         public ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null) 
             where TDatabase : IDatabase, new()
         {

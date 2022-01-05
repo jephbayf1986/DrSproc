@@ -41,7 +41,14 @@ namespace DrSproc
         {
             var drSproc = new SqlConnector(new DbExecutor(), new EntityMapper());
 
-            return drSproc.Use<TDatabase>(transaction);
+            return drSproc.Use(transaction);
+        }
+
+        public static ITargetConnection UseOptional<TDatabase>(ITransaction transaction = null) where TDatabase : IDatabase, new()
+        {
+            var drSproc = new SqlConnector(new DbExecutor(), new EntityMapper());
+
+            return drSproc.UseOptional<TDatabase>(transaction);
         }
 
         public static ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null)

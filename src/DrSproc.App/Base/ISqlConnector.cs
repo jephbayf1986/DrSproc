@@ -31,6 +31,9 @@ namespace DrSproc
         ITargetTransaction Use<TDatabase>(ITransaction<TDatabase> transaction)
             where TDatabase : IDatabase, new ();
 
+        ITargetConnection UseOptional<TDatabase>(ITransaction transaction = null)
+            where TDatabase : IDatabase, new();
+
         ITransaction<TDatabase> BeginTransaction<TDatabase>(TransactionIsolation? isolationLevel = null)
             where TDatabase : IDatabase, new ();
     }
