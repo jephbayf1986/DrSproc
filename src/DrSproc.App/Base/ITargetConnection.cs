@@ -4,23 +4,21 @@ using DrSproc.Builders.Async;
 namespace DrSproc
 {
     /// <summary>
-    /// <b>Target Database Interface</b> <br />
-    /// An Interface With options for executing Sprocs within the previously specified Target Database
-    /// <para>
-    /// Inject the DrSproc interface in order to access this via the '<i>Use</i>' Method.
-    /// </para>
+    /// <b>Target Connection Interface</b> <br />
+    /// An Interface With options for executing Sprocs within the previously specified Target Database (or Transaction)
     /// </summary>
     public interface ITargetConnection
     {
         /// <summary>
         /// <b>Execute</b> <br />
-        /// Creates a class for building up an Stored Procedure Call for the default schema (eg. dbo)
+        /// Creates a builder for setting up a Stored Procedure Call for the default schema (eg. dbo)
         /// <para>
         /// <i>Example:</i> <br />
         /// <code>
         /// <![CDATA[db.Execute("sp_GetPatients")]]> <br />
         ///   .WithParam("Country", "GB") <br />
-        ///   .ReturnMulti();
+        ///   .ReturnMulti()
+        ///   .Go();
         /// </code>
         /// </para>
         /// </summary>
@@ -30,13 +28,14 @@ namespace DrSproc
 
         /// <summary>
         /// <b>Execute</b> <br />
-        /// Creates a class for building up a Stored Procedure Call for any schema name
+        /// Creates a builder for setting up a Stored Procedure Call for any schema name
         /// <para>
         /// <i>Example:</i> <br />
         /// <code>
         /// <![CDATA[db.Execute("patient", "sp_GetPatients")]]> <br />
         ///   .WithParam("Country", "GB") <br />
-        ///   .ReturnMulti();
+        ///   .ReturnMulti()
+        ///   .Go();
         /// </code>
         /// </para>
         /// </summary>
@@ -46,13 +45,14 @@ namespace DrSproc
 
         /// <summary>
         /// <b>Execute Async</b> <br />
-        /// Creates a class for building up an Asynchronous Stored Procedure Call for the default schema (eg. dbo)
+        /// Creates a builder for setting up an Asynchronous Stored Procedure Call for the default schema (eg. dbo)
         /// <para>
         /// <i>Example:</i> <br />
         /// <code>
         /// <![CDATA[db.ExecuteAsync("sp_GetPatients")]]> <br />
         ///   .WithParam("Country", "GB") <br />
-        ///   .ReturnMulti();
+        ///   .ReturnMulti()
+        ///   .GoAsync();
         /// </code>
         /// </para>
         /// </summary>
@@ -62,13 +62,14 @@ namespace DrSproc
 
         /// <summary>
         /// <b>Execute Async</b> <br />
-        /// Creates a class for building up an Asynchronous Stored Procedure Call for any schema name
+        /// Creates a builder for setting up an Asynchronous Stored Procedure Call for any schema name
         /// <para>
         /// <i>Example:</i> <br />
         /// <code>
         /// <![CDATA[db.ExecuteAsync("patient", "sp_GetPatients")]]> <br />
         ///   .WithParam("Country", "GB") <br />
-        ///   .ReturnMulti();
+        ///   .ReturnMulti()
+        ///   .GoAsync();
         /// </code>
         /// </para>
         /// </summary>
