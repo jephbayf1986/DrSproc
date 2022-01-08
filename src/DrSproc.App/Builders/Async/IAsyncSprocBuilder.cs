@@ -53,7 +53,7 @@ namespace DrSproc.Builders.Async
 
         /// <summary>
         /// <b>Go Async</b> <bt />
-        /// Completes Stored Procedure call asynchronously
+        /// Executes the Stored Procedure call asynchronously
         /// </summary>
         Task GoAsync(CancellationToken cancellationToken = default);
     }

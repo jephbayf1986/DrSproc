@@ -59,7 +59,7 @@ namespace DrSproc.Builders
 
         /// <summary>
         /// <b>Go</b> <bt />
-        /// Completes Stored Procedure call
+        /// Executes the Stored Procedure call
         /// </summary>
         void Go();
     }
