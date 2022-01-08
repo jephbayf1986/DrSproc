@@ -1,14 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>DrSproc.Unity</RootNamespace>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<IsPublishable>False</IsPublishable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<PackageId>DrSproc.Unity</PackageId>
+		<Authors>Jeph Bayfield, Georgina Bayfield</Authors>
+		<Product>DrSproc Unity Extensions</Product>
+		<Description>Dr Sproc - A syntactically simple way to call SQL stored procedures - Unity Container extensions</Description>
+		<RepositoryUrl>https://github.com/jephbayf1986/DrSproc</RepositoryUrl>
+		<PackageTags>Sql;Stored Procedure;Database;Builder;Sproc;Unity;C#</PackageTags>
+		<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DrSproc" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
     <ProjectReference Include="..\DrSproc.App\DrSproc.App.csproj" />
   </ItemGroup>
 

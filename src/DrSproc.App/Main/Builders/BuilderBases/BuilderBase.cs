@@ -18,12 +18,14 @@ namespace DrSproc.Main.Builders.BuilderBases
         private readonly SqlTransaction _transaction;
         private readonly StoredProc _storedProc;
         private readonly Action<TransactionLog> _logStoredProcudure;
+        private readonly bool _closeConnection = false;
 
         public BuilderBase(IDbExecutor dbExecutor, SqlConnection connection, StoredProc storedProc)
         {
             _dbExecutor = dbExecutor;
             _connection = connection;
             _storedProc = storedProc;
+            _closeConnection = true;
         }
 
         public BuilderBase(IDbExecutor dbExecutor, IInternalTransaction transaction, StoredProc storedProc)
@@ -43,6 +45,7 @@ namespace DrSproc.Main.Builders.BuilderBases
             _transaction = builderBase._transaction;
             _storedProc = builderBase._storedProc;
             _logStoredProcudure = builderBase._logStoredProcudure;
+            _closeConnection = builderBase._closeConnection;
         }
 
         protected string StoredProcName
@@ -68,28 +71,48 @@ namespace DrSproc.Main.Builders.BuilderBases
 
         protected object ExecuteReturnIdentity(IDictionary<string, object> parameters, int? commandTimeOut)
         {
+            object identity;
+
             if (_logStoredProcudure == null)
-                return _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+            {
+                identity = _dbExecutor.ExecuteReturnIdentity(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
-            var reader = _dbExecutor.ExecuteReturnReader(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
+                _connection.Close();
 
-            var identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+                return identity;
+            }
 
-            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
+            using (var reader = _dbExecutor.ExecuteReturnReader(_connection, StoredProcName, parameters, _transaction, commandTimeOut))
+            {
+                identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+
+                var recordsAffected = reader?.RecordsAffected;
+                LogToTransaction(parameters, recordsAffected ?? 0);
+            }
 
             return identity;
         }
 
         protected async Task<object> ExecuteReturnIdentityAsync(IDictionary<string, object> parameters, CancellationToken cancellationToken)
         {
+            object identity;
+
             if (_logStoredProcudure == null)
-                return await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+            {
+                identity = await _dbExecutor.ExecuteReturnIdentityAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
-            var reader = await _dbExecutor.ExecuteReturnReaderAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
+                _connection.Close();
 
-            var identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+                return identity;
+            }
 
-            LogToTransaction(parameters, reader?.RecordsAffected ?? 0);
+            using (var reader = await _dbExecutor.ExecuteReturnReaderAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken))
+            {
+                identity = reader != null && reader.Read() ? reader.GetValue(0) : null;
+
+                var recordsAffected = reader?.RecordsAffected;
+                LogToTransaction(parameters, recordsAffected ?? 0);
+            }
 
             return identity;
         }
@@ -98,6 +121,8 @@ namespace DrSproc.Main.Builders.BuilderBases
         {
             var rowsAffected = _dbExecutor.Execute(_connection, StoredProcName, parameters, _transaction, commandTimeOut);
 
+            CloseConnectionIfNotTransaction();
+
             LogToTransaction(parameters, rowsAffected);
         }
 
@@ -105,7 +130,15 @@ namespace DrSproc.Main.Builders.BuilderBases
         {
             var rowsAffected = await _dbExecutor.ExecuteAsync(_connection, StoredProcName, parameters, _transaction, cancellationToken);
 
+            CloseConnectionIfNotTransaction();
+
             LogToTransaction(parameters, rowsAffected);
+        }
+
+        protected void CloseConnectionIfNotTransaction()
+        {
+            if (_closeConnection && _connection?.State == ConnectionState.Open)
+                _connection.Close();
         }
 
         protected void LogToTransaction(IDictionary<string, object> parameters, int rowsAffected)

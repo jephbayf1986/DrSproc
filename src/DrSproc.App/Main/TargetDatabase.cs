@@ -27,40 +27,36 @@ namespace DrSproc.Main
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            using (var connection = GetSqlConnection())
-            {
-                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
-            }
+            var connection = GetSqlConnection();
+
+            return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string storedProcedureName)
         {
             var sproc = new StoredProc(storedProcedureName);
 
-            using (var connection = GetSqlConnection())
-            {
-                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
-            }
+            var connection = GetSqlConnection();
+
+            return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
         }
 
         public ISprocBuilder Execute(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            using (var connection = GetSqlConnection())
-            {
-                return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
-            }
+            var connection = GetSqlConnection();
+
+            return new SprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
         }
 
         public IAsyncSprocBuilder ExecuteAsync(string schemaName, string storedProcedureName)
         {
             var sproc = new StoredProc(schemaName, storedProcedureName);
 
-            using (var connection = GetSqlConnection())
-            {
-                return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
-            }
+            var connection = GetSqlConnection();
+
+            return new AsyncSprocBuilder<TDatabase>(_dbExecutor, _entityMapper, connection, sproc);
         }
 
         public ITargetTransaction BeginTransaction(TransactionIsolation? isolationLevel = null)

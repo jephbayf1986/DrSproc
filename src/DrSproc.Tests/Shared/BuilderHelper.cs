@@ -25,6 +25,9 @@ namespace DrSproc.Tests.Shared
             if (entityMapper == null)
                 entityMapper = new Mock<IEntityMapper>();
 
+            if (connection == null)
+                connection = new SqlConnection(RandomHelpers.RandomConnectionString());
+
             return new SprocBuilder<TDatabase>(dbExecutor.Object, entityMapper.Object, connection, storedProc);
         }
 

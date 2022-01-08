@@ -34,23 +34,39 @@ namespace DrSproc.Main.Builders.BuilderBases
         protected TReturn MapUsingCustomMapping<TReturn, TMapping>(IDataReader reader)
             where TMapping : CustomMapper<TReturn>, new()
         {
-            return _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader, StoredProcName);
+            var entity = _entityMapper.MapUsingCustomMapping<TReturn, TMapping>(reader, StoredProcName);
+
+            CloseConnectionIfNotTransaction();
+
+            return entity;
         }
 
         protected TReturn MapUsingReflection<TReturn>(IDataReader reader)
         {
-            return _entityMapper.MapUsingReflection<TReturn>(reader, StoredProcName);
+            var entity = _entityMapper.MapUsingReflection<TReturn>(reader, StoredProcName);
+
+            CloseConnectionIfNotTransaction();
+
+            return entity;
         }
 
         protected IEnumerable<TReturn> MapMultiUsingCustomMapping<TReturn, TMapping>(IDataReader reader)
             where TMapping : CustomMapper<TReturn>, new()
         {
-            return _entityMapper.MapMultiUsingCustomMapping<TReturn, TMapping>(reader, StoredProcName);
+            var entities = _entityMapper.MapMultiUsingCustomMapping<TReturn, TMapping>(reader, StoredProcName);
+
+            CloseConnectionIfNotTransaction();
+
+            return entities;
         }
 
         protected IEnumerable<TReturn> MapMultiUsingReflection<TReturn>(IDataReader reader)
         {
-            return _entityMapper.MapMultiUsingReflection<TReturn>(reader, StoredProcName);
+            var entities = _entityMapper.MapMultiUsingReflection<TReturn>(reader, StoredProcName);
+
+            CloseConnectionIfNotTransaction();
+
+            return entities;
         }
     }
 }
