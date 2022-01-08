@@ -1,6 +1,5 @@
 ﻿using DrSproc.EntityMapping;
 using DrSproc.Main.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -43,7 +42,17 @@ namespace DrSproc.Main.EntityMapping
 
         public IEnumerable<TReturn> MapMultiUsingReflection<TReturn>(IDataReader reader, string storedProcName)
         {
-            throw new NotImplementedException();
+            ICollection<TReturn> results = new List<TReturn>();
+
+            using (reader)
+            {
+                while (reader.Read())
+                {
+                    results.Add(reader.CreateWithReflection<TReturn>(storedProcName));
+                }
+
+                return results;
+            }
         }
 
         private TMapper GetMapper<TReturn, TMapper>(IDataReader reader, string storedProcName)
