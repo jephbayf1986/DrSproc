@@ -2,6 +2,10 @@
 
 namespace DrSproc.Exceptions
 {
+    /// <summary>
+    /// <br>Dr Sproc Parameter Exception</br> <br />
+    /// Thrown when the stored procedure parameter inputs are invalid
+    /// </summary>
     public class DrSprocParameterException : Exception
     {
         private DrSprocParameterException(string storedProcName, string message)

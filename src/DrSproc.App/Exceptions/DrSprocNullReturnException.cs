@@ -2,6 +2,10 @@
 
 namespace DrSproc.Exceptions
 {
+    /// <summary>
+    /// <br>Dr Sproc Null Return Exception</br> <br />
+    /// Thrown when a null value is received unexpectedly
+    /// </summary>
     public class DrSprocNullReturnException : Exception
     {
         private DrSprocNullReturnException(string storedProcName, string message)

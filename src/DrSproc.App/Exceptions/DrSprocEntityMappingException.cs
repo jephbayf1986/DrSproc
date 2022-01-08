@@ -2,6 +2,10 @@
 
 namespace DrSproc.Exceptions
 {
+    /// <summary>
+    /// <br>Dr Sproc Entity Mapping Exception</br> <br />
+    /// Thrown when Mapping Database values to an object hits an unexpected issue
+    /// </summary>
     public class DrSprocEntityMappingException : Exception
     {
         private DrSprocEntityMappingException(string sprocName, string message)

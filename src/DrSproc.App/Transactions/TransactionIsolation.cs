@@ -1,5 +1,8 @@
 ﻿namespace DrSproc.Transactions
 {
+    /// <summary>
+    /// <b>Transaction Isolation Level</b>
+    /// </summary>
     public enum TransactionIsolation
     {
         /// <summary>
