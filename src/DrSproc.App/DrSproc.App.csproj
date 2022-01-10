@@ -15,7 +15,7 @@
 		<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<AssemblyVersion>1.01</AssemblyVersion>
 		<FileVersion>1.0.1</FileVersion>
 	</PropertyGroup>

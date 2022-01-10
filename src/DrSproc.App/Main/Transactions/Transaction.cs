@@ -2,6 +2,7 @@
 using DrSproc.Transactions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -51,6 +52,9 @@ namespace DrSproc.Main.Transactions
 
         internal void BeginTransaction(TransactionIsolation? isolationLevel)
         {
+            if (_sqlConnection.State != ConnectionState.Open)
+                _sqlConnection.Open();
+
             _sqlTransaction = _sqlConnection.BeginTransaction(isolationLevel.ToIsolationLevel());
 
             BeginTime = DateTime.Now;
