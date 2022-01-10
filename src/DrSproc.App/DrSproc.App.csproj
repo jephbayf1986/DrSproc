@@ -50,6 +50,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="https:\raw.githubusercontent.com\jephbayf1986\DrSproc\main\README.md" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 	</ItemGroup>
 
