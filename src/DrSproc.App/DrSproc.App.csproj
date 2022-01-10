@@ -16,8 +16,8 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<Version>1.0.2</Version>
-		<AssemblyVersion>1.01</AssemblyVersion>
-		<FileVersion>1.0.1</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,11 +46,6 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
 		</AssemblyAttribute>
-
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="https:\raw.githubusercontent.com\jephbayf1986\DrSproc\main\README.md" />
 	</ItemGroup>
 
 	<ItemGroup>
