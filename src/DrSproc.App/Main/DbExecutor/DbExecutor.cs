@@ -16,7 +16,7 @@ namespace DrSproc.Main.DbExecutor
                 if (connection.IsNotOpen())
                     connection.Open();
 
-                return command.ExecuteReader(CommandBehavior.CloseConnection);
+                return command.ExecuteReader();
             }
         }
 
@@ -27,7 +27,7 @@ namespace DrSproc.Main.DbExecutor
                 if (connection.IsNotOpen())
                     await connection.OpenAsync(cancellationToken);
 
-                return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
+                return await command.ExecuteReaderAsync(cancellationToken);
             }
         }
 
