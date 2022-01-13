@@ -22,6 +22,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(expectedReturn.Id);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
@@ -63,6 +64,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(expectedReturn.Id);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
@@ -98,6 +100,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(expectedReturn.Id);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
@@ -132,6 +135,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(null);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
@@ -167,6 +171,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(expectedReturn.Id);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
@@ -199,6 +204,7 @@ namespace DrSproc.Tests.EntityMappingTests
 
             TestClassForMapping expectedReturn = new();
 
+            dataReader.Setup(m => m.Read()).Returns(true);
             dataReader.Setup(m => m[TestClassMapper.Id_Lookup]).Returns(expectedReturn.Id);
             dataReader.Setup(m => m[TestClassMapper.FirstName_Loookup]).Returns(expectedReturn.FirstName);
             dataReader.Setup(m => m[TestClassMapper.LastName_Loookup]).Returns(expectedReturn.LastName);
