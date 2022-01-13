@@ -12,7 +12,7 @@ namespace DrSproc.Main.EntityMapping
         {
             using (var mapper = GetMapper<TReturn, TMapper>(reader, storedProcName))
             {
-                return mapper.Map();
+                return mapper.MapSingle();
             }
         }
 

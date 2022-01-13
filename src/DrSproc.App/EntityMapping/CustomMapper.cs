@@ -51,6 +51,16 @@ namespace DrSproc.EntityMapping
         /// <returns>The Entity Desired from Mapping</returns>
         public abstract T Map();
 
+        internal T MapSingle()
+        {
+            if (_dataReader.Read())
+            {
+                return Map();
+            }
+
+            return default;
+        }
+
         internal IEnumerable<T> MapMulti()
         {
             var mappedItems = new List<T>();
