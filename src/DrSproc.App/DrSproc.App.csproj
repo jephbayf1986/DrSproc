@@ -12,10 +12,10 @@
 		<Description>Dr Sproc - A syntactically simple way to call SQL stored procedures</Description>
 		<RepositoryUrl>https://github.com/jephbayf1986/DrSproc</RepositoryUrl>
 		<PackageTags>Sql;Stored Procedure;Database;Builder;Sproc;C#</PackageTags>
-		<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+		<PackageReleaseNotes>Fixed issues around single mapping throwing error.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>

@@ -12,10 +12,10 @@
 		<Description>Dr Sproc - A syntactically simple way to call SQL stored procedures - Unity Container extensions</Description>
 		<RepositoryUrl>https://github.com/jephbayf1986/DrSproc</RepositoryUrl>
 		<PackageTags>Sql;Stored Procedure;Database;Builder;Sproc;Unity;C#</PackageTags>
-		<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+		<PackageReleaseNotes>Has latest version of DrSproc dependency</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 	</PropertyGroup>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DrSproc" Version="1.0.3" />
+		<PackageReference Include="DrSproc" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
