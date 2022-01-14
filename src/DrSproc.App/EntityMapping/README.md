@@ -1,4 +1,4 @@
-The following read-type methods are avialable for Custom Mapping:
+The following read-type methods are available for Custom Mapping:
  - ```ReadString()```
  - ```ReadLong()```
  - ```ReadNullableLong()```
