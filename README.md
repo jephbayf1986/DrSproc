@@ -23,6 +23,13 @@ var db = DoctorSproc.Use<ContosoDb>();
 db.Execute("sp_LogEvent")
             .Go();
 ```
+You can also specify the schema if necessary:
+```cs
+var db = DoctorSproc.Use<ContosoDb>();
+
+db.Execute("events", "sp_LogEvent")
+            .Go();
+```
 
 ### Parameters
 
@@ -105,7 +112,7 @@ internal class EmployeeCustomMapper : CustomMapper<Employee>
     }
 }
 ```
-The methods ```ReadInt``` and ```ReadNullableInt``` etc are built into the ```CustomMapper<>``` abstract class. For a full list of available options check here.
+The methods ```ReadInt``` and ```ReadNullableInt``` etc are built into the ```CustomMapper<>``` abstract class. Check [here](https://github.com/jephbayf1986/DrSproc/blob/main/src/DrSproc.App/EntityMapping/README.md) for a full list of available type reading options.
 
 To use the mapper, simply declare it with ```UseCustomMapping<>()``` in the chain between the return type and the ```Go()``` as follows:
 
@@ -174,12 +181,62 @@ return DoctorSproc.Use<ContosoDb>()
 ```
 *Note ```WithTimeOut()``` is not available for asynchronous calls*
 ### Dependency Injection
+The examples throughout this readme all use the static DoctorSproc class. However Dependency Injection is also available...
 
+Dr Sproc has 2 extension libraries to register dependency injection:
+ - [DrSproc.DependencyInjection](https://www.nuget.org/packages/DrSproc.DependencyInjection/) for the Microsoft Dependency Injection library
+ - [DrSproc.Unity](https://www.nuget.org/packages/DrSproc.Unity/) for Unity Container
+
+For both the above, Dr Sproc is registered using the extension ```RegisterDrSproc()```.
+
+To inject Dr Sproc use the ```ISqlConnector``` interface as follows:
+
+```cs
+private readonly ISqlConnector connector;
+
+public DepartmentRepository(ISqlConnector connector)
+{
+    this.connector = connector;
+}
+
+public IEnumerable<Department> GetDepartments()
+{
+    var db = connector.Use<ContosoDb>();
+
+    return db.Execute("sp_GetDepartments")
+                    .ReturnMulti<Department>()
+                        .Go();
+}
+```
 
 ### Transactions
+Several options are built into Dr Sproc for using single database Transactions using the ```ITransaction``` interface.
 
+To create and begin a transaction for a specific database, you can use the following command:
+```cs
+var contosoTransaction = DoctorSproc.BeginTransaction<ContosoDb>()
+```
+Then to execute a stored procedure within that transaction, you can use the following:
+```cs
+var dbTransaction = DoctorSproc.Use(transaction);
+
+dbTransaction.Execute("sp_InsideTransaction")
+                .Go();
+```
+
+For a full explanation of Transactions within this library, click [here](https://github.com/jephbayf1986/DrSproc/blob/main/src/DrSproc.App/Transactions/README.md)
 
 ### Exceptions
+Dr Sproc has 3 custom exceptions to give you clear information when somethings gone wrong:
+- ```DrSprocEntityMappingException```
+- ```DrSprocNullReturnException```
+- ```DrSprocParameterException```
+
+All 3 will fully state the name of the stored procedure being called and detailed reasons for the error. For example if a null value is returned for a non-nullable property, you will see the following error:
+```
+The following error occurred while Dr Sproc attempted to read a non-null return object from sproc 'sp_GetThings': The data returned in field ThingId was of null, but a non-null value was expected
+```
+****
 
 See [this](https://github.com/jephbayf1986/DrSprocExampleProject) project for several examples of how to implement DrSproc.
 
