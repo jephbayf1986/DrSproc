@@ -47,6 +47,40 @@ db.Execute("sp_UpdateDepartment")
                 .Go();
 ```
 ### Return Types
+There are 4 return types possible to be set after the parameter declarations:
+ - Fire and forget, no return value *(This is the default, by calling ```Go()``` after declaring the parameters the procedure call will take place)*
+ - Indentity Return Object
+ - Single Return Type
+ - Mulit Return Type (```IEnumerable``` output).
+
+The return type, if any can be set as follows:
+
+```cs
+var db = DoctorSproc.Use<ContosoDb>();
+
+var id = db.Execute("sp_CreateEmployee")
+                .WithParam("FirstName", mainItem.FirstName)
+                .WithParam("LastName", mainItem.LastName)
+                    .ReturnIdentity()
+                        .Go();
+```
+
+```cs
+var db = DoctorSproc.Use<ContosoDb>();
+            
+return db.Execute("sp_GetEmployee")
+            .WithParam("EmployeeId", id)
+                .ReturnSingle<Employee>()
+                    .Go();
+```
+
+```cs
+var db = DoctorSproc.Use<ContosoDb>();
+  
+return db.Execute("sp_GetEmployees")
+                .ReturnMulti<Employee>()
+                    .Go();
+```
 
 ### Mapping
 
