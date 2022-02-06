@@ -3,7 +3,7 @@
 namespace DrSproc.Exceptions
 {
     /// <summary>
-    /// <br>Dr Sproc Null Return Exception</br> <br />
+    /// <b>Dr Sproc Null Return Exception</b> <br />
     /// Thrown when a null value is received unexpectedly
     /// </summary>
     public class DrSprocNullReturnException : Exception

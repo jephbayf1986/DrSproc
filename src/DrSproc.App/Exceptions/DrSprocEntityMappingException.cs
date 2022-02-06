@@ -3,7 +3,7 @@
 namespace DrSproc.Exceptions
 {
     /// <summary>
-    /// <br>Dr Sproc Entity Mapping Exception</br> <br />
+    /// <b>Dr Sproc Entity Mapping Exception</b> <br />
     /// Thrown when Mapping Database values to an object hits an unexpected issue
     /// </summary>
     public class DrSprocEntityMappingException : Exception

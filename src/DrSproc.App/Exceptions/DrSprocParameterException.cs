@@ -3,7 +3,7 @@
 namespace DrSproc.Exceptions
 {
     /// <summary>
-    /// <br>Dr Sproc Parameter Exception</br> <br />
+    /// <b>Dr Sproc Parameter Exception</b> <br />
     /// Thrown when the stored procedure parameter inputs are invalid
     /// </summary>
     public class DrSprocParameterException : Exception
