@@ -1,0 +1,20 @@
+The following read-type methods are available for Custom Mapping:
+ - ```ReadString()```
+ - ```ReadLong()```
+ - ```ReadNullableLong()```
+ - ```ReadInt()```
+ - ```ReadNullableInt()```
+ - ```ReadShort()```
+ - ```ReadNullableShort()```
+ - ```ReadByte()```
+ - ```ReadNullableByte()```
+ - ```ReadDouble()```
+ - ```ReadNullableDouble()```
+ - ```ReadDecimal()```
+ - ```ReadNullableDecimal()```
+ - ```ReadBoolean()```
+ - ```ReadNullableBoolean()```
+ - ```ReadDateTime()```
+ - ```ReadNullableDateTime()```
+ - ```ReadGuid()```
+ - ```ReadNullableGuid()```
