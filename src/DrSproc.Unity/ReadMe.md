@@ -1,4 +1,4 @@
-# DrSproc Unit Extensions
+# DrSproc Unity Extensions
 Dr Sproc is a syntactically simple way to call SQL stored procedures!
 
 ## Unity Extensions
