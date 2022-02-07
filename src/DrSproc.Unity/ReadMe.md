@@ -6,7 +6,7 @@ This project has a simple extension for registering DrSproc and it's dependency 
 
 ### Installation
 
-You can install Dr Sproc with Unity from Nuget Package Manager
+You can install Dr Sproc with Unity from Nuget Package Manager, or Nuget CLI:
 
 ```cli
 nuget install DrSproc.Unity
