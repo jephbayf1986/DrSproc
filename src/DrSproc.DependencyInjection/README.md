@@ -20,7 +20,7 @@ dotnet add package DrSproc.DependencyInjection
 
 ### Usage
 
-Start by registering DrSproc in your startup class:
+Start by registering DrSproc in your `startup` class:
 
 ```cs
 
