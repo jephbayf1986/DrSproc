@@ -3,6 +3,20 @@ Dr Sproc is a syntactically simple way to call SQL stored procedures!
 
 The idea behind this library is to enable developers to write stored procedure calls in a syntatically similar way to how they are called in SQL server. Using a chained builder-like pattern it ensures you don't have to worry about SQL Connections and Commands. This should allow quick understanding of what's being called. It also aims to give clear error handling to ensure you don't have to spend too much time debugging through code to know which stored procedure, parameter or field is causing the problem.
 
+### Installation
+
+You can install Dr Sproc from Nuget Package Manager, or Nuget CLI:
+
+```cli
+nuget install DrSproc
+```
+
+Or you can use the dotnet cli:
+
+```cli
+dotnet add package DrSproc
+```
+
 ## How to Use
 Before using *Dr Sproc* to call stored procedures the minimum setup required is to declare any Databases you may use, inheriting from the ```IDatabase``` interface:
 ```cs
