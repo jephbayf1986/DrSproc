@@ -19,6 +19,7 @@ dotnet add package DrSproc.Unity
 ```
 
 ### Usage
+Start by registering dotValidate in your `UnityConfig` class:
 
 ```cs
 public static class UnityConfig
